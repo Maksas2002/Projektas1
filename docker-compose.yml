@@ -1,0 +1,36 @@
+
+
+
+
+
+# docker compose up --build
+# Use when:
+# You want to force rebuild and immediately run
+# Good during development
+
+# docker compose up -d --build
+# Use when:
+# You want to rebuild everything
+# And run in background
+
+# docker compose build
+#  Use when:
+# You changed the Dockerfile
+# You changed dependencies
+# You need to rebuild images without starting containers
+
+# docker compose up -d
+#  Use when:
+# You already built images
+# You want the stack running in the background
+
+# docker compose down
+#  Use when:
+# You want to completely stop the environment
+# But keep database/data files stored in volumes
+
+# docker compose down -v
+#  also removes volumes.
+
+# docker compose logs -f service_name
+# Shows real‑time logs for a specific service (streaming mode).
