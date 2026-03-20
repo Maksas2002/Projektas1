@@ -107,3 +107,4 @@ volumes:
 
 # docker compose logs -f service_name
 # Shows real‑time logs for a specific service (streaming mode).
+# 
