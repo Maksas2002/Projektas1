@@ -1,4 +1,77 @@
+services:
+  postgres:
+    restart: unless-stopped
+    image: postgres:16-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./back/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      retries: 5
 
+  pgadmin:
+    restart: unless-stopped
+    image: dpage/pgadmin4:8
+    container_name: pgadmin-api
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  back:
+    restart: unless-stopped
+    build: ./back
+    container_name: server-api
+    environment:
+      PORT: ${PORT}
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+      CLIENT_URL: ${CLIENT_URL}
+    depends_on:
+        postgres:
+          condition: service_healthy
+    ports:
+      - "3000:5000"
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+
+  front:
+    restart: unless-stopped
+    build: ./front
+    container_name: client-api
+    environment:
+      VITE_API_URL: http://back:5000
+    depends_on:
+      - back
+    ports:
+      - "5173:5173"
+    volumes:
+    - ./front:/app
+    - /app/node_modules
+
+volumes:
+  pgadmin_data:
+
+#  Ports
+# 5000 (backend)
+# 5173 (frontend)
+# 5050 (pgAdmin)
+
+# docker compose up --build
+# docker compose down -v
+# docker compose down
 
 
 
