@@ -76,6 +76,7 @@ volumes:
 
 
 
+
 # docker compose up --build
 # Use when:
 # You want to force rebuild and immediately run
@@ -106,5 +107,4 @@ volumes:
 #  also removes volumes.
 
 # docker compose logs -f service_name
-# Shows real‑time logs for a specific service (streaming mode).
-# 
+
