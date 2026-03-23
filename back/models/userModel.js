@@ -21,3 +21,19 @@ export const getUserByEmail = async (email) => {
 
   return users[0];
 };
+
+//delete user
+
+export const deleteUserById = async (id) => {
+  const users = await sql`
+    delete from users
+    where id = ${id}
+    returning *
+  `;
+
+  if (users.length === 0) {
+    return null;
+  }
+
+  return users[0];
+}
