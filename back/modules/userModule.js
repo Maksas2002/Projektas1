@@ -1,3 +1,5 @@
+import { sql } from "../dbConnection.js";
+
 // Create User 
 
 export const createUserM = async ({ name, email, password }) => {
@@ -9,6 +11,7 @@ export const createUserM = async ({ name, email, password }) => {
 
   return users[0];
 };
+
 
 
 
