@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import userRoutes from "./routes/userRoutes.js";
 
 export const PORT = process.env.PORT || 5000;
 export const CLIENT_URL = process.env.CLIENT_URL;
@@ -18,6 +19,8 @@ app.use(
   })
 );
 
+// user routes
+app.use("/api/v1/user", userRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
