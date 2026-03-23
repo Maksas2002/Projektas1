@@ -1,3 +1,17 @@
+// Create User 
+
+export const createUserM = async ({ name, email, password }) => {
+  const users = await sql`
+    INSERT INTO users (name, email, password)
+    VALUES (${name}, ${email}, ${password})
+    RETURNING id, name, email
+  `;
+
+  return users[0];
+};
+
+
+
 // get by email
 
 export const getUserByEmailM = async (email) => {
