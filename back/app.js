@@ -18,6 +18,7 @@ app.use(
   })
 );
 
+app.use("/api/v1/users", usersRouter);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
