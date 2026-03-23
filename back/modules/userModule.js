@@ -1,3 +1,4 @@
+import { sql } from "../dbConnection.js";
 // get by email
 
 export const getUserByEmailM = async (email) => {
