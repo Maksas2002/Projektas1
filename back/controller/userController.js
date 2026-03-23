@@ -2,6 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { getUserByEmailM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
+import e from "express";
 
 // creates and returns jwt token
 
@@ -31,10 +32,10 @@ const sendTokenCookie = (token, res) => {
 export const loginC = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    if (email || password) {
-      throw new AppError("Missing email or password", 404);
-    }
+// console.log(email);
+//     if (email || password) {
+//       throw new AppError("Missing email or password", 404);
+//     }
 
     const user = await getUserByEmailM(email);
     if (!user) throw new AppError("Invalid user email or password", 401);

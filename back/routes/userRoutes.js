@@ -3,6 +3,6 @@ import { loginC } from "../controller/userController.js";
 
 const userRoutes = express.Router();
 
-userRoutes.route("/login").get(loginC);
+userRoutes.route("/login").post(loginC);
 
 export default userRoutes;
