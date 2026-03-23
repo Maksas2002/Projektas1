@@ -32,6 +32,8 @@ services:
   back:
     restart: unless-stopped
     build: ./back
+    env_file:
+      - .env
     container_name: server-api
     environment:
       PORT: ${PORT}

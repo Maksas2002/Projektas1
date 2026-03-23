@@ -1,0 +1,23 @@
+info:
+  name: signin
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:3000/api/v1/users/signup
+  body:
+    type: json
+    data: |-
+      {
+        "username":"username111",
+        "email":"user@gmail.com",
+        "password":"pipi9996"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
