@@ -22,6 +22,15 @@ export const getUserByEmail = async (email) => {
   return users[0];
 };
 
+// get user by id
+
+export const getUserById = async (id) => {
+  const users = await sql`
+  select * from users where id=${id}
+  `;
+  return users[0];
+}
+
 //delete user
 
 export const deleteUserById = async (id) => {

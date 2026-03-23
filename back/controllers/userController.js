@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { createUser, getUserByEmail } from "../models/userModel.js";
+import { createUser, deleteUserById, getUserByEmail, getUserById } from "../models/userModel.js";
 import AppError from "../utils/appError.js";
 
 
@@ -77,7 +77,7 @@ export const login = async (req, res, next) => {
     if (!passwordCorrect)
       throw new AppError("Invalid user email or password", 401);
 
-    const token = signToken(user.userId);
+    const token = signToken(user.id);
     sendTokenCookie(token, res);
 
     user.password = undefined;
@@ -91,9 +91,49 @@ export const login = async (req, res, next) => {
   }
 };
 
+//protect
+
+export const protect = async (req, res, next) => {
+  try {
+    let token = req.cookies?.jwt;
+    if (!token) {
+      throw new AppError("You are not logged in! please log in to get access")
+    }
+    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+
+    console.log(decodedUser);
+    
+    const currentUser = await getUserById(decodedUser.id);
+
+    if(!currentUser){
+      throw new AppError("The user belonging to this token does no longer exist", 401)
+    }
+
+    req.user = currentUser;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+//user it self delete
+
 export const deleteMe = async (req, res, next) => {
-    res.status(200).json({
-      status: "success",
-      data: "Successfully deleted account",
-    });
+    try {
+      const deletedUser = await deleteUserById(req.user.id);
+
+      if (!deletedUser) {
+        throw new AppError("User not found", 404);
+      }
+
+      res.clearCookie("jwt");
+
+      res.status(200).json({
+        status: "success",
+        data: "Successfully deleted account",
+      });
+    } catch (error) {
+      next(error);
+    }
 };
