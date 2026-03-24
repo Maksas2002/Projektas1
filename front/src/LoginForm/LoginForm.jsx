@@ -6,8 +6,6 @@ import { UserContext } from "../utlis/UserContext";
 import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 function LoginForm() {
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
@@ -25,7 +23,6 @@ function LoginForm() {
         withCredentials: true
       });
 
-     
       // user
       setUser(response);
       localStorage.setItem("user", JSON.stringify(response));
