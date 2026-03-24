@@ -53,6 +53,9 @@ services:
     container_name: client-api
     environment:
       VITE_API_URL: http://back:5000
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+
     depends_on:
       - back
     ports:

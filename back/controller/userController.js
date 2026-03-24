@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 import e from "express";
 
@@ -25,6 +25,38 @@ const sendTokenCookie = (token, res) => {
   };
 
   res.cookie("jwt", token, cookieOptions);
+};
+
+// user signup
+
+export const signup = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      throw new AppError("name, email and password are required", 400);
+    }
+
+    const existing = await getUserByEmailM(email);
+    if (existing) {
+      throw new AppError("User with this email already exists", 409);
+    }
+
+    const hash = await argon2.hash(password);
+
+    const createdUser = await createUserM({
+      name,
+      email,
+      password: hash,
+    });
+
+    res.status(201).json({
+      status: "success",
+      data: createdUser,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // User login

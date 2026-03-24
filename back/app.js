@@ -19,6 +19,7 @@ app.use(
   })
 );
 
+
 // user routes
 app.use("/api/v1/user", userRoutes);
 
