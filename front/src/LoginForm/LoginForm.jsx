@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../utlis/UserContext";
+import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
