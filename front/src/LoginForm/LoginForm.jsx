@@ -19,15 +19,19 @@ function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/user/login`, data, {
-        withCredentials: true
-      });
+      const response = await axios.post(
+        `http://localhost:3000/api/v1/user/login`,
+        data,
+        {
+          withCredentials: true,
+        },
+      );
 
       // user
       setUser(response);
       localStorage.setItem("user", JSON.stringify(response));
       reset();
-    //   navigate(`/user/${response.data.data.userId}/apointments`);
+      //   navigate(`/user/${response.data.data.userId}/apointments`);
     } catch (error) {
       setError(errorHandler(error));
     }
@@ -35,19 +39,15 @@ function LoginForm() {
 
   return (
     <>
-      <main>
-        <header className="text-center ">
-          <Link to="/">
-            <h1 className="pt-10">Pet Clinic</h1>
-          </Link>
-        </header>
+      <main className="flex justify-center items-center min-h-screen">
         <section>
-          <h1 className="pt-50 text-center">Login form</h1>
+          <h1 className="pt-50 text-center">Welcome back</h1>
+          <p>Don't hae an account? Sign Up</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center items-center pt-10 gap-2"
           >
-            <label>Your Email</label>
+            <label>Email</label>
             <input
               type="text"
               {...register("email", {
@@ -61,11 +61,11 @@ function LoginForm() {
             />
             {errors.email && (
               <span>
-                Must contain your email and must be from 5 to 30 characters long
+                Must contain your email and must be from 3 to 30 characters long
               </span>
             )}
 
-            <label>Your password</label>
+            <label>Password</label>
             <input
               type="password"
               {...register("password", {
@@ -75,9 +75,9 @@ function LoginForm() {
               })}
               className="border block"
             />
-            {errors.emailAddress && (
+            {errors.password && (
               <span>
-                Must contain your password and must be from 2 to 100 characters
+                Must contain your password and must be from 3 to 100 characters
                 long
               </span>
             )}

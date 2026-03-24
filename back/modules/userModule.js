@@ -1,6 +1,6 @@
 import { sql } from "../dbConnection.js";
 
-// Create User 
+// Create User
 
 export const createUserM = async ({ name, email, password }) => {
   const users = await sql`
@@ -12,8 +12,11 @@ export const createUserM = async ({ name, email, password }) => {
   return users[0];
 };
 
-
-
+// get users by id
+export const getUserByIdM = async (id) => {
+  const users = await sql`select * from users where id=${id}`;
+  return users[0];
+};
 
 // get by email
 
