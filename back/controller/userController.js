@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { getUserByEmailM, createUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
-import e from "express";
+
 
 // creates and returns jwt token
 
