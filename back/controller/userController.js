@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { getUserByEmailM, createUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
+
 // creates and returns jwt token
 
 const signToken = (id) => {
@@ -63,10 +64,6 @@ export const signup = async (req, res, next) => {
 export const loginC = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
-    if (email || password) {
-      throw new AppError("Missing email or password", 404);
-    }
 
     const user = await getUserByEmailM(email);
     if (!user) throw new AppError("Invalid user email or password", 401);
