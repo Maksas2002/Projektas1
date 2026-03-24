@@ -18,7 +18,7 @@ function LoginForm() {
             const response = await axios.post(`${API_URL}/users/login`, formdata, {withCredentials:true});
 
             setUser(response.data.data);
-            navigate("/appointments");
+            navigate("/dashboard");
         } catch (error) {
             setError(handleErrors(error));
         }

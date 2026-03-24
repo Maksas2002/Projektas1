@@ -2,6 +2,7 @@ import { Link, Routes, Route} from "react-router";
 import Home from "./compoments/Home";
 import LoginForm from "./compoments/LoginForm";
 import SignupForm from "./compoments/SignupForm";
+import Dashboard from "./compoments/Dashboard";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route index element={<Home/>}/>
           <Route path="/login" element={<LoginForm/>}/>
           <Route path="/signup" element={<SignupForm/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
         </Routes>
       </div>
     </>
