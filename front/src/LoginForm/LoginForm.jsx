@@ -39,15 +39,15 @@ function LoginForm() {
 
   return (
     <>
-      <main className="flex justify-center items-center min-h-screen">
+      <main className="flex justify-center items-center min-h-screen m-0 bg-bg-blue">
         <section>
-          <h1 className="pt-50 text-center">Welcome back</h1>
-          <p>Don't hae an account? Sign Up</p>
+          <h1 className="pt-50 text-center text-white text-[2rem]">Welcome back</h1>
+          <p className="text-gray-400 text-[1rem]">Don't have an account? Sign Up</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col justify-center items-center pt-10 gap-2"
+            className="flex flex-col justify-center pt-10 gap-2"
           >
-            <label>Email</label>
+            <label className="text-white">Email</label>
             <input
               type="text"
               {...register("email", {
@@ -56,7 +56,7 @@ function LoginForm() {
                 maxLength: 150,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
-              className="border block"
+              className="border block bg-"
               placeholder="example@email.com"
             />
             {errors.email && (
@@ -65,7 +65,7 @@ function LoginForm() {
               </span>
             )}
 
-            <label>Password</label>
+            <label className="text-white">Password</label>
             <input
               type="password"
               {...register("password", {
