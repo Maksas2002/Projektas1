@@ -54,7 +54,10 @@ services:
     build: ./front
     container_name: client-api
     environment:
-      VITE_API_URL: http://back:5000
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "200"
+      WATCHPACK_POLLING: "true"
+      VITE_API_URL: ${VITE_API_URL}
     depends_on:
       - back
     ports:
