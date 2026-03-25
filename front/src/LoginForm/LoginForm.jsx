@@ -52,6 +52,7 @@ function LoginForm() {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center pt-10 gap-2"
           >
+            <div>
             <label className="text-white">Email</label>
             <input
               type="text"
@@ -61,11 +62,13 @@ function LoginForm() {
                 maxLength: 150,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
-              className="border block w-90 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
+              className="border block w-130 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
               placeholder="example@email.com"
             />
+            </div>
+
             {errors.email && (
-              <span>
+              <span className="text-red-600 text-center">
                 Must contain your email and must be from 3 to 30 characters long
               </span>
             )}
@@ -81,13 +84,13 @@ function LoginForm() {
               className="border block h-11 rounded-[10px] border-gray-800 bg-input-blue  text-gray-500"
             />
             {errors.password && (
-              <span>
+              <span className="text-red-600 text-center">
                 Must contain your password and must be from 3 to 100 characters
                 long
               </span>
             )}
-            <input type="submit" className="border border-none bg-button-blue text-white" value="Login" />
-            {error && <p>{error}</p>}
+            <input type="submit" className="border border-none p-1 rounded-[10px] bg-button-blue text-white" value="Login" />
+            {error && <p className="text-red-600 text-center">{error}</p>}
           </form>
         </section>
       </main>
