@@ -62,7 +62,7 @@ function LoginForm() {
                 maxLength: 150,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
-              className="border block w-130 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
+              className="border block pl-2 w-130 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
               placeholder="example@email.com"
             />
             </div>
@@ -81,7 +81,7 @@ function LoginForm() {
                 minLength: 3,
                 maxLength: 100,
               })}
-              className="border block h-11 rounded-[10px] border-gray-800 bg-input-blue  text-gray-500"
+              className="border block h-11 pl-2 rounded-[10px] border-gray-800 bg-input-blue  text-gray-500"
             />
             {errors.password && (
               <span className="text-red-600 text-center">
