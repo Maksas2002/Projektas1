@@ -11,8 +11,8 @@ http:
     data: |-
       {
         "name":"admin", 
-        "email":"admin@mail.com", 
-        "password":"admin"
+        "email":"adminas@mail.com", 
+        "password":"adminas"
       }
   auth: inherit
 
