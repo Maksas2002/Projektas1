@@ -1,20 +1,14 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM } from "../modules/userModule.js";
+// PRIDĖTAS getAllUsersM importas
+import { getUserByEmailM, createUserM, getUserByIdM, getAllUsersM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
-
-// creates and returns jwt token
-
 const signToken = (id) => {
-  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
-
-  return token;
 };
-
-// writes jwt cookie to front
 
 const sendTokenCookie = (token, res) => {
   const cookieOptions = {
@@ -23,33 +17,25 @@ const sendTokenCookie = (token, res) => {
     ),
     httpOnly: true,
   };
-
   res.cookie("jwt", token, cookieOptions);
 };
-
-// user signup
 
 export const signup = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-
     if (!name || !email || !password) {
       throw new AppError("name, email and password are required", 400);
     }
-
     const existing = await getUserByEmailM(email);
     if (existing) {
       throw new AppError("User with this email already exists", 409);
     }
-
     const hash = await argon2.hash(password);
-
     const createdUser = await createUserM({
       name,
       email,
       password: hash,
     });
-
     res.status(201).json({
       status: "success",
       data: createdUser,
@@ -59,27 +45,23 @@ export const signup = async (req, res, next) => {
   }
 };
 
-// User login
-
 export const loginC = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     const user = await getUserByEmailM(email);
-    if (!user) throw new AppError("Invalid user email or password", 401);
-
-    const passwordCorrect = await argon2.verify(user.password, password);
-
-    if (!passwordCorrect)
+    if (!user) {
       throw new AppError("Invalid user email or password", 401);
-
-    const token = signToken(user.userId);
+    }
+    const isMatch = await argon2.verify(user.password, password);
+    if (!isMatch) {
+      throw new AppError("Invalid user email or password", 401);
+    }
+    const token = signToken(user.id);
     sendTokenCookie(token, res);
-
     user.password = undefined;
-
     res.status(200).json({
       status: "success",
+      token,
       data: user,
     });
   } catch (err) {
@@ -87,29 +69,36 @@ export const loginC = async (req, res, next) => {
   }
 };
 
-//autorizacijos middleware, routes apsaugai nuo neregistruotų vartotojų
 export const protect = async (req, res, next) => {
   try {
     let token = req.cookies?.jwt;
-
+    if (!token && req.headers.authorization?.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
     if (!token) {
-      throw new AppError("You are not logged in! Please log in to get access", 401);
+      throw new AppError("You are not logged in!", 401);
     }
-
     const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
-
     const currentUser = await getUserByIdM(decodedUser.id);
-
     if (!currentUser) {
-      throw new AppError(
-        "The user belonging to this token does not longer exist",
-        401,
-      );
+      throw new AppError("The user no longer exists", 401);
     }
-
     req.user = currentUser;
-
     next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+// SUTVARKYTA: Dabar ima duomenis iš DB
+export const getAllUsers = async (req, res, next) => {
+  try {
+    const users = await getAllUsersM(); 
+    res.status(200).json({
+      status: "success",
+      results: users.length,
+      data: users,
+    });
   } catch (err) {
     next(err);
   }

@@ -3,12 +3,12 @@ import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"; // 1. Importuojame admin maršrutus
 
 export const PORT = process.env.PORT || 5000;
 export const CLIENT_URL = process.env.CLIENT_URL;
 
 const app = express();
-
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,9 +19,11 @@ app.use(
   })
 );
 
-
 // user routes
 app.use("/api/v1/user", userRoutes);
+
+// admin routes
+app.use("/api/v1/admin", adminRoutes); 
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
