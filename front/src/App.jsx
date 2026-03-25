@@ -4,6 +4,7 @@ import LoginForm from "./compoments/LoginForm";
 import SignupForm from "./compoments/SignupForm";
 import Dashboard from "./compoments/Dashboard";
 import Header from "./compoments/Header";
+import ProtectedRoute from "./compoments/ProtectedRoute.jsx";
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
           <Route index element={<Home/>}/>
           <Route path="/login" element={<LoginForm/>}/>
           <Route path="/signup" element={<SignupForm/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
         </Routes>
       </div>
     </>
