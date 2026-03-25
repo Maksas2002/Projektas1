@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router";
-import LoginForm from "./LoginForm/LoginForm";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignUpForm";
 
 function App() {
   
@@ -7,6 +8,7 @@ function App() {
   return (
    <>
    <Routes>
+
     <Route path="/login" element={<LoginForm/>}/>
    </Routes>
    </>
