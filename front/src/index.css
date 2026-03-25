@@ -3,4 +3,5 @@
 @theme {
     --color-bg-blue: oklch(0.1643 0.0443 272.29);
     --color-input-blue: oklch(0.1469 0.0337 281.74);
+    --color-button-blue: oklch(0.4529 0.1492 255.01);
 }

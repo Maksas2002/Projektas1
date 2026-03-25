@@ -41,8 +41,13 @@ function LoginForm() {
     <>
       <main className="flex justify-center items-center min-h-screen m-0 bg-bg-blue">
         <section>
-          <h1 className="pt-50 text-center text-white text-[2rem]">Welcome back</h1>
-          <p className="text-gray-400 text-[1rem]">Don't have an account? Sign Up</p>
+
+          <div>
+            <h1 className="pt-50 text-center text-white text-[2rem]">Welcome back</h1>
+            <p className="text-gray-400 text-center text-[1rem]">Don't have an account? Sign Up</p>
+          </div>
+
+
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col justify-center pt-10 gap-2"
@@ -56,7 +61,7 @@ function LoginForm() {
                 maxLength: 150,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
-              className="border block bg-input-blue"
+              className="border block w-90 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
               placeholder="example@email.com"
             />
             {errors.email && (
@@ -73,7 +78,7 @@ function LoginForm() {
                 minLength: 3,
                 maxLength: 100,
               })}
-              className="border block bg-input-blue"
+              className="border block h-11 rounded-[10px] border-gray-800 bg-input-blue  text-gray-500"
             />
             {errors.password && (
               <span>
@@ -81,7 +86,7 @@ function LoginForm() {
                 long
               </span>
             )}
-            <input type="submit" className="border" value="Login" />
+            <input type="submit" className="border border-none bg-button-blue text-white" value="Login" />
             {error && <p>{error}</p>}
           </form>
         </section>
