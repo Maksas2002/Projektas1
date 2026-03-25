@@ -28,12 +28,12 @@ function LoginForm() {
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
                 <form onSubmit={handleSubmit(onSubmit)} className="text-xl text-white p-2">
                     <h3 className="m-2 text-4xl font-bold">Welcome back</h3>
-                    <div className="p-2">
+                    <div className="p-2 text-sm">
                         <p>
                             I dont have account <Link to="/signup" className="text-blue-400 hover:text-blue-500">Sign up</Link>
                         </p>
                     </div>
-                    <div className="p-2 text-start">
+                    <div className="p-2 text-start text-sm">
                         <label>Email: </label>
                         <input
                         id="email"
@@ -49,7 +49,7 @@ function LoginForm() {
                         )}
                     </div>
 
-                    <div className="p-2 text-start">
+                    <div className="p-2 text-start text-sm">
                         <label>Password:</label>
                         <input
                         id="password"
@@ -64,9 +64,9 @@ function LoginForm() {
                             <p className="text-red-500 text-sm">{errors.password.message}</p>
                         )}
                     </div>
-                    <button className="w-full p-3 bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Login</button>
+                    <button className="w-full p-2 bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Login</button>
                                     
-                    <div className="text-red-800">{error}</div>
+                    <div className="text-red-800 text-sm">{error}</div>
                 </form>
             </div>
         </>

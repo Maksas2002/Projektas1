@@ -39,8 +39,13 @@ function SignupForm(){
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
                 
                 <form onSubmit={handleSubmit(onSubmit)} className="text-xl text-white p-2">
-                    <h3 className="m-2 text-2xl font-bold">Sign up</h3>
-                    <div className="p-2 text-start">
+                    <h3 className="m-2 text-4xl font-bold">Create Account</h3>
+                    <div className="p-2 text-sm">
+                        <p>
+                            Already have an account? <Link to="/login" className="text-indigo-800 hover:text-indigo-900">Sign in</Link>
+                        </p>
+                    </div>
+                    <div className="p-2 text-start text-sm">
                         <label>Name:</label>
                         <input
                         id="name"
@@ -56,7 +61,7 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <div className="p-2 text-start">
+                    <div className="p-2 text-start text-sm">
                         <label>Email:</label>
                         <input
                         id="email"
@@ -72,7 +77,7 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <div className="p-2 text-start">
+                    <div className="p-2 text-start text-sm">
                         <label>Password:</label>
                         <input
                         id="password"
@@ -88,13 +93,8 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <button className="p-3 w-full bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Create account</button>
-                    <div className="p-2">
-                        <p>
-                            I already have my account. <Link to="/login" className="text-indigo-800 hover:text-indigo-900">Log in</Link>
-                        </p>
-                    </div>
-                    <div className="text-red-800">{error}</div>
+                    <button className="p-2 w-full bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Create account</button>
+                    <div className="text-red-800 text-sm">{error}</div>
                 </form>
             </div>
         </>
