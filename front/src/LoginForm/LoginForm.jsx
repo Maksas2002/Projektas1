@@ -56,7 +56,7 @@ function LoginForm() {
                 maxLength: 150,
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
               })}
-              className="border block bg-"
+              className="border block bg-input-blue"
               placeholder="example@email.com"
             />
             {errors.email && (
@@ -73,7 +73,7 @@ function LoginForm() {
                 minLength: 3,
                 maxLength: 100,
               })}
-              className="border block"
+              className="border block bg-input-blue"
             />
             {errors.password && (
               <span>

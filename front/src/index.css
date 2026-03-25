@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-    --color-bg-blue: oklch(0.1796 0.0399 270.83);
-    --color-input-blue: oklch(0.2708 0.0605 271.29);
+    --color-bg-blue: oklch(0.1643 0.0443 272.29);
+    --color-input-blue: oklch(0.1469 0.0337 281.74);
 }
