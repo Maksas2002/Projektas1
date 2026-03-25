@@ -1,1 +1,8 @@
 @import "tailwindcss";
+
+body{
+    background-color: #05052f;
+}
+button, a, input{
+    @apply rounded-xl
+}

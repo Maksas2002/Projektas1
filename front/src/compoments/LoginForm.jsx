@@ -26,15 +26,20 @@ function LoginForm() {
     return(
         <>
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
-                <form onSubmit={handleSubmit(onSubmit)} className="text-xl p-2">
-                    <h3 className="m-2 text-2xl font-bold">Login</h3>
+                <form onSubmit={handleSubmit(onSubmit)} className="text-xl text-white p-2">
+                    <h3 className="m-2 text-4xl font-bold">Welcome back</h3>
                     <div className="p-2">
+                        <p>
+                            I dont have account <Link to="/signup" className="text-blue-400 hover:text-blue-500">Sign up</Link>
+                        </p>
+                    </div>
+                    <div className="p-2 text-start">
                         <label>Email: </label>
                         <input
                         id="email"
                         name="email"
                         type="email"
-                        className="m-2 p-2 w-full"
+                        className="my-3 p-3 w-full bg-gray-700"
                         {...register("email")}
                         placeholder="name@example.com"
                         required
@@ -44,13 +49,14 @@ function LoginForm() {
                         )}
                     </div>
 
-                    <div className="p-2">
+                    <div className="p-2 text-start">
                         <label>Password:</label>
                         <input
                         id="password"
                         name="password"
                         type="password"
-                        className="m-2 p-2 w-full"
+                        placeholder="••••••••"
+                        className="my-3 p-3 w-full bg-gray-700"
                         {...register("password")}
                         required
                         />
@@ -58,13 +64,8 @@ function LoginForm() {
                             <p className="text-red-500 text-sm">{errors.password.message}</p>
                         )}
                     </div>
-
-                    <button className="p-3 bg-blue-400 hover:bg-blue-500" type="submit">Login</button>
-                    <div className="p-2">
-                        <p>
-                            I dont have account <Link to="/signup" className="text-indigo-800 hover:text-indigo-900">Sign up</Link>
-                        </p>
-                    </div>                
+                    <button className="w-full p-3 bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Login</button>
+                                    
                     <div className="text-red-800">{error}</div>
                 </form>
             </div>

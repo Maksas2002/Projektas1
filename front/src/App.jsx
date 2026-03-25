@@ -9,7 +9,7 @@ function App() {
 
   return (
     <>
-      <div className="flex justify-between m-3">
+      <div className="flex justify-between m-3 text-white">
         <Header/>
       </div>
       <div>

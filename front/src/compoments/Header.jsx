@@ -12,17 +12,17 @@ function Header() {
 
                 <Link to="/">Home</Link>
 
-                <Link to="login" className="p-3 bg-blue-400 hover:bg-blue-500">Sign in</Link>
+                <Link to="login" className="py-3 px-4 bg-blue-400 hover:bg-blue-500 font-bold">Sign in</Link>
             </>}
         
             {user && <>
                 <div>
-                    <h3 >My Dashboard</h3>
-                    Personal Finance Overview
+                    <h3 className="text-2xl">My Dashboard</h3>
+                    <p className="text-blue-400">Personal Finance Overview</p>
                 </div>
-                <div>
-                    <button className="bg-blue-400 hover:bg-blue-500 border p-3">Log out</button>
-                    <button className="py-3 px-5 text-sm ">Delete your Account</button>
+                <div className="flex justify-center items-center">
+                    <button className="bg-blue-400 hover:bg-blue-500 mx-3 p-3 font-bold">Log out</button>
+                    <button className="bg-red-400  hover:bg-red-500 mx-3 py-3 px-5 text-sm  font-bold">Delete your Account</button>
                 </div>
             </>}
         </>

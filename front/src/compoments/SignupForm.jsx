@@ -38,15 +38,16 @@ function SignupForm(){
         <>
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
                 
-                <form onSubmit={handleSubmit(onSubmit)} className="text-xl p-2">
+                <form onSubmit={handleSubmit(onSubmit)} className="text-xl text-white p-2">
                     <h3 className="m-2 text-2xl font-bold">Sign up</h3>
-                    <div className="p-2">
+                    <div className="p-2 text-start">
                         <label>Name:</label>
                         <input
                         id="name"
                         name="name"
                         type="text"
-                        className="p-2 m-2"
+                        placeholder="John Doe"
+                        className="p-3 my-3 w-full bg-gray-700"
                         {...register("name")}
                         required
                         />
@@ -55,15 +56,15 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <div className="p-2">
+                    <div className="p-2 text-start">
                         <label>Email:</label>
                         <input
                         id="email"
                         name="email"
                         type="email"
-                        className="p-2 m-2"
+                        className="p-3 my-3 w-full bg-gray-700"
                         {...register("email")}
-                        placeholder="name@example.com"
+                        placeholder="john@example.com"
                         required
                         />
                         {errors.email && (
@@ -71,13 +72,14 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <div className="p-2">
+                    <div className="p-2 text-start">
                         <label>Password:</label>
                         <input
                         id="password"
                         name="password"
                         type="password"
-                        className="p-2 m-2"
+                        placeholder="••••••••"
+                        className="p-3 my-3 w-full bg-gray-700"
                         {...register("password")}
                         required
                         />
@@ -86,7 +88,7 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <button className="p-3 w-full bg-blue-400 hover:bg-blue-500" type="submit">Create account</button>
+                    <button className="p-3 w-full bg-blue-400 hover:bg-blue-500 font-bold" type="submit">Create account</button>
                     <div className="p-2">
                         <p>
                             I already have my account. <Link to="/login" className="text-indigo-800 hover:text-indigo-900">Log in</Link>
