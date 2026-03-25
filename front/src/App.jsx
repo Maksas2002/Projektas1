@@ -1,19 +1,16 @@
-import { Link, Routes, Route} from "react-router";
+import {Routes, Route} from "react-router";
 import Home from "./compoments/Home";
 import LoginForm from "./compoments/LoginForm";
 import SignupForm from "./compoments/SignupForm";
 import Dashboard from "./compoments/Dashboard";
+import Header from "./compoments/Header";
 
 function App() {
 
   return (
     <>
       <div className="flex justify-between m-3">
-        <h3 className="text-xl text-blue-500">BudgetNest</h3>
-
-        <Link to="/">Home</Link>
-
-        <Link to="login" className="border p-3">Sign in</Link>
+        <Header/>
       </div>
       <div>
         <Routes>

@@ -26,7 +26,7 @@ function LoginForm() {
     return(
         <>
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
-                <form onSubmit={handleSubmit(onSubmit)} className="border text-xl p-2">
+                <form onSubmit={handleSubmit(onSubmit)} className="text-xl p-2">
                     <h3 className="m-2 text-2xl font-bold">Login</h3>
                     <div className="p-2">
                         <label>Email: </label>
@@ -34,7 +34,7 @@ function LoginForm() {
                         id="email"
                         name="email"
                         type="email"
-                        className="m-2 p-2"
+                        className="m-2 p-2 w-full"
                         {...register("email")}
                         placeholder="name@example.com"
                         required
@@ -50,7 +50,7 @@ function LoginForm() {
                         id="password"
                         name="password"
                         type="password"
-                        className="m-2 p-2"
+                        className="m-2 p-2 w-full"
                         {...register("password")}
                         required
                         />
@@ -59,7 +59,7 @@ function LoginForm() {
                         )}
                     </div>
 
-                    <button className="p-3" type="submit">Login</button>
+                    <button className="p-3 bg-blue-400 hover:bg-blue-500" type="submit">Login</button>
                     <div className="p-2">
                         <p>
                             I dont have account <Link to="/signup" className="text-indigo-800 hover:text-indigo-900">Sign up</Link>

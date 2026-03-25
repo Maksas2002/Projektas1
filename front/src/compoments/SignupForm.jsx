@@ -38,7 +38,7 @@ function SignupForm(){
         <>
             <div className="min-h-screen flex flex-col justify-center text-center items-center">
                 
-                <form onSubmit={handleSubmit(onSubmit)} className="border text-xl p-2">
+                <form onSubmit={handleSubmit(onSubmit)} className="text-xl p-2">
                     <h3 className="m-2 text-2xl font-bold">Sign up</h3>
                     <div className="p-2">
                         <label>Name:</label>
@@ -86,7 +86,7 @@ function SignupForm(){
                         )}
                     </div>
 
-                    <button className="p-3" type="submit">Create account</button>
+                    <button className="p-3 w-full bg-blue-400 hover:bg-blue-500" type="submit">Create account</button>
                     <div className="p-2">
                         <p>
                             I already have my account. <Link to="/login" className="text-indigo-800 hover:text-indigo-900">Log in</Link>
