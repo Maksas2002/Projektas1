@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, getUserByIdM } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, getUserByIdM, updateUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 
@@ -95,30 +95,35 @@ export const logoutC = (req, res) => {
   });
 };
 
-//autorizacijos middleware, routes apsaugai nuo neregistruotų vartotojų
-export const protect = async (req, res, next) => {
+// EDIT
+
+export const updateUserC = async (req, res, next) => {
   try {
-    let token = req.cookies?.jwt;
+    const { name, email, password } = req.body;
 
-    if (!token) {
-      throw new AppError("You are not logged in! Please log in to get access", 401);
+    if (!name && !email && !password) {
+      throw new AppError("Provide at least one field to update", 400);
     }
 
-    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
-   
-    const currentUser = await getUserByIdM(decodedUser.id);
-    
-
-    if (!currentUser) {
-      throw new AppError(
-        "The user belonging to this token does not longer exist",
-        401,
-      );
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("Not authenticated", 401);
     }
 
-    req.user = currentUser;
+    const updates = {};
 
-    next();
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+    if (password) updates.password = await argon2.hash(password);
+
+    const updatedUser = await updateUserM(userId, updates);
+
+    updatedUser.password = undefined;
+
+    res.status(200).json({
+      status: "success",
+      data: updatedUser,
+    });
   } catch (err) {
     next(err);
   }
