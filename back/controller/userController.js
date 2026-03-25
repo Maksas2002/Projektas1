@@ -87,6 +87,14 @@ export const loginC = async (req, res, next) => {
   }
 };
 
+//logout user
+export const logoutC = (req, res) => {
+  return res.clearCookie("jwt").status(200).json({
+    status: "success",
+    message: "Your are now logged out",
+  });
+};
+
 //autorizacijos middleware, routes apsaugai nuo neregistruotų vartotojų
 export const protect = async (req, res, next) => {
   try {
