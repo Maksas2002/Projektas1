@@ -6,7 +6,7 @@ import { authProtect } from "../middleware/authProtect.js";
 
 const userRoutes = express.Router();
 
-userRoutes.route("/logout").get(logoutC);
+userRoutes.route("/logout").get(authProtect, logoutC);
 userRoutes.post("/signup", signup);
 userRoutes.route("/login").post(userLogin, validate, loginC);
 userRoutes.patch("/edit", authProtect, updateUserC);
