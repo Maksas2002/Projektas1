@@ -8,7 +8,7 @@ const userRoutes = express.Router();
 
 userRoutes.route("/logout").get(logoutC);
 userRoutes.post("/signup", signup);
-userRoutes.route("/login").get(userLogin, validate, loginC);
+userRoutes.route("/login").post(userLogin, validate, loginC);
 userRoutes.patch("/edit", authProtect, updateUserC);
 
 export default userRoutes;
