@@ -11,6 +11,7 @@ function Header() {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
 
+    //deletes your account
     const DeleteYourAccount = async () => {
         try {
             await axios.delete(`${API_URL}/users/me`, { withCredentials: true });

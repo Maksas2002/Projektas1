@@ -17,6 +17,7 @@ function SignupForm(){
         reset
     } = useForm({defaultValues:{name:"", email:"", password:""}});
 
+    //sign up
     const onSubmit = async (formValues) => {
         try {
             await axios.post(`${API_URL}/users/signup`, {

@@ -13,6 +13,7 @@ function LoginForm() {
     const {register, handleSubmit, formState:{errors}} = useForm();
     const navigate = useNavigate();
 
+    //log in
     const onSubmit = async (formdata) =>{
         try {
             const response = await axios.post(`${API_URL}/users/login`, formdata, {withCredentials:true});
