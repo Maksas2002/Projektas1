@@ -20,7 +20,7 @@ function DashHeader() {
                     <p>Personal Finance Overview</p>
                 </div>
                 <div><button onClick={() => toShow()} type="button">Exit</button></div>
-                {show ? <UserLogout add notToShow={() => notToShow}/> : null}
+                {show ? <UserLogout notToShow={() => notToShow}/> : null}
             </header>
         </>
     );
