@@ -5,7 +5,15 @@ info:
 
 http:
   method: POST
-  url: http://localhost:5000/users/signup
+  url: http://localhost:3000/api/v1/user/signup
+  body:
+    type: json
+    data: |
+      {
+        "name": "ug",
+        "email": "y5",
+        "password": "y1"
+      }
   auth: inherit
 
 settings:
