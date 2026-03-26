@@ -1,16 +1,16 @@
-import { Routes, Route } from "react-router";
+import { Routes, Route } from "react-router"; // Ištrink BrowserRouter iš čia
 import LoginForm from "./LoginForm/LoginForm";
+import AdminPage from "./pages/AdminPage";
 
 function App() {
-  
-
   return (
-   <>
-   <Routes>
-    <Route path="/login" element={<LoginForm/>}/>
-   </Routes>
-   </>
-  )
+      <Routes>
+        <Route path="/" element={<LoginForm />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="*" element={<div>404 - Not Found</div>} />
+      </Routes>
+  );
 }
 
-export default App
+export default App;
