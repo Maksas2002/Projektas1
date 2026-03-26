@@ -1,4 +1,4 @@
-import { UserContext } from "./utlis/UserContext";
+import { UserContext } from "./UserContext";
 import { useContext } from "react";
 import { Navigate } from "react-router";
 

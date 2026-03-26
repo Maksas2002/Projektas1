@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router";
 import LoginForm from "./LoginForm/LoginForm";
-import ProtectedRoute from "./ProtectedRoute";
-import DashBoard from "./DashBoard";
+import ProtectedRoute from "./utlis/ProtectedRoute";
+import DashBoard from "./DashBoard"
 
 function App() {
   
