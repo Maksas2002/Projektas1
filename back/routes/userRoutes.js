@@ -15,5 +15,7 @@ userRoutes.get("/", protect, getAllUsers);
 userRoutes.get("/logout", protect, logoutC);
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", userLogin, validate, loginC);
+usersRouter.route("/me").delete(protect, deleteMe);
+
 
 export default userRoutes;

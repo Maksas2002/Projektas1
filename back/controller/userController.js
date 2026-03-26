@@ -114,3 +114,23 @@ export const getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
+
+//delete account
+export const deleteMe = async (req, res, next) => {
+    try {
+      const deletedUser = await deleteUserById(req.user.id);
+
+      if (!deletedUser) {
+        throw new AppError("User not found", 404);
+      }
+
+      res.clearCookie("jwt");
+
+      res.status(200).json({
+        status: "success",
+        data: "Successfully deleted account",
+      });
+    } catch (error) {
+      next(error);
+    }
+};
