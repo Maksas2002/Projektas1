@@ -1,13 +1,16 @@
 import express from "express";
-import { loginC, signup } from "../controller/userController.js";
-import userLogin from "../validation/userLoginV.js"
-import validate from "../validation/validate.js";
-import userSignUp from "../validation/userSignup.js";
+import { loginC, signup, getAllUsers, updateUserC } from "../controller/userController.js";
+import userLogin from "../validation/userLoginV.js";
 
 const userRoutes = express.Router();
 
-userRoutes.route("/signup").post(userSignUp, validate, signup);
+userRoutes.get("/", getAllUsers); 
+userRoutes.route("/logout").get(authProtect, logoutC);
+userRoutes.post("/signup", signup);
+userRoutes.route("/login").post(userLogin, validate, loginC);
+userRoutes.patch("/edit", authProtect, updateUserC);
 
+userRoutes.post("/signup", signup);
 userRoutes.route("/login").post(userLogin, validate, loginC);
 
 export default userRoutes;
