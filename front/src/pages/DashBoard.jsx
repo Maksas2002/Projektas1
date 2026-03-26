@@ -1,4 +1,4 @@
-import DashHeader from "./Header/DashHeader/DashHeader"
+import DashHeader from "../Header/DashHeader/DashHeader"
 
 function DashBoard(){
 return(
