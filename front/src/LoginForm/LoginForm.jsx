@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useContext } from "react";
@@ -7,6 +8,7 @@ import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
 function LoginForm() {
+  let navigate = useNavigate();
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
 
@@ -31,7 +33,7 @@ function LoginForm() {
       setUser(response);
       localStorage.setItem("user", JSON.stringify(response));
       reset();
-      //   navigate(`/user/${response.data.data.userId}/apointments`);
+      navigate(`/user/dashboard`);
     } catch (error) {
       setError(errorHandler(error));
     }
@@ -53,18 +55,18 @@ function LoginForm() {
             className="flex flex-col justify-center pt-10 gap-2"
           >
             <div>
-            <label className="text-white">Email</label>
-            <input
-              type="text"
-              {...register("email", {
-                required: true,
-                minLength: 3,
-                maxLength: 150,
-                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              })}
-              className="border block pl-2 w-130 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
-              placeholder="example@email.com"
-            />
+              <label className="text-white">Email</label>
+              <input
+                type="text"
+                {...register("email", {
+                  required: true,
+                  minLength: 3,
+                  maxLength: 150,
+                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                })}
+                className="border block pl-2 w-130 h-11 rounded-[10px] border-gray-800 bg-input-blue text-gray-500"
+                placeholder="example@email.com"
+              />
             </div>
 
             {errors.email && (
