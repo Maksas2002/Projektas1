@@ -24,12 +24,11 @@ const AdminUserCreate = ({ onUserCreated }) => {
       const userObj = JSON.parse(savedUser);
       token = userObj?.token || userObj?.accessToken;
     } catch (err) {
-      token = savedUser; // Jei localStorage ne JSON, imam kaip paprastą stringą
+      token = savedUser;
     }
 
     try {
       // 2. SIUNČIAME UŽKLAUSĄ
-      // Patikrink ar tavo API tikrai priima /signup (arba galbūt /register)
       const response = await axios.post('http://localhost:3000/api/v1/user/signup', formData, {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -40,7 +39,6 @@ const AdminUserCreate = ({ onUserCreated }) => {
       if (response.status === 201 || response.status === 200) {
         // Išvalome formą
         setFormData({ name: '', email: '', password: '', role: 'User' });
-        // Pranešame tėviniam komponentui (AdminPage), kad reikia atnaujinti sąrašą
         if (onUserCreated) onUserCreated(); 
         alert("Vartotojas sėkmingai sukurtas!");
       }
@@ -49,7 +47,6 @@ const AdminUserCreate = ({ onUserCreated }) => {
       // 3. DETALUS KLAIDŲ APDOROJIMAS
       console.error("Registracijos klaida:", err.response);
       
-      // Jei serveris grąžina 409, tai reiškia "User already exists"
       if (err.response?.status === 409) {
         setError("Šis el. pašto adresas jau užimtas.");
       } else {

@@ -18,7 +18,7 @@ const AdminPage = () => {
     let token = null;
     try {
       const userObj = JSON.parse(savedUser);
-      // Paimame tokeną, kurį dabar sėkmingai įrašome LoginFormoje
+      // Paimame tokeną
       token = userObj.token;
     } catch (e) {
       token = savedUser;
@@ -31,7 +31,6 @@ const AdminPage = () => {
     }
 
     try {
-      // PAKEITIMAS: Jei /user meta 404, pabandyk pakeisti į /users
       const res = await fetch('http://localhost:3000/api/v1/user', {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -42,7 +41,7 @@ const AdminPage = () => {
       const data = await res.json();
       
       if (res.ok) {
-        // Ištraukiame sąrašą priklausomai nuo to, kaip grąžina tavo Backend
+        // Ištraukiame sąrašą
         const usersList = Array.isArray(data) ? data : (data.data?.users || data.data || data.users || []);
         setUsers(usersList);
         setError(null);
@@ -69,7 +68,6 @@ const AdminPage = () => {
     }
 
     try {
-      // PAKEITIMAS: Užtikriname, kad trinant naudojamas tas pats kelias /user/${id}
       const res = await fetch(`http://localhost:3000/api/v1/user/${id}`, {
         method: 'DELETE',
         headers: { 

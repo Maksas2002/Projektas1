@@ -1,6 +1,5 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-// PRIDĖTAS getAllUsersM importas
 import { getUserByEmailM, createUserM, getUserByIdM, getAllUsersM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 

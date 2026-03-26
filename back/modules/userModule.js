@@ -22,7 +22,7 @@ export const getUserByEmailM = async (email) => {
   return users[0];
 };
 
-// NAUJA: Gauti visus vartotojus lentelės atvaizdavimui
+//Gauti visus vartotojus lentelės atvaizdavimui
 export const getAllUsersM = async () => {
   const users = await sql`
     SELECT id, name, email, role FROM users ORDER BY id DESC
