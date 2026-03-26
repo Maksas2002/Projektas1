@@ -5,8 +5,12 @@ import SignupForm from "./compoments/SignupForm";
 import Dashboard from "./compoments/Dashboard";
 import Header from "./compoments/Header";
 import ProtectedRoute from "./compoments/ProtectedRoute.jsx";
+import { useContext } from "react";
+import { UserContext } from "./contexts/UserContext.jsx";
+import Footer from "./compoments/Footer.jsx";
 
 function App() {
+  const { user } = useContext(UserContext);
 
   return (
     <>
@@ -21,6 +25,10 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
         </Routes>
       </div>
+
+      {!user&& <div>
+          <Footer/>
+      </div>}
     </>
   )
 }
