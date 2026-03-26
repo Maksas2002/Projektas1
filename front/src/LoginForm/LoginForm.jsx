@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useState, useContext } from "react";
 import { UserContext } from "../utlis/UserContext";
@@ -6,6 +7,7 @@ import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
 function LoginForm() {
+  let navigate = useNavigate();
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
 
@@ -31,6 +33,7 @@ function LoginForm() {
       setUser(response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       reset();
+      navigate(`/user/dashboard`);
     } catch (error) {
       setError(errorHandler(error));
     }
