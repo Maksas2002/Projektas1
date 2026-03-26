@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, updateUserM } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, getUserByIdM, updateUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 
@@ -73,9 +73,7 @@ export const loginC = async (req, res, next) => {
     if (!passwordCorrect)
       throw new AppError("Invalid user email or password", 401);
 
-    // const token = signToken(user.userId);
     const token = signToken(user.id);
-
     sendTokenCookie(token, res);
 
     user.password = undefined;
@@ -87,6 +85,14 @@ export const loginC = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+//logout user
+export const logoutC = (req, res) => {
+  return res.clearCookie("jwt").status(200).json({
+    status: "success",
+    message: "Your are now logged out",
+  });
 };
 
 // EDIT
