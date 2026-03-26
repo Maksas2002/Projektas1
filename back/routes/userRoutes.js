@@ -2,6 +2,7 @@ import express from "express";
 import { loginC, signup, getAllUsers } from "../controller/userController.js";
 import userLogin from "../validation/userLoginV.js";
 import validate from "../validation/validate.js";
+import { authProtect } from "../middleware/authProtect.js";
 
 const userRoutes = express.Router();
 
