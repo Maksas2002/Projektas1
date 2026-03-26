@@ -77,7 +77,7 @@ export const logoutC = (req, res) => {
   });
 };
 
-// EDIT
+// EDIT User
 
 
 export const protect = async (req, res, next) => {

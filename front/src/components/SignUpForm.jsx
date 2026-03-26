@@ -1,13 +1,13 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-import { useState, useContext } from "react";
-import { UserContext } from "../utlis/UserContext";
-import errorHandler from "../utils/errorHandler";
+import { useState } from "react";
 import axios from "axios";
+import errorHandler from "../utils/errorHandler";
 
-function LoginForm() {
+function SignUpForm() {
   const [error, setError] = useState(null);
-  const { setUser } = useContext(UserContext);
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -19,18 +19,23 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       setError(null);
+      setSuccess(null);
 
       const response = await axios.post(
-        "http://localhost:3000/api/v1/user/login",
+        "http://localhost:3000/api/v1/user/signup",
         data,
         {
           withCredentials: true,
         }
       );
 
-      setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      console.log(response.data);
+      setSuccess("Account created successfully");
       reset();
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     } catch (error) {
       setError(errorHandler(error));
     }
@@ -63,12 +68,12 @@ function LoginForm() {
         <section className="w-full max-w-md">
           <div>
             <h1 className="text-center text-[2.5rem] font-semibold text-white">
-              Welcome back
+              Create Account
             </h1>
             <p className="mt-2 text-center text-[1rem] text-gray-400">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-blue-400">
-                Sign Up
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-400">
+                Sign In
               </Link>
             </p>
           </div>
@@ -78,13 +83,32 @@ function LoginForm() {
             className="flex flex-col justify-center gap-4 pt-10"
           >
             <div>
+              <label className="mb-2 block text-white">Full Name</label>
+              <input
+                type="text"
+                placeholder="John Doe"
+                {...register("name", {
+                  required: true,
+                  minLength: 2,
+                  maxLength: 100,
+                })}
+                className="block h-12 w-full rounded-[10px] border border-white/10 bg-[#1f2747] px-3 text-gray-300 outline-none placeholder:text-gray-500"
+              />
+              {errors.name && (
+                <span className="mt-2 block text-sm text-red-500">
+                  Name is required and must be from 2 to 100 characters long
+                </span>
+              )}
+            </div>
+
+            <div>
               <label className="mb-2 block text-white">Email</label>
               <input
                 type="text"
-                placeholder="tim@budgetnest.com"
+                placeholder="john@example.com"
                 {...register("email", {
                   required: true,
-                  minLength: 3,
+                  minLength: 5,
                   maxLength: 150,
                   pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 })}
@@ -92,7 +116,7 @@ function LoginForm() {
               />
               {errors.email && (
                 <span className="mt-2 block text-sm text-red-500">
-                  Must contain a valid email and be from 3 to 150 characters long
+                  Email is required and must be valid
                 </span>
               )}
             </div>
@@ -111,18 +135,19 @@ function LoginForm() {
               />
               {errors.password && (
                 <span className="mt-2 block text-sm text-red-500">
-                  Must contain your password and be from 3 to 100 characters long
+                  Password is required and must be from 3 to 100 characters long
                 </span>
               )}
             </div>
 
             <input
               type="submit"
+              value="Create Account"
               className="mt-2 cursor-pointer rounded-[10px] bg-blue-500 p-3 text-white transition hover:bg-blue-400"
-              value="Sign In"
             />
 
             {error && <p className="text-center text-red-500">{error}</p>}
+            {success && <p className="text-center text-green-500">{success}</p>}
           </form>
         </section>
       </main>
@@ -176,4 +201,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default SignUpForm;
