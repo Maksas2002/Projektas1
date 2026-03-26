@@ -95,7 +95,7 @@ export const logoutC = (req, res) => {
   });
 };
 
-// EDIT
+// EDIT User
 
 export const updateUserC = async (req, res, next) => {
   try {
