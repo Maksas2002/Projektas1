@@ -29,3 +29,29 @@ export const getAllUsersM = async () => {
   `;
   return users;
 };
+
+// Edit user data
+export const updateUserM = async (id, updates) => {
+  const allowedFields = ["name", "email", "password"];
+
+  const entries = Object.entries(updates).filter(([key]) =>
+    allowedFields.includes(key)
+  );
+
+  if (entries.length === 0) return null;
+
+  let query = sql`UPDATE users SET `;
+
+  entries.forEach(([key, value], index) => {
+    query = sql`${query} ${sql(key)} = ${value}`;
+
+    if (index < entries.length - 1) {
+      query = sql`${query}, `;
+    }
+  });
+
+  query = sql`${query} WHERE id = ${id}
+              RETURNING id, name, email`;
+  const [user] = await query;
+  return user;
+};

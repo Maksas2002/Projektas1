@@ -1,6 +1,6 @@
 import axios from "axios";
-import errorHandler from "../../utils/errorHandler";
-import { UserContext } from "../../utlis/UserContext";
+import errorHandler from "../../..//utils/errorHandler"
+import { UserContext } from "../../../utlis/UserContext";
 import { useNavigate } from "react-router";
 import { useState, useContext } from "react";
 

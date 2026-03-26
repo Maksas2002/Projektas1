@@ -14,7 +14,7 @@ function DashHeader() {
 
     return (
         <>
-            <header className="flex justify-around pt-5">
+            <header className="flex justify-around pt-5 border-b border-white/10">
                 <div>
                     <h2>My Dashboard</h2>
                     <p>Personal Finance Overview</p>
