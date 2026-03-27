@@ -24,11 +24,11 @@ function DashHeader() {
                 </div>
                 <div className="flex">
 
-                    <button onClick={() => toShow()} className="flex flex-row-reverse items-center gap-2 text-sm font-medium cursor-pointer bg-blue-500 hover:bg-blue-400 px-5 py-2 rounded-[10px]" type="button"><span className="text-[1rem] font-medium">Exit</span>
+                    <button onClick={() => toShow()} className="flex flex-row-reverse items-center gap-2 text-sm font-medium cursor-pointer bg-blue-400 hover:bg-blue-500 px-5 py-2 rounded-[10px]" type="button"><span className="text-sm font-bold">Exit</span>
                         <img src={exit} alt="exit" className="w-4 h-4 " />
                     </button>
 
-                    <button onClick={() => setShowDelete(true)} className="bg-red-400 text-white hover:bg-red-500 mx-3 py-3 px-5 text-sm rounded-xl font-bold">Delete your Account</button>
+                    <button onClick={() => setShowDelete(true)} className="bg-red-400 text-white hover:bg-red-500 cursor-pointer mx-3 py-3 px-5 text-sm rounded-xl font-bold">Delete your Account</button>
                 </div>
                 {show ? <UserLogout notToShow={() => notToShow} /> : null}
                 {showDelete && (<DeleteAccount setShowDelete={setShowDelete} />)}
