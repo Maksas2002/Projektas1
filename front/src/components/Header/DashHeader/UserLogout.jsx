@@ -8,7 +8,7 @@ import { useState, useContext } from "react";
 
 function UserLogout({ notToShow }) {
     let navigate = useNavigate();
-    const { setUser, user } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     const [error, setError] = useState(null);
 
     const logoutU = async () => {
@@ -31,17 +31,18 @@ function UserLogout({ notToShow }) {
                 <h2 className="text-white text-center pb-5 text-[1.2rem]" >Do you want to log out?</h2>
                 <div className="flex gap-31">
                     <div>
-                        <button onClick={logoutU} className="text-white border border-red-600 rounded-[10px] p-2">
+                        <button onClick={logoutU} className="text-white border hover:bg-red-500 border-red-600 rounded-[10px] p-2">
                             <span className="text-red-600">Yes</span>
                         </button>
                     </div>
 
                     <div>
-                        <button onClick={notToShow()} className="text-white border border-green-600 rounded-[10px] p-2">
+                        <button onClick={notToShow()} className="text-white border  hover:bg-green-500 border-green-600 rounded-[10px] p-2">
                             <span className="text-green-600">No</span>
                         </button>
                     </div>
                 </div>
+                <p className="text-center text-red-600">{error}</p>
             </section>
         </>
     );
