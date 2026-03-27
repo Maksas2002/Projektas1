@@ -5,7 +5,8 @@ import {
   getAllUsers, 
   protect, 
   logoutC,
-  updateUserC
+  updateUserC,
+  deleteMe
 } from "../controller/userController.js";
 import userLogin from "../validation/userLoginV.js";
 import validate from "../validation/validate.js";
@@ -18,5 +19,7 @@ userRoutes.get("/logout", protect, logoutC);
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", userLogin, validate, loginC);
 userRoutes.patch("/edit", authProtect, updateUserC);
+userRoutes.route("/me").delete(protect, deleteMe);
+
 
 export default userRoutes;

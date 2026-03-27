@@ -55,3 +55,18 @@ export const updateUserM = async (id, updates) => {
   const [user] = await query;
   return user;
 };
+
+//delete account
+export const deleteUserById = async (id) => {
+  const users = await sql`
+    delete from users
+    where id = ${id}
+    returning *
+  `;
+
+  if (users.length === 0) {
+    return null;
+  }
+
+  return users[0];
+}
