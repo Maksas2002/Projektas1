@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, getUserByIdM,  getAllUsersM, deleteUserById } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, updateUserM, getUserByIdM,  getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 const signToken = (id) => {
@@ -79,6 +79,37 @@ export const logoutC = (req, res) => {
 
 // EDIT User
 
+export const updateUserC = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name && !email && !password) {
+      throw new AppError("Provide at least one field to update", 400);
+    }
+
+    const userId = req.user?.id;
+    if (!userId) {
+      throw new AppError("Not authenticated", 401);
+    }
+
+    const updates = {};
+
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+    if (password) updates.password = await argon2.hash(password);
+
+    const updatedUser = await updateUserM(userId, updates);
+
+    updatedUser.password = undefined;
+
+    res.status(200).json({
+      status: "success",
+      data: updatedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const protect = async (req, res, next) => {
   try {
