@@ -27,18 +27,18 @@ function UserLogout({ notToShow }) {
 
     return (
         <>
-            <section className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black p-50">
-                <h2 className="text-white text-center pb-5">Do you want to log out?</h2>
-                <div className="flex gap-22">
+            <section className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#020b33] rounded-[10px] p-50">
+                <h2 className="text-white text-center pb-5 text-[1.2rem]" >Do you want to log out?</h2>
+                <div className="flex gap-31">
                     <div>
-                        <button onClick={logoutU} className="text-white border p-2">
-                            Yes
+                        <button onClick={logoutU} className="text-white border border-red-600 rounded-[10px] p-2">
+                            <span className="text-red-600">Yes</span>
                         </button>
                     </div>
 
                     <div>
-                        <button onClick={notToShow()} className="text-white border p-2">
-                            No
+                        <button onClick={notToShow()} className="text-white border border-green-600 rounded-[10px] p-2">
+                            <span className="text-green-600">No</span>
                         </button>
                     </div>
                 </div>
