@@ -14,12 +14,12 @@ function DashHeader() {
 
     return (
         <>
-            <header className="flex justify-around pt-5 border-b border-white/10">
+            <header className="bg-[#020b33] pb-2 pt-2 text-white flex justify-around items-center border-b-white/10">
                 <div>
-                    <h2>My Dashboard</h2>
-                    <p>Personal Finance Overview</p>
+                    <h2 className="text-2xl font-semibold text-blue-400 ">My Dashboard</h2>
+                    <p className="text-[1.2rem]">Personal Finance Overview</p>
                 </div>
-                <div><button onClick={() => toShow()} type="button">Exit</button></div>
+                <div><button className="text-sm font-medium cursor-pointer bg-blue-500 hover:bg-blue-400 px-5 py-2 rounded-[10px]" onClick={() => toShow()} type="button">Exit</button></div>
                 {show ? <UserLogout notToShow={() => notToShow}/> : null}
             </header>
         </>
