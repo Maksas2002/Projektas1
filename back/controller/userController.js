@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, getUserByIdM,  getAllUsersM } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, getUserByIdM,  getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 const signToken = (id) => {
@@ -113,4 +113,24 @@ export const getAllUsers = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+//delete account
+export const deleteMe = async (req, res, next) => {
+    try {
+      const deletedUser = await deleteUserById(req.user.id);
+
+      if (!deletedUser) {
+        throw new AppError("User not found", 404);
+      }
+
+      res.clearCookie("jwt");
+
+      res.status(200).json({
+        status: "success",
+        data: "Successfully deleted account",
+      });
+    } catch (error) {
+      next(error);
+    }
 };

@@ -3,7 +3,7 @@ import LoginForm from "./LoginForm/LoginForm";
 import AdminPage from "./pages/AdminPage";
 import SignUpForm from "./components/SignUpForm";
 import ProtectedRoute from "./utlis/ProtectedRoute";
-import DashBoard from "./DashBoard"
+import DashBoard from "./pages/DashBoard"
 
 function App() {
   return (
