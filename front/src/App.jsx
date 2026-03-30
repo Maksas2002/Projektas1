@@ -1,27 +1,33 @@
-import { Routes, Route } from "react-router"; // Ištrink BrowserRouter iš čia
+import { Routes, Route } from "react-router";
 import LoginForm from "./components/LoginForm";
 import AdminPage from "./pages/AdminPage";
 import SignUpForm from "./components/SignUpForm";
 import ProtectedRoute from "./utlis/ProtectedRoute";
-import DashBoard from "./pages/DashBoard"
+import DashBoard from "./pages/DashBoard";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
-      <Routes>
+    <Routes>
+      {/* 1. PAGRINDINIS PUSLAPIS */}
+      <Route path="/" element={<LandingPage />} />
 
-        <Route path="/" element={<LoginForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/signup" element={<SignUpForm />} />
-        <Route 
-    path="/adminpage" 
-    element={
-      <ProtectedRoute requiredRole="Admin">
-        <AdminPage />
-      </ProtectedRoute>
-    } 
-  />
-        <Route path="*" element={<div>404 - Not Found</div>} />
-       <Route
+      {/* 2. AUTENTIFIKACIJA */}
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/signup" element={<SignUpForm />} />
+
+      {/* 3. APSAUGOTAS ADMIN MARŠRUTAS */}
+      <Route 
+        path="/adminpage" 
+        element={
+          <ProtectedRoute requiredRole="Admin">
+            <AdminPage />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* 4. APSAUGOTAS VARTOTOJO MARŠRUTAS */}
+      <Route
         path="/user/dashboard"
         element={
           <ProtectedRoute>
@@ -29,7 +35,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-   </Routes>
+    </Routes>
   );
 }
 
