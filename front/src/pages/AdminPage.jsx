@@ -35,7 +35,7 @@ const AdminPage = () => {
   }
 
   try {
-    const res = await fetch('http://localhost:3000/api/v1/user', {
+    const res = await fetch('http://localhost:3000/api/v1/admin/users', {
       method: 'GET', // Pridedam metodą aiškumui
       headers: { 
         'Authorization': `Bearer ${token}`,
@@ -54,7 +54,7 @@ const AdminPage = () => {
         setError("Sesija pasibaigė. Prašome prisijungti iš naujo.");
         localStorage.removeItem('user');
       } else {
-        setError(data.message || "Nepavyko užkrauti vartotojų");
+       setError(data.message || data.error || "Nepavyko užkrauti vartotojų");
       }
     }
   } catch (err) {
@@ -77,19 +77,19 @@ const AdminPage = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/user/${id}`, {
-        method: 'DELETE',
-        headers: { 
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-      });
+      const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
+  method: 'DELETE',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+});
 
       if (res.ok) {
         setUsers(prev => prev.filter(user => (user.id || user._id || user.uuid) !== id));
       } else {
         const errorData = await res.json();
-        alert(`Ištrinti nepavyko: ${errorData.message || 'Serverio klaida'}`);
+       alert(`Ištrinti nepavyko: ${errorData.message || errorData.error || 'Serverio klaida'}`);
       }
     } catch (err) {
       alert("Klaida susisiekiant su serveriu");

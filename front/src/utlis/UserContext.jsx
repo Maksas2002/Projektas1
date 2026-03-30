@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "Admin";
 
   return (
     <UserContext.Provider value={{ user, setUser, login, logout, isAdmin, loading }}>
