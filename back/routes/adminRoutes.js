@@ -2,7 +2,7 @@ import express from 'express';
 import { sql } from '../dbConnection.js'; 
 import argon2 from 'argon2';
 import { authenticateToken } from '../middleware/auth.js';
-import { getAllUsers, deleteUser } from '../controller/adminController.js';
+import { getAllUsers, deleteUser, updateUser } from '../controller/adminController.js';
 
 const router = express.Router();
 
@@ -57,5 +57,14 @@ router.delete('/users/:id', authenticateToken, async (req, res, next) => {
     }
     next();
 }, deleteUser);
+
+
+// 4. Atnaujina vartotoją
+router.patch('/users/:id', authenticateToken, async (req, res, next) => {
+    if (req.user.role !== 'Admin') {
+        return res.status(403).json({ error: "Access denied. Admins only." });
+    }
+    next();
+}, updateUser);
 
 export default router;

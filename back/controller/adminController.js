@@ -44,3 +44,46 @@ export const deleteUser = async (req, res, next) => {
     next(err);
   }
 };
+
+// Atnaujinti vartotoją
+export const updateUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, email, role } = req.body;
+
+    // Required fields
+    if (!name || !email) {
+      return res.status(400).json({ error: "Name and email are required." });
+    }
+
+    const [existingUser] = await sql`
+      SELECT * FROM users WHERE id = ${id}
+    `;
+    if (!existingUser) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const [emailCheck] = await sql`
+      SELECT id FROM users WHERE email = ${email} AND id != ${id}
+    `;
+    if (emailCheck) {
+      return res.status(400).json({ error: "Email already exists." });
+    }
+
+    const [updatedUser] = await sql`
+      UPDATE users
+      SET name = ${name}, email = ${email}, role = ${role || existingUser.role}
+      WHERE id = ${id}
+      RETURNING id, name, email, role
+    `;
+
+    res.status(200).json({
+      message: "User updated successfully",
+      user: updatedUser
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
