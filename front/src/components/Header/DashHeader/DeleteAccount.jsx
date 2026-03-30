@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router";
-import errorHandler from "../../utils/errorHandler";
+import errorHandler from "../../../utils/errorHandler";
 import { useContext, useState } from "react";
-import { UserContext } from "../../utlis/UserContext";
+import { UserContext } from "../../../utlis/UserContext";
 
 function DeleteAccount({ setShowDelete }) {
     const navigate = useNavigate();
