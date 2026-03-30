@@ -36,6 +36,7 @@ const AdminUserCreate = ({ onUserCreated }) => {
         }
       });
       
+      
       if (response.status === 201 || response.status === 200) {
         // Išvalome formą
         setFormData({ name: '', email: '', password: '', role: 'User' });
