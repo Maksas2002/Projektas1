@@ -8,16 +8,34 @@ export const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Nepavyko nuskaityti vartotojo duomenų:", error);
+        localStorage.removeItem("user");
+      }
     }
-
     setLoading(false);
   }, []);
 
+  
+  const login = (userData) => {
+   
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+  // Funkcija atsijungimui
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
+  const isAdmin = user?.role === "admin";
+
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={{ user, setUser, login, logout, isAdmin, loading }}>
       {children}
     </UserContext.Provider>
   );

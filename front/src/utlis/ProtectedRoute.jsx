@@ -2,12 +2,22 @@ import { UserContext } from "./UserContext";
 import { useContext } from "react";
 import { Navigate } from "react-router";
 
-function ProtectedRoute({ children }) {
+// Pridedame 'requiredRole' parametrą
+function ProtectedRoute({ children, requiredRole }) {
   const { user, loading } = useContext(UserContext);
 
-  if (loading) return null; 
+  if (loading) return null;
 
-  return user ? children : <Navigate to="/login" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Jei viskas gerai, rodome turinį
+  return children;
 }
 
 export default ProtectedRoute;

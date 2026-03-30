@@ -1,11 +1,12 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router"; 
 import { useForm } from "react-hook-form";
 import { useState, useContext } from "react";
-import { UserContext } from "../utlis/UserContext";
+import { UserContext } from "../utlis/UserContext"; 
 import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
 
@@ -28,9 +29,22 @@ function LoginForm() {
         }
       );
 
-      setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      
+      const userData = response.data.data;
+
+      
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+      
       reset();
+
+      
+      if (userData.role === "Admin") {
+        navigate("/adminpage");
+      } else {
+        navigate("/user/dashboard");
+      }
+
     } catch (error) {
       setError(errorHandler(error));
     }
@@ -132,8 +146,7 @@ function LoginForm() {
           <div>
             <h3 className="text-2xl font-semibold">BudgetNest</h3>
             <p className="mt-4 text-sm leading-6 text-gray-400">
-              Take control of your money. Track, save &amp; grow — all in one
-              place.
+              Take control of your money. Track, save &amp; grow — all in one place.
             </p>
           </div>
 
