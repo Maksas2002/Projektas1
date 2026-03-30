@@ -12,12 +12,12 @@ export const createIncomeC = async (req, res, next) => {
     } else if (!newData) {
       throw new AppError("Error", 400);
     }
-cconsole.log(newData, id);
-    // const post = await createIncomeM(newData, {id});
-    // res.status(201).json({
-    //   status: "success",
-    //   data: post,
-    // });
+
+    const post = await createIncomeM(newData, {id});
+    res.status(201).json({
+      status: "success",
+      data: post,
+    });
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, updateUserM, getUserByIdM,  getAllUsersM, deleteUserById } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 const signToken = (id, role) => {

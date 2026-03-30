@@ -3,7 +3,6 @@ import {
   loginC, 
   signup, 
   getAllUsers, 
-  protect, 
   logoutC,
   updateUserC,
   deleteMe
