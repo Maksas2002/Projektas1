@@ -1,0 +1,19 @@
+info:
+  name: userCreateIncome
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: http://localhost:3000/api/v1/user/income/:id/add
+  params:
+    - name: id
+      value: ""
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -111,27 +111,6 @@ export const updateUserC = async (req, res, next) => {
   }
 };
 
-export const protect = async (req, res, next) => {
-  try {
-    let token = req.cookies?.jwt;
-    if (!token && req.headers.authorization?.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-    if (!token) {
-      throw new AppError("You are not logged in!", 401);
-    }
-    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
-    const currentUser = await getUserByIdM(decodedUser.id);
-    if (!currentUser) {
-      throw new AppError("The user no longer exists", 401);
-    }
-    req.user = currentUser;
-    next();
-  } catch (err) {
-    next(err);
-  }
-};
-
 // SUTVARKYTA: Dabar ima duomenis iš DB
 export const getAllUsers = async (req, res, next) => {
   try {
