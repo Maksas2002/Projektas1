@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
-const signToken = (id, role) => {
+export const signToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
-const sendTokenCookie = (token, res) => {
+ const sendTokenCookie = (token, res) => {
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
@@ -56,7 +56,8 @@ export const loginC = async (req, res, next) => {
       throw new AppError("Invalid user email or password", 401);
     }
 
-    const token = signToken(user.id, user.role);
+    const token = signToken(user.id, user.role); 
+    console.log(token);
     sendTokenCookie(token, res);
     user.password = undefined;
     res.status(200).json({
