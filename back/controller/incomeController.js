@@ -6,7 +6,7 @@ export const createIncomeC = async (req, res, next) => {
     const newData = req.body;
     const { id } = req.params;
 
-    if (!newData.amount || !newData.description || !newData.date) {
+    if (!newData.amount || !newData.date) {
       throw new AppError("Error, not enough info", 400);
     } else if (!newData) {
       throw new AppError("Error", 400);
