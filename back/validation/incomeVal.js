@@ -6,12 +6,15 @@ const incomeVal = [
   body("amount")
     .isNumeric()
     .custom((a) => {
+      let result;
       if (a > 0) {
-        true;
+        result = true;
       } else {
-        throw new Error("Must be a non negative number and cannot post letters");
+        throw new Error(
+          "Must be a non negative number and cannot post letters",
+        );
       }
-      return true;
+      return result;
     })
     .withMessage(Error.message),
 
