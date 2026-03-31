@@ -3,6 +3,8 @@ import { sql } from '../dbConnection.js';
 import argon2 from 'argon2';
 import { authenticateToken } from '../middleware/auth.js';
 import { getAllUsers, deleteUser, updateUser } from '../controller/adminController.js';
+import editUser from '../validation/editUser.js';
+import validate from '../validation/validate.js';
 
 const router = express.Router();
 
@@ -65,6 +67,6 @@ router.patch('/users/:id', authenticateToken, async (req, res, next) => {
         return res.status(403).json({ error: "Access denied. Admins only." });
     }
     next();
-}, updateUser);
+}, editUser, validate, updateUser);
 
 export default router;
