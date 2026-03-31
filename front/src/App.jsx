@@ -5,6 +5,7 @@ import SignUpForm from "./components/SignUpForm";
 import ProtectedRoute from "./utlis/ProtectedRoute";
 import DashBoard from "./pages/DashBoard";
 import LandingPage from "./pages/LandingPage";
+import EditForm from "./components/EditForm";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       {/* 2. AUTENTIFIKACIJA */}
       <Route path="/login" element={<LoginForm />} />
       <Route path="/signup" element={<SignUpForm />} />
+       <Route path="/edit" element={<EditForm />} />
 
       {/* 3. APSAUGOTAS ADMIN MARŠRUTAS */}
       <Route 
