@@ -5,11 +5,15 @@ info:
 
 http:
   method: POST
-  url: http://localhost:3000/api/v1/user/income/:id/add
-  params:
-    - name: id
-      value: ""
-      type: path
+  url: http://localhost:3000/api/v1/user/income/3/add
+  body:
+    type: json
+    data: |-
+      {
+        "amount" : "100.00",
+        "description": "test test test",
+        "date": "2026-10-10"
+      }
   auth: inherit
 
 settings:

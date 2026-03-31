@@ -1,4 +1,3 @@
-import appError from "../utils/appError.js";
 import { createIncomeM } from "../modules/incomeModule.js";
 import AppError from "../utils/appError.js";
 
