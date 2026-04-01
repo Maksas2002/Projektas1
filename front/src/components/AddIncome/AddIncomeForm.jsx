@@ -1,10 +1,16 @@
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import { useState, useContext } from "react";
 import { UserContext } from "../../utlis/UserContext";
+import errorHandler from "../../utils/errorHandler";
 
 function AddIncomeForm() {
   const [error, setError] = useState(null);
-  const { user } = useContext(UserContext);
+  const user  = useContext(UserContext);
+
+
+const userId = user.user.id;
+ 
 
   const {
     register,
@@ -13,8 +19,21 @@ function AddIncomeForm() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      await axios.post(
+        `http://localhost:3000/api/v1/user/${userId}/income/add`,
+        data,
+        {
+           withCredentials: true,
+        },
+      );
+
+      reset();
+    } catch (error) {
+      // console.log(response.data);
+      setError(errorHandler(error));
+    }
   };
 
   return (
@@ -47,6 +66,8 @@ function AddIncomeForm() {
         />
 
         <input type="submit" className="block border" value="Add Income" />
+
+        <p>{error}</p>
       </form>
     </>
   );

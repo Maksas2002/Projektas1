@@ -3,7 +3,8 @@ import AppError from "../utils/appError.js";
 import { getUserByIdM } from "../modules/userModule.js";
 export const authProtect = async (req, res, next) => {
   try {
-    const token = req.cookies.jwt;
+    const token = req.cookies?.jwt;
+    
     if (!token) throw new AppError("Not authenticated", 401);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
