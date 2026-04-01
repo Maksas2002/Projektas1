@@ -1,25 +1,39 @@
 import express from "express";
-import { 
-  loginC, 
-  signup, 
-  getAllUsers, 
-  protect, 
+import {
+  loginC,
+  signup,
+  getAllUsers,
   logoutC,
   updateUserC,
-  deleteMe
+  deleteMe,
 } from "../controller/userController.js";
+import { createIncomeC } from "../controller/incomeController.js";
 import userLogin from "../validation/userLoginV.js";
+import userSignUp from "../validation/userSignup.js";
+import incomeVal from "../validation/incomeVal.js";
 import validate from "../validation/validate.js";
+import restrictToOwnUser from "../middleware/restrictToOwnerUser.js";
+import { allowAccessTo } from "../middleware/allowAcceesTo.js";
 import { authProtect } from "../middleware/authProtect.js";
 
 const userRoutes = express.Router();
 
-userRoutes.get("/", protect, getAllUsers);
-userRoutes.get("/logout", protect, logoutC);
-userRoutes.post("/signup", signup);
+userRoutes.get("/", authProtect, getAllUsers);
+userRoutes.get("/logout", authProtect, logoutC);
+userRoutes.post("/signup", userSignUp, validate, signup);
 userRoutes.post("/login", userLogin, validate, loginC);
 userRoutes.patch("/edit", authProtect, updateUserC);
-userRoutes.route("/me").delete(protect, deleteMe);
+userRoutes.route("/me").delete(authProtect, deleteMe);
+// income
 
+userRoutes.post(
+  "/:id/income/add",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  incomeVal,
+  validate,
+  createIncomeC,
+);
 
 export default userRoutes;
