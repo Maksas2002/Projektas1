@@ -9,6 +9,7 @@ function AddIncomeForm() {
   const user = useContext(UserContext);
 
   const userId = user.user.id;
+  // console.log(user.user.id);
 
   const {
     register,
