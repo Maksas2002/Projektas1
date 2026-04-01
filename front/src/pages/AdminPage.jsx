@@ -6,7 +6,7 @@ const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showEdit, setShowEdit] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
   const fetchUsers = useCallback(async () => {
     const savedUser = localStorage.getItem('user');
@@ -167,7 +167,7 @@ const AdminPage = () => {
                             </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <button onClick={() => setShowEdit(true)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2">Edit</button>
+                          <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2">Edit</button>
                           <button 
                             onClick={() => handleDelete(user.id || user._id)} 
                             className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2"
@@ -175,7 +175,7 @@ const AdminPage = () => {
                             Delete
                           </button>
                         </td>
-                        {showEdit && <AdminUserEdit setShowEdit={setShowEdit}/>}
+                        
                       </tr>
                     ))
                 ) : (
@@ -188,6 +188,7 @@ const AdminPage = () => {
               </tbody>
             </table>
           </div>
+          {editingUser && <AdminUserEdit user={editingUser} onClose={() => setEditingUser(null) } onUpdated={fetchUsers}/>}
         </div>
       </div>
     </div>
