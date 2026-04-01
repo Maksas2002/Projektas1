@@ -6,11 +6,9 @@ import errorHandler from "../../utils/errorHandler";
 
 function AddIncomeForm() {
   const [error, setError] = useState(null);
-  const user  = useContext(UserContext);
+  const user = useContext(UserContext);
 
-
-const userId = user.user.id;
- 
+  const userId = user.user.id;
 
   const {
     register,
@@ -25,7 +23,7 @@ const userId = user.user.id;
         `http://localhost:3000/api/v1/user/${userId}/income/add`,
         data,
         {
-           withCredentials: true,
+          withCredentials: true,
         },
       );
 
@@ -38,7 +36,7 @@ const userId = user.user.id;
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
         <label className="block">Amount (EUR)</label>
 
         <input
@@ -50,6 +48,11 @@ const userId = user.user.id;
             min: { value: 0, message: "Number cannot be negative" },
           })}
         />
+        {errors.amount && (
+          <p className="text-center">
+            Must be a non negative number and cannot post letters
+          </p>
+        )}
 
         <label className="block">Description</label>
         <input
@@ -57,6 +60,9 @@ const userId = user.user.id;
           className="border"
           {...register("description", { maxLength: 255 })}
         />
+        {errors.description && (
+          <p className="text-center">Cannot be longer than 255 characters</p>
+        )}
 
         <label className="block">Date</label>
         <input
@@ -64,8 +70,9 @@ const userId = user.user.id;
           className="border"
           {...register("date", { required: true })}
         />
+        {errors.date && <p className="text-center">Must write a date</p>}
 
-        <input type="submit" className="block border" value="Add Income" />
+        <input type="submit" className="block border mt-3" value="Add Income" />
 
         <p>{error}</p>
       </form>
