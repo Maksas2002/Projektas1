@@ -37,45 +37,45 @@ function AddIncomeForm() {
 
   return (
     <>
-      <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-        <label className="block">Amount (EUR)</label>
+      <form className="flex flex-col pt-5" onSubmit={handleSubmit(onSubmit)}>
+        <label className="block text-white">Amount (EUR)</label>
 
         <input
           type="number"
-          className="border"
+          className="border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white pl-2"
           placeholder="0.00"
           {...register("amount", {
             required: true,
-            min: { value: 0, message: "Number cannot be negative" },
+            min: { value: 1, message: "Number cannot be negative" },
           })}
         />
         {errors.amount && (
-          <p className="text-center">
+          <p className="text-center  text-red-600">
             Must be a non negative number and cannot post letters
           </p>
         )}
 
-        <label className="block">Description</label>
+        <label className="block text-white">Description</label>
         <input
           type="text"
-          className="border"
+          className="border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white pl-2"
           {...register("description", { maxLength: 255 })}
         />
         {errors.description && (
-          <p className="text-center">Cannot be longer than 255 characters</p>
+          <p className="text-center t text-red-600">Cannot be longer than 255 characters</p>
         )}
 
-        <label className="block">Date</label>
+        <label className="block text-white">Date</label>
         <input
           type="date"
-          className="border"
+          className="border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white pl-2"
           {...register("date", { required: true })}
         />
-        {errors.date && <p className="text-center">Must write a date</p>}
+        {errors.date && <p className="text-center text-red-600">Must write a date</p>}
 
-        <input type="submit" className="block border mt-3" value="Add Income" />
+        <input type="submit" className="block border border-green-600 hover:bg-green-500 cursor-pointer rounded-[6px] bg-green-400 text-white mt-3" value="Add Income" />
 
-        <p>{error}</p>
+        <p className="text-center text-red-600">{error}</p>
       </form>
     </>
   );
