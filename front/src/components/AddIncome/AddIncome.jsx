@@ -11,7 +11,7 @@ function AddIncome() {
 
   return (
     <>
-      <section className="border border-green-500 bg-[#020b33] rounded-[20px] p-8 mt-5 w-[25%]">
+      <section className="border border-green-500 bg-[#020b33] rounded-[20px] p-8 mt-5 w-[300px] md:w-[25%]">
         <div className="flex justify-between">
           <p className="text-white text-[1.2rem]">Add Income</p>
           <button
