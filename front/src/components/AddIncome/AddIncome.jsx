@@ -1,4 +1,5 @@
 import AddIncomeForm from "./AddIncomeForm";
+import plus from "../../assets/plus-circle.svg";
 import { useState } from "react";
 
 function AddIncome() {
@@ -15,9 +16,10 @@ function AddIncome() {
           <p className="text-white text-[1.2rem]">Add Income</p>
           <button
             type="button"
-            className="border block pb-1 pt-1 pr-1 pl-1 border-green-600 hover:bg-green-500 cursor-pointer rounded-[6px] bg-green-400 text-white"
+            className="flex items-center gap-2 border block pb-1 pt-1 pr-1 pl-1 border-green-600 hover:bg-green-500 cursor-pointer rounded-[6px] bg-green-400 text-white"
             onClick={toShow}
           >
+            <img src={plus} alt="plus" className="block " />
             Add Income
           </button>
         </div>
