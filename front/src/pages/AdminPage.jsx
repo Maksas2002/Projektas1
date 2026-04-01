@@ -8,54 +8,63 @@ const AdminPage = () => {
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
 
-  const fetchUsers = useCallback(async () => {
-    const savedUser = localStorage.getItem('user');
+ const fetchUsers = useCallback(async () => {
+  const savedUser = localStorage.getItem('user');
+  
+  if (!savedUser) {
+    setError("Jūs nesate prisijungęs (Nerastas 'user' objektas)");
+    setLoading(false);
+    return;
+  }
+
+  let token = null;
+  try {
+    const fullResponse = JSON.parse(savedUser);
     
-    if (!savedUser) {
-      setError("Jūs nesate prisijungęs (Nerastas 'user' objektas)");
-      setLoading(false);
-      return;
-    }
 
-    let token = null;
-    try {
-      const userObj = JSON.parse(savedUser);
-      // Paimame tokeną
-      token = userObj.token;
-    } catch (e) {
-      token = savedUser;
-    }
+    token = fullResponse.token;
 
-    if (!token) {
-      setError("Jūs nesate prisijungęs (Token laukas tuščias)");
-      setLoading(false);
-      return;
-    }
 
-    try {
-      const res = await fetch('http://localhost:3000/api/v1/user', {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      const data = await res.json();
-      
-      if (res.ok) {
-        // Ištraukiame sąrašą
-        const usersList = Array.isArray(data) ? data : (data.data?.users || data.data || data.users || []);
-        setUsers(usersList);
-        setError(null);
-      } else {
-        setError(data.message || "Nepavyko užkrauti vartotojų (Serveris grąžino klaidą)");
+
+  } catch (e) {
+    token = savedUser;
+  }
+
+  if (!token) {
+    setError("Jūs nesate prisijungęs (Token laukas tuščias)");
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const res = await fetch('http://localhost:3000/api/v1/admin/users', {
+      method: 'GET', // Pridedam metodą aiškumui
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-    } catch (err) {
-      setError("Serverio ryšio klaida (Patikrinkite ar veikia Backend)");
-    } finally {
-      setLoading(false);
+    });
+    
+    const data = await res.json();
+    
+    if (res.ok) {
+      const usersList = data.data || data.users || (Array.isArray(data) ? data : []);
+      setUsers(usersList);
+      setError(null);
+    } else {
+      if (res.status === 401) {
+        setError("Sesija pasibaigė. Prašome prisijungti iš naujo.");
+        localStorage.removeItem('user');
+      } else {
+       setError(data.message || data.error || "Nepavyko užkrauti vartotojų");
+      }
     }
-  }, []);
+  } catch (err) {
+    setError("Serverio ryšio klaida (Patikrinkite ar veikia Backend)");
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Ar tikrai norite ištrinti vartotoją?")) return;
@@ -70,19 +79,19 @@ const AdminPage = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/api/v1/user/${id}`, {
-        method: 'DELETE',
-        headers: { 
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-      });
+      const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
+  method: 'DELETE',
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+});
 
       if (res.ok) {
         setUsers(prev => prev.filter(user => (user.id || user._id || user.uuid) !== id));
       } else {
         const errorData = await res.json();
-        alert(`Ištrinti nepavyko: ${errorData.message || 'Serverio klaida'}`);
+       alert(`Ištrinti nepavyko: ${errorData.message || errorData.error || 'Serverio klaida'}`);
       }
     } catch (err) {
       alert("Klaida susisiekiant su serveriu");

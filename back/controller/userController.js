@@ -11,7 +11,6 @@ const signToken = (user) => {
   );
 };
 
-
 const sendTokenCookie = (token, res) => {
   const cookieOptions = {
     expires: new Date(

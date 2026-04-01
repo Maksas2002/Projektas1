@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useState, useContext } from "react";
 import { UserContext } from "../utlis/UserContext";
@@ -6,6 +6,7 @@ import errorHandler from "../utils/errorHandler";
 import axios from "axios";
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [error, setError] = useState(null);
   const { setUser } = useContext(UserContext);
 
@@ -16,23 +17,33 @@ function LoginForm() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     try {
       setError(null);
 
       const response = await axios.post(
         "http://localhost:3000/api/v1/user/login",
-        data,
-        {
-          withCredentials: true,
-        }
+        formData,
+        { withCredentials: true },
       );
 
-      setUser(response.data);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      const authResponse = response.data;
+
+      // Išsaugome visą objektą (su tokenu)
+      localStorage.setItem("user", JSON.stringify(authResponse));
+
+      // Atnaujiname vartotojo būseną kontekste
+      setUser(authResponse.data);
+
       reset();
-    } catch (error) {
-      setError(errorHandler(error));
+
+      if (authResponse.data && authResponse.data.role === "Admin") {
+        navigate("/adminpage");
+      } else {
+        navigate("/user/dashboard");
+      }
+    } catch (err) {
+      setError(errorHandler(err));
     }
   };
 
@@ -43,13 +54,11 @@ function LoginForm() {
           <Link to="/" className="text-2xl font-semibold text-blue-400">
             BudgetNest
           </Link>
-
           <nav>
             <Link to="/" className="text-sm text-white hover:text-blue-300">
               Home
             </Link>
           </nav>
-
           <Link
             to="/login"
             className="rounded-[10px] bg-blue-500 px-5 py-2 text-sm font-medium text-white"
@@ -83,16 +92,17 @@ function LoginForm() {
                 type="text"
                 placeholder="tim@budgetnest.com"
                 {...register("email", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 150,
-                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Invalid email address",
+                  },
                 })}
-                className="block h-12 w-full rounded-[10px] border border-white/10 bg-[#1f2747] px-3 text-gray-300 outline-none placeholder:text-gray-500"
+                className="block h-12 w-full rounded-[10px] border border-white/10 bg-[#1f2747] px-3 text-gray-300 outline-none"
               />
               {errors.email && (
                 <span className="mt-2 block text-sm text-red-500">
-                  Must contain a valid email and be from 3 to 150 characters long
+                  {errors.email.message}
                 </span>
               )}
             </div>
@@ -103,26 +113,30 @@ function LoginForm() {
                 type="password"
                 placeholder="••••••••"
                 {...register("password", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 100,
+                  required: "Password is required",
+                  minLength: { value: 3, message: "Too short" },
                 })}
-                className="block h-12 w-full rounded-[10px] border border-white/10 bg-[#1f2747] px-3 text-gray-300 outline-none placeholder:text-gray-500"
+                className="block h-12 w-full rounded-[10px] border border-white/10 bg-[#1f2747] px-3 text-gray-300 outline-none"
               />
               {errors.password && (
                 <span className="mt-2 block text-sm text-red-500">
-                  Must contain your password and be from 3 to 100 characters long
+                  {errors.password.message}
                 </span>
               )}
             </div>
 
-            <input
+            <button
               type="submit"
-              className="mt-2 cursor-pointer rounded-[10px] bg-blue-500 p-3 text-white transition hover:bg-blue-400"
-              value="Sign In"
-            />
+              className="mt-2 cursor-pointer rounded-[10px] bg-blue-500 p-3 text-white transition hover:bg-blue-400 font-medium"
+            >
+              Sign In
+            </button>
 
-            {error && <p className="text-center text-red-500">{error}</p>}
+            {error && (
+              <p className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-center text-red-500 text-sm">
+                {error}
+              </p>
+            )}
           </form>
         </section>
       </main>
