@@ -6,7 +6,10 @@ return(
     <>
     <main>
         <DashHeader/>
+
+        <div className="flex justify-center">
         <AddIncome/>
+        </div>
     </main>
     </>
 );

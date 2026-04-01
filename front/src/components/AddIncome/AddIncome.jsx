@@ -10,7 +10,7 @@ function AddIncome() {
 
   return (
     <>
-      <section className="border p-8 ml-100 mt-5 w-[32%]">
+      <section className="border p-8 mt-5 w-[30%]">
         <div className="flex justify-between">
           <p>Add income</p>
           <button type="button" className="border block" onClick={toShow}>
