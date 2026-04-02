@@ -37,11 +37,12 @@ function AddIncomeForm() {
 
   return (
     <>
-      <form className="flex flex-col pt-5" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col pt-5 gap-1" onSubmit={handleSubmit(onSubmit)}>
         <label className="block text-white">Amount (EUR)</label>
 
         <input
           type="number"
+          step="any"
           className="border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white pl-2"
           placeholder="0.00"
           {...register("amount", {
