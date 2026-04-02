@@ -2,9 +2,10 @@ import express from 'express';
 import { sql } from '../dbConnection.js'; 
 import argon2 from 'argon2';
 import { authenticateToken } from '../middleware/auth.js';
-import { getAllUsers, deleteUser, updateUser } from '../controller/adminController.js';
+import { getAllUsers, deleteUser, updateUser, isAdmin} from '../controller/adminController.js';
 import editUser from '../validation/editUser.js';
 import validate from '../validation/validate.js';
+import { createCategory, deleteCategory, getCategories, updateCategory } from '../controller/categoryAdminController.js';
 
 const router = express.Router();
 
@@ -68,5 +69,10 @@ router.patch('/users/:id', authenticateToken, async (req, res, next) => {
     }
     next();
 }, editUser, validate, updateUser);
+
+
+// categories
+router.get('/categories', getCategories).post('/categories', createCategory);
+router.delete('/categories/:id', deleteCategory).patch('/categories/:id', updateCategory);
 
 export default router;
