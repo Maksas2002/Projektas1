@@ -37,35 +37,35 @@ const AdminPage = () => {
       return;
     }
 
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/admin/users', {
-      method: 'GET', // Pridedam metodą aiškumui
-      headers: { 
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    const data = await res.json();
-    
-    if (res.ok) {
-      const usersList = data.data || data.users || (Array.isArray(data) ? data : []);
-      setUsers(usersList);
-      setError(null);
-    } else {
-      if (res.status === 401) {
-        setError("Sesija pasibaigė. Prašome prisijungti iš naujo.");
-        localStorage.removeItem('user');
+    try {
+      const res = await fetch('http://localhost:3000/api/v1/admin/users', {
+        method: 'GET', // Pridedam metodą aiškumui
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const usersList = data.data || data.users || (Array.isArray(data) ? data : []);
+        setUsers(usersList);
+        setError(null);
       } else {
-       setError(data.message || data.error || "Nepavyko užkrauti vartotojų");
+        if (res.status === 401) {
+          setError("Sesija pasibaigė. Prašome prisijungti iš naujo.");
+          localStorage.removeItem('user');
+        } else {
+          setError(data.message || data.error || "Nepavyko užkrauti vartotojų");
+        }
       }
+    } catch (err) {
+      setError("Serverio ryšio klaida (Patikrinkite ar veikia Backend)");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setError("Serverio ryšio klaida (Patikrinkite ar veikia Backend)");
-  } finally {
-    setLoading(false);
-  }
-}, []);
+  }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm("Ar tikrai norite ištrinti vartotoją?")) return;
@@ -81,12 +81,12 @@ const AdminPage = () => {
 
     try {
       const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
-  method: 'DELETE',
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-});
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (res.ok) {
         setUsers(prev => prev.filter(user => (user.id || user._id || user.uuid) !== id));
