@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 
-const AdminUserEdit = ({user, onClose, onUpdated}) => {
+const AdminUserEdit = ({ user, onClose, onUpdated }) => {
     const [formData, setFormData] = useState({
         name: user.name,
         email: user.email,
@@ -17,13 +17,14 @@ const AdminUserEdit = ({user, onClose, onUpdated}) => {
 
         try {
             //Siunčiame PATCH užklausą į serverį
-            const res = await axios.patch(
+            await axios.patch(
                 `http://localhost:3000/api/v1/admin/users/${user.id}`,
                 formData,
                 {
+                    withCredentials: true,
                     headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     }
                 }
             );
@@ -37,56 +38,56 @@ const AdminUserEdit = ({user, onClose, onUpdated}) => {
         }
     }
 
-    return(
+    return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
             <form
-            onSubmit={handleSubmit}
-            className="bg-[#1e293b] p-6 rounded-xl w-96 border border-slate-700"
+                onSubmit={handleSubmit}
+                className="bg-[#1e293b] p-6 rounded-xl w-96 border border-slate-700"
             >
                 <div>
                     <h2 className="text-lg font-semibold mb-6 text-white flex items-center gap-2">
                         <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
                         Edit User
                     </h2>
-                    
+
                 </div>
-                
+
 
                 <div className="my-5">
                     <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Full Name</label>
                     <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white transition-all placeholder:text-slate-600"
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                        }
+                        className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white transition-all placeholder:text-slate-600"
                     />
                 </div>
 
                 <div className="my-5">
                     <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Email Address</label>
                     <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white transition-all placeholder:text-slate-600"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                        }
+                        className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white transition-all placeholder:text-slate-600"
                     />
                 </div>
 
                 <div className="my-5">
                     <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Role</label>
                     <select
-                    value={formData.role}
-                    onChange={(e) =>
-                        setFormData({ ...formData, role: e.target.value })
-                    }
-                    className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white cursor-pointer appearance-none shadow-inner"
+                        value={formData.role}
+                        onChange={(e) =>
+                            setFormData({ ...formData, role: e.target.value })
+                        }
+                        className="w-full bg-[#0f172a] border border-slate-700 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 text-white cursor-pointer appearance-none shadow-inner"
                     >
-                    <option value="User">User</option>
-                    <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
                     </select>
                 </div>
 

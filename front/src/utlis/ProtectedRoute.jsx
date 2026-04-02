@@ -12,9 +12,9 @@ function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/" replace />;
-  }
+  // if (requiredRole && user.role !== requiredRole) {  // ar adminas turi būti atjungtas po puslapio perkrovimo?
+  //   return <Navigate to="/" replace />;
+  // }
 
   // Jei viskas gerai, rodome turinį
   return children;
