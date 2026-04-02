@@ -21,10 +21,7 @@ const AdminUserEdit = ({user, onClose, onUpdated}) => {
                 `http://localhost:3000/api/v1/admin/users/${user.id}`,
                 formData,
                 {
-                    headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                    }
+                   withCredentials: true,
                 }
             );
 

@@ -63,6 +63,7 @@ export const loginC = async (req, res, next) => {
     user.password = undefined;
     res.status(200).json({
       status: "success",
+      token: token,
       data: user,
     });
   } catch (err) {
