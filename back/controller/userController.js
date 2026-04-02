@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, updateUserM, getUserByIdM,  getAllUsersM, deleteUserById } from "../modules/userModule.js";
+import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 const signToken = (user) => {
@@ -11,7 +11,7 @@ const signToken = (user) => {
   );
 };
 
-const sendTokenCookie = (token, res) => {
+ const sendTokenCookie = (token, res) => {
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
@@ -63,7 +63,6 @@ export const loginC = async (req, res, next) => {
     user.password = undefined;
     res.status(200).json({
       status: "success",
-      token,
       data: user,
     });
   } catch (err) {
@@ -108,27 +107,6 @@ export const updateUserC = async (req, res, next) => {
       status: "success",
       data: updatedUser,
     });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const protect = async (req, res, next) => {
-  try {
-    let token = req.cookies?.jwt;
-    if (!token && req.headers.authorization?.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-    if (!token) {
-      throw new AppError("You are not logged in!", 401);
-    }
-    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
-    const currentUser = await getUserByIdM(decodedUser.id);
-    if (!currentUser) {
-      throw new AppError("The user no longer exists", 401);
-    }
-    req.user = currentUser;
-    next();
   } catch (err) {
     next(err);
   }

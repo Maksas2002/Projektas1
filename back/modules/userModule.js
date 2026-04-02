@@ -4,7 +4,7 @@ import { sql } from "../dbConnection.js";
 export const createUserM = async ({ name, email, password, role }) => {
   const users = await sql`
     INSERT INTO users (name, email, password, role)
-    VALUES (${name}, ${email}, ${password}, ${role || 'User'})
+    VALUES (${name}, ${email}, ${password}, ${role || "User"})
     RETURNING id, name, email, role
   `;
   return users[0];
@@ -35,7 +35,7 @@ export const updateUserM = async (id, updates) => {
   const allowedFields = ["name", "email", "password"];
 
   const entries = Object.entries(updates).filter(([key]) =>
-    allowedFields.includes(key)
+    allowedFields.includes(key),
   );
 
   if (entries.length === 0) return null;
@@ -69,4 +69,4 @@ export const deleteUserById = async (id) => {
   }
 
   return users[0];
-}
+};

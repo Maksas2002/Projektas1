@@ -1,18 +1,18 @@
 info:
-  name: signup
+  name: userCreateIncome
   type: http
-  seq: 2
+  seq: 7
 
 http:
   method: POST
-  url: http://localhost:3000/api/v1/user/signup
+  url: http://localhost:3000/api/v1/user/income/3/add
   body:
     type: json
     data: |-
       {
-        "name":"Arminas Balevicius", 
-        "email":"balevicius.arminas@gmail.com", 
-        "password":"kemp"
+        "amount" : "100.00",
+        "description": "test test test",
+        "date": "2026-10-10"
       }
   auth: inherit
 
