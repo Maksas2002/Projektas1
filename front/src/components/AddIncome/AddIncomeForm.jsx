@@ -8,8 +8,10 @@ function AddIncomeForm() {
   const [error, setError] = useState(null);
   const user = useContext(UserContext);
 
-  const userId = user.user.id;
-  // console.log(user.user.id);
+  // for getting id. Checks if userContext data object is correct, if not, checks for different different data object 
+  const getId = () => {
+    return user?.user?.id || user?.user?.data?.id || null;
+  };
 
   const {
     register,
@@ -21,7 +23,7 @@ function AddIncomeForm() {
   const onSubmit = async (data) => {
     try {
       await axios.post(
-        `http://localhost:3000/api/v1/user/${userId}/income/add`,
+        `http://localhost:3000/api/v1/user/${getId()}/income/add`,
         data,
         {
           withCredentials: true,
@@ -30,18 +32,19 @@ function AddIncomeForm() {
 
       reset();
     } catch (error) {
-      // console.log(response.data);
+      // console.log(error);
       setError(errorHandler(error));
     }
   };
 
   return (
     <>
-      <form className="flex flex-col pt-5" onSubmit={handleSubmit(onSubmit)}>
+      <form className="flex flex-col pt-5 gap-1" onSubmit={handleSubmit(onSubmit)}>
         <label className="block text-white">Amount (EUR)</label>
 
         <input
           type="number"
+          step="any"
           className="border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white pl-2"
           placeholder="0.00"
           {...register("amount", {
