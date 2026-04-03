@@ -5,8 +5,10 @@ info:
 
 http:
   method: GET
-  url: ""
-  auth: inherit
+  url: http://localhost:3000/api/v1/admin/categories
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzc1MTMyODEyLCJleHAiOjE3ODI5MDg4MTJ9.8XY1scNNJYNbN5ADvO__kbuUB0PrKfZMCm8RcVBDU4o
 
 settings:
   encodeUrl: true
