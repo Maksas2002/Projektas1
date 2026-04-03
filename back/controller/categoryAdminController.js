@@ -1,4 +1,4 @@
-import { createCategoryM, getAllCategoriesM, getCategoryByIdM, getCategoryByNameM, updateCategoryM } from "../modules/categoryModule.js";
+import { createCategoryM, deleteCategoryM, getAllCategoriesM, getCategoryByIdM, getCategoryByNameM, updateCategoryM } from "../modules/categoryModule.js";
 
 export const createCategory = async (req, res, next) => {
     try {
@@ -62,6 +62,7 @@ export const updateCategory = async (req, res, next) => {
         });
       }
 
+      //tikrina ar id egzistuoja
       const nameTaken = await getCategoryByNameM(name);
       if (nameTaken && nameTaken.id !== Number(id)) {
         return res.status(409).json({
@@ -69,6 +70,7 @@ export const updateCategory = async (req, res, next) => {
         });
       }
 
+      //atnaujina kategorija
       const updated = await updateCategoryM(id, name, type);
 
       res.status(200).json({
@@ -82,7 +84,22 @@ export const updateCategory = async (req, res, next) => {
 };
 
 export const deleteCategory = async (req, res, next) => {
-    res.status(200).json({
-      message: "Test",
-    });
+    try {
+      const {id} = req.params;
+
+      const existingCategory = await getCategoryByIdM(id);
+      if (!existingCategory) {
+        return res.status(404).json({
+          message: "Category not found",
+        });
+      }
+
+      await deleteCategoryM(id);
+
+      res.status(200).json({
+        message: "Category deleted successfully",
+      });
+    } catch (error) {
+      next(error)
+    }
 };

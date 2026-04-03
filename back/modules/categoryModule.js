@@ -44,4 +44,11 @@ export const updateCategoryM = async (id, name, type) => {
   return result[0];
 };
 
-
+export const deleteCategoryM = async (id) => {
+  const result = await sql`
+    DELETE FROM categories
+    WHERE id = ${id}
+    RETURNING *;
+  `;
+  return result[0];
+};
