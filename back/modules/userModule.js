@@ -32,27 +32,21 @@ export const getAllUsersM = async () => {
 
 // Edit user data
 export const updateUserM = async (id, updates) => {
-  const allowedFields = ["name", "email", "password"];
+  const allowedFields = ["name", "email", "password", "role"];
 
-  const entries = Object.entries(updates).filter(([key]) =>
-    allowedFields.includes(key),
+  const filteredUpdates = Object.fromEntries(
+    Object.entries(updates).filter(([key]) => allowedFields.includes(key))
   );
 
-  if (entries.length === 0) return null;
+  if (Object.keys(filteredUpdates).length === 0) return null;
 
-  let query = sql`UPDATE users SET `;
+  const [user] = await sql`
+    UPDATE users 
+    SET ${sql(filteredUpdates)} 
+    WHERE id = ${id}
+    RETURNING id, name, email, role
+  `;
 
-  entries.forEach(([key, value], index) => {
-    query = sql`${query} ${sql(key)} = ${value}`;
-
-    if (index < entries.length - 1) {
-      query = sql`${query}, `;
-    }
-  });
-
-  query = sql`${query} WHERE id = ${id}
-              RETURNING id, name, email`;
-  const [user] = await query;
   return user;
 };
 
