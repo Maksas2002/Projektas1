@@ -1,12 +1,10 @@
-import { sql } from "../dbConnection.js";
+import { getAllUsersM, deleteUserById, getUserByIdM, getUserByEmailM, updateUserM } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 
 // Gauti visus vartotojus
 export const getAllUsers = async (req, res, next) => {
   try {
-    const users = await sql`
-      SELECT id, name, email, role FROM users ORDER BY id DESC
-    `;
+    const users = await getAllUsersM();
 
     res.status(200).json({
       status: "success",
@@ -23,16 +21,13 @@ export const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    // Neleidžiame adminui ištrinti savęs (apsauga)
     if (parseInt(id) === req.user.id) {
       throw new AppError("You cannot delete your own admin account", 400);
     }
 
-    const result = await sql`
-      DELETE FROM users WHERE id = ${id} RETURNING id
-    `;
+    const deletedUser = await deleteUserById(id);
 
-    if (result.length === 0) {
+    if (!deletedUser) {
       throw new AppError("No user found with that ID", 404);
     }
 
@@ -45,45 +40,42 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-// Atnaujinti vartotoją
 export const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, email, role } = req.body;
 
-    // Required fields
+    // Patikriname ar pateikti privalomi laukai
     if (!name || !email) {
-      return res.status(400).json({ error: "Name and email are required." });
+      throw new AppError("Name and email are required", 400);
     }
 
-    const [existingUser] = await sql`
-      SELECT * FROM users WHERE id = ${id}
-    `;
+    // Patikriname ar vartotojas egzistuoja
+    const existingUser = await getUserByIdM(id);
     if (!existingUser) {
-      return res.status(404).json({ error: "User not found." });
+      throw new AppError("User not found", 404);
     }
 
-    const [emailCheck] = await sql`
-      SELECT id FROM users WHERE email = ${email} AND id != ${id}
-    `;
-    if (emailCheck) {
-      return res.status(400).json({ error: "Email already exists." });
+    // Patikriname ar naujas email nėra užimtas kito vartotojo
+    const emailCheck = await getUserByEmailM(email);
+    if (emailCheck && emailCheck.id !== parseInt(id)) {
+      throw new AppError("Email already exists", 400);
     }
 
-    const [updatedUser] = await sql`
-      UPDATE users
-      SET name = ${name}, email = ${email}, role = ${role || existingUser.role}
-      WHERE id = ${id}
-      RETURNING id, name, email, role
-    `;
+    const updates = {
+      name,
+      email,
+      role: role || existingUser.role
+    };
+
+    const updatedUser = await updateUserM(id, updates);
 
     res.status(200).json({
-      message: "User updated successfully",
-      user: updatedUser
+      status: "success",
+      data: updatedUser
     });
 
   } catch (err) {
     next(err);
   }
 };
-
