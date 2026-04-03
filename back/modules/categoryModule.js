@@ -25,4 +25,23 @@ export const getCategoryByNameM = async (name) => {
   return result[0];
 };
 
+//checks for id
+export const getCategoryByIdM = async (id) => {
+  const result = await sql`
+    SELECT * FROM categories WHERE id = ${id};
+  `;
+  return result[0];
+};
+
+//update category
+export const updateCategoryM = async (id, name, type) => {
+  const result = await sql`
+    UPDATE categories
+    SET name = ${name}, type = ${type}
+    WHERE id = ${id}
+    RETURNING *;
+  `;
+  return result[0];
+};
+
 

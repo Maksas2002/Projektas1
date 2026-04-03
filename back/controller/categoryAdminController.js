@@ -1,4 +1,4 @@
-import { createCategoryM, getAllCategoriesM, getCategoryByNameM } from "../modules/categoryModule.js";
+import { createCategoryM, getAllCategoriesM, getCategoryByIdM, getCategoryByNameM, updateCategoryM } from "../modules/categoryModule.js";
 
 export const createCategory = async (req, res, next) => {
     try {
@@ -22,13 +22,14 @@ export const createCategory = async (req, res, next) => {
       const category = await createCategoryM(name, type, user_id || null);
 
       res.status(200).json({
-        message: "category created successfully",
+        message: "Category created successfully",
         data: category
       });
     } catch (error) {
       next(error)
     }
 };
+
 export const getCategories = async (req, res, next) => {
     try {
       const categories = await getAllCategoriesM();
@@ -42,12 +43,45 @@ export const getCategories = async (req, res, next) => {
       next(error);
     }
 };
-export const updateCategory = async (req, res) => {
-    res.status(200).json({
-      message: "Test",
-    });
+
+export const updateCategory = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { name, type } = req.body;
+
+      if (!name || !type) {
+        return res.status(400).json({
+          message: "Name and type are required",
+        });
+      }
+
+      const existingCategory = await getCategoryByIdM(id);
+      if (!existingCategory) {
+        return res.status(404).json({
+          message: "Category not found",
+        });
+      }
+
+      const nameTaken = await getCategoryByNameM(name);
+      if (nameTaken && nameTaken.id !== Number(id)) {
+        return res.status(409).json({
+          message: "Category name already exists",
+        });
+      }
+
+      const updated = await updateCategoryM(id, name, type);
+
+      res.status(200).json({
+        message: "Categories fetched successfully",
+        data: updated,
+      })
+
+    } catch (error) {
+      next(error);
+    }
 };
-export const deleteCategory = async (req, res) => {
+
+export const deleteCategory = async (req, res, next) => {
     res.status(200).json({
       message: "Test",
     });
