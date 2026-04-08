@@ -5,7 +5,9 @@ import { authenticateToken } from '../middleware/auth.js';
 import { getAllUsers, deleteUser, updateUser, isAdmin} from '../controller/adminController.js';
 import editUser from '../validation/editUser.js';
 import validate from '../validation/validate.js';
+import CategoryVal from '../validation/categoryVal.js';
 import { createCategory, deleteCategory, getCategories, updateCategory } from '../controller/categoryAdminController.js';
+
 
 const router = express.Router();
 
@@ -72,7 +74,7 @@ router.patch('/users/:id', authenticateToken, async (req, res, next) => {
 
 
 // categories
-router.get('/categories', getCategories).post('/categories', createCategory);
-router.delete('/categories/:id', deleteCategory).patch('/categories/:id', updateCategory);
+router.get('/categories', getCategories).post('/categories', CategoryVal, validate, createCategory);
+router.delete('/categories/:id', deleteCategory).patch('/categories/:id', CategoryVal, validate, updateCategory);
 
 export default router;

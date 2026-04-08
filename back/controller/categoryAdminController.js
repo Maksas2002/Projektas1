@@ -4,12 +4,6 @@ export const createCategory = async (req, res, next) => {
     try {
       const {name, type, user_id} = req.body;
 
-      if (!name || !type) {
-        return res.status(400).json({
-          message: "Name and type are required",
-        });
-      }
-
       //patikrina ar existuoja vardas
       const existing = await getCategoryByNameM(name);
       if (existing) {
@@ -48,12 +42,6 @@ export const updateCategory = async (req, res, next) => {
     try {
       const { id } = req.params;
       const { name, type } = req.body;
-
-      if (!name || !type) {
-        return res.status(400).json({
-          message: "Name and type are required",
-        });
-      }
 
       const existingCategory = await getCategoryByIdM(id);
       if (!existingCategory) {
