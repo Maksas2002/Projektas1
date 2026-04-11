@@ -30,12 +30,9 @@ const AdminUserCreate = ({ onUserCreated }) => {
     try {
       // 2. SIUNČIAME UŽKLAUSĄ
       const response = await axios.post('http://localhost:3000/api/v1/admin/users', formData,  {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+       withCredentials: true,
       });
-      
+   
       
       if (response.status === 201 || response.status === 200) {
         // Išvalome formą
