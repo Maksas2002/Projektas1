@@ -7,6 +7,7 @@ import ListCategoriesAdmin from '../components/categories/ListCategoriesAdmin';
 import EditCategoriesAdmin from '../components/categories/EditCategoriesAdmin';
 
 
+
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -207,7 +208,7 @@ const AdminPage = () => {
         </div>
 
         {/* Categories */}
-        <div>
+        <div className="max-w-7xl mx-auto space-y-6">
             <AddCategoriesAdmin/>
             <ListCategoriesAdmin/>
             <EditCategoriesAdmin/>

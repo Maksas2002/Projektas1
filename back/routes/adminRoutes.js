@@ -74,7 +74,7 @@ router.patch('/users/:id', authenticateToken, async (req, res, next) => {
 
 
 // categories
-router.get('/categories', getCategories).post('/categories', CategoryVal, validate, createCategory);
-router.delete('/categories/:id', deleteCategory).patch('/categories/:id', CategoryVal, validate, updateCategory);
+router.get('/categories', authenticateToken, getCategories).post('/categories', authenticateToken, CategoryVal, validate, createCategory);
+router.delete('/categories/:id', authenticateToken, deleteCategory).patch('/categories/:id', authenticateToken, CategoryVal, validate, updateCategory);
 
 export default router;
