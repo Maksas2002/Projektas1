@@ -8,6 +8,7 @@ const ListCategoriesAdmin = () => {
   const [error, setError] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
 
+  // get all
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
@@ -20,6 +21,22 @@ const ListCategoriesAdmin = () => {
       setError("Failed to load categories.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // delete
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/v1/admin/categories/${id}`,
+        { withCredentials: true }
+      );
+      setCategories(categories.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete category.");
     }
   };
 
@@ -89,6 +106,13 @@ const ListCategoriesAdmin = () => {
                     >
                       Edit
                     </button>
+
+                    <button
+                    onClick={() => handleDelete(categorie.id)}
+                    className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2"
+                  >
+                    Delete
+                  </button>
                     </td>
                   </tr>
                 ))}
@@ -96,8 +120,8 @@ const ListCategoriesAdmin = () => {
             </table>
         </div>
         <div>
+          {/* edit */}
           {editingCategory && <EditCategoriesAdmin category={editingCategory} onClose={() => setEditingCategory(null)} onUpdated={fetchCategories} />}
-          {/* <DeleteCategoriesAdmin/> */}
         </div>
     </div>
   );
