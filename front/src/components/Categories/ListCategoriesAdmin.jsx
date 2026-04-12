@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import EditCategoriesAdmin from "./EditCategoriesAdmin";
 
 const ListCategoriesAdmin = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -59,30 +61,43 @@ const ListCategoriesAdmin = () => {
                     </tr>
                 )}
 
-                {categories.map((cat) => (
-                    <tr
-                    key={cat.id}
-                    className="hover:bg-slate-800/40 transition-all group"
-                    >
+                {categories.map((categorie) => (
+                  <tr
+                  key={categorie.id}
+                  className="hover:bg-slate-800/40 transition-all group"
+                  >
                     <td className="px-6 py-4 flex items-center gap-3">
-                        <span className="font-semibold text-2xl text-slate-300">{cat.name}</span>
+                        <span className="font-semibold text-2xl text-slate-300">{categorie.name}</span>
                     </td>
 
                     <td className="px-6 py-4">
                         <span
                         className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
-                            cat.type === "income"
+                            categorie.type === "income"
                             ? "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30"
                             : "bg-red-500/20 text-red-400 border border-red-500/30"
                         }`}
                         >
-                        {cat.type}
+                        {categorie.type}
                         </span>
                     </td>
-                    </tr>
+
+                    <td className="px-6 py-4 text-right">
+
+                    <button onClick={() => setEditingCategory(categorie)}
+                      className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2"
+                    >
+                      Edit
+                    </button>
+                    </td>
+                  </tr>
                 ))}
                 </tbody>
             </table>
+        </div>
+        <div>
+          {editingCategory && <EditCategoriesAdmin category={editingCategory} onClose={() => setEditingCategory(null)} onUpdated={fetchCategories} />}
+          {/* <DeleteCategoriesAdmin/> */}
         </div>
     </div>
   );

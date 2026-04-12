@@ -4,7 +4,6 @@ import AdminUserCreate from '../components/AdminUserCreate';
 import AdminUserEdit from '../components/AdminUserEdit';
 import AddCategoriesAdmin from '../components/categories/AddCategoriesAdmin';
 import ListCategoriesAdmin from '../components/categories/ListCategoriesAdmin';
-import EditCategoriesAdmin from '../components/categories/EditCategoriesAdmin';
 
 
 
@@ -211,7 +210,6 @@ const AdminPage = () => {
         <div className="max-w-7xl mx-auto space-y-6">
             <AddCategoriesAdmin/>
             <ListCategoriesAdmin/>
-            <EditCategoriesAdmin/>
         </div>
       </div>
     </div>
