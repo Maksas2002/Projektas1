@@ -60,6 +60,8 @@ const ListCategoriesAdmin = () => {
                 <tr className="bg-[#334155]/20 text-slate-400 text-[11px] uppercase tracking-[0.2em] font-bold">
                     <th className="px-6 py-5">Category</th>
                     <th className="px-6 py-5">Type</th>
+                    <th className="px-6 py-5">Created At</th>
+                    <th className="px-6 py-5">Created By</th>
                     <th className="px-6 py-5 text-end">Actions</th>
                 </tr>
                 </thead>
@@ -82,14 +84,17 @@ const ListCategoriesAdmin = () => {
                 )}
 
                 {categories.map((categorie) => (
+                  
                   <tr
                   key={categorie.id}
                   className="hover:bg-slate-800/40 transition-all group"
                   >
+                    {/* name */}
                     <td className="px-6 py-4 flex items-center gap-3">
                         <span className="font-semibold text-slate-300">{categorie.name}</span>
                     </td>
 
+                  {/* type */}
                     <td className="px-6 py-4">
                         <span
                         className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${
@@ -102,6 +107,17 @@ const ListCategoriesAdmin = () => {
                         </span>
                     </td>
 
+                    {/* Created At */}
+                    <td className="px-6 py-4 text-slate-300 text-sm">
+                      {new Date(categorie.created_at).toLocaleDateString("lt-LT")}
+                    </td>
+
+                    {/* Created By */}
+                    <td className="px-6 py-4 text-slate-300 text-sm">
+                      {categorie.created_by || "Unknown"}
+                    </td>
+
+                    {/* action */}
                     <td className="px-6 py-4 text-right">
 
                     <button onClick={() => setEditingCategory(categorie)}
