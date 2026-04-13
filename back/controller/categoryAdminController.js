@@ -2,7 +2,8 @@ import { createCategoryM, deleteCategoryM, getAllCategoriesM, getCategoryByIdM, 
 
 export const createCategory = async (req, res, next) => {
     try {
-      const {name, type, user_id} = req.body;
+      const {name, type} = req.body;
+      const user_id = req.user.id;
 
       //patikrina ar existuoja vardas
       const existing = await getCategoryByNameM(name);
@@ -13,7 +14,7 @@ export const createCategory = async (req, res, next) => {
       }
 
       //sukurema kategorija
-      const category = await createCategoryM(name, type, user_id || null);
+      const category = await createCategoryM(name, type, user_id);
 
       res.status(200).json({
         message: "Category created successfully",

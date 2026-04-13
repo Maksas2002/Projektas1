@@ -2,13 +2,25 @@ import { sql } from "../dbConnection.js";
 
 //get all
 export const getAllCategoriesM = async () => {
-  const categoryLists = await sql`SELECT * FROM categories ORDER BY id ASC`;
+  const categoryLists = await sql`
+    SELECT 
+      category.id,
+      category.name,
+      category.type,
+      category.created_at,
+      usr.name AS created_by
+    FROM categories AS category
+    LEFT JOIN users AS usr ON category.user_id = usr.id
+    ORDER BY category.id ASC
+  `;
 
   return categoryLists;
 };
 
+
+
 //add category
-export const createCategoryM = async (name, type, user_id = null) => {
+export const createCategoryM = async (name, type, user_id) => {
   const result = await sql`
     INSERT INTO categories (name, type, user_id)
     VALUES (${name}, ${type}, ${user_id})
