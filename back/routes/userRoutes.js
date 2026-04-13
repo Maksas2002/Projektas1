@@ -8,6 +8,7 @@ import {
   deleteMe,
 } from "../controller/userController.js";
 import { createIncomeC } from "../controller/incomeController.js";
+import { userHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
@@ -34,6 +35,15 @@ userRoutes.post(
   incomeVal,
   validate,
   createIncomeC,
+);
+
+// user expense and income history
+
+userRoutes.get(
+  "/history",
+  authProtect,
+  allowAccessTo("User"),
+  userHistoryC
 );
 
 export default userRoutes;
