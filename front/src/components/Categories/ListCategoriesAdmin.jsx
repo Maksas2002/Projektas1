@@ -47,7 +47,9 @@ const ListCategoriesAdmin = () => {
   return (
     <div className="bg-[#1e293b] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden">
           <div className="p-6 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
-            <h2 className="text-lg font-semibold text-white">Category list</h2>
+            <h2 className="text-lg font-semibold text-white">
+              <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
+              Category list</h2>
             <span className="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold border border-blue-600/30">
               {categories.length} Categories
             </span>
@@ -58,6 +60,7 @@ const ListCategoriesAdmin = () => {
                 <tr className="bg-[#334155]/20 text-slate-400 text-[11px] uppercase tracking-[0.2em] font-bold">
                     <th className="px-6 py-5">Category</th>
                     <th className="px-6 py-5">Type</th>
+                    <th className="px-6 py-5 text-end">Actions</th>
                 </tr>
                 </thead>
 
@@ -84,7 +87,7 @@ const ListCategoriesAdmin = () => {
                   className="hover:bg-slate-800/40 transition-all group"
                   >
                     <td className="px-6 py-4 flex items-center gap-3">
-                        <span className="font-semibold text-2xl text-slate-300">{categorie.name}</span>
+                        <span className="font-semibold text-slate-300">{categorie.name}</span>
                     </td>
 
                     <td className="px-6 py-4">
