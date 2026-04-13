@@ -1,49 +1,40 @@
 import { useEffect, useState, useCallback } from 'react';
-import axios from "axios"
 import AdminUserCreate from '../components/AdminUserCreate';
 import AdminUserEdit from '../components/AdminUserEdit';
+import AdminLogs from '../components/AdminLogs';
 import AddCategoriesAdmin from '../components/categories/AddCategoriesAdmin';
 import ListCategoriesAdmin from '../components/categories/ListCategoriesAdmin';
-
-
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
+  const [refreshLogsKey, setRefreshLogsKey] = useState(0);
+
+  // Pagalbinė funkcija tokenui gauti
+  const getToken = () => {
+    const savedUser = localStorage.getItem('user');
+    if (!savedUser) return null;
+    try {
+      const parsed = JSON.parse(savedUser);
+      return parsed.token;
+    } catch {
+      return savedUser;
+    }
+  };
 
   const fetchUsers = useCallback(async () => {
-    const savedUser = localStorage.getItem('user');
-
-    if (!savedUser) {
-      setError("Jūs nesate prisijungęs (Nerastas 'user' objektas)");
-      setLoading(false);
-      return;
-    }
-
-    let token = null;
-    try {
-      const fullResponse = JSON.parse(savedUser);
-
-
-      token = fullResponse.token;
-
-
-
-    } catch (e) {
-      token = savedUser;
-    }
-
+    const token = getToken();
     if (!token) {
-      setError("Jūs nesate prisijungęs (Token laukas tuščias)");
+      setError("Jūs nesate prisijungęs");
       setLoading(false);
       return;
     }
 
     try {
       const res = await fetch('http://localhost:3000/api/v1/admin/users', {
-        method: 'GET', // Pridedam metodą aiškumui
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -71,17 +62,15 @@ const AdminPage = () => {
     }
   }, []);
 
+  // Funkcija, kviečiama po sėkmingo veiksmo (sukūrimo, redagavimo, trynimo)
+  const handleDataChange = () => {
+    fetchUsers();
+    setRefreshLogsKey(prev => prev + 1); // Priverčiame AdminLogs persikrauti
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Ar tikrai norite ištrinti vartotoją?")) return;
-
-    const savedUser = localStorage.getItem('user');
-    let token = null;
-    try {
-      const parsed = JSON.parse(savedUser);
-      token = parsed.token;
-    } catch {
-      token = savedUser;
-    }
+    const token = getToken();
 
     try {
       const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
@@ -93,7 +82,7 @@ const AdminPage = () => {
       });
 
       if (res.ok) {
-        setUsers(prev => prev.filter(user => (user.id || user._id || user.uuid) !== id));
+        handleDataChange(); // Atnaujinam sąrašą ir logus
       } else {
         const errorData = await res.json();
         alert(`Ištrinti nepavyko: ${errorData.message || errorData.error || 'Serverio klaida'}`);
@@ -111,13 +100,14 @@ const AdminPage = () => {
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white font-sans">
       <div className="flex flex-col items-center gap-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <p className="text-slate-400 animate-pulse">Kraunama duomenų bazė...</p>
+        <p className="text-slate-400 animate-pulse">Kraunama valdymo panelė...</p>
       </div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-200 p-6 font-sans">
+      {/* Header */}
       <div className="max-w-7xl mx-auto flex justify-between items-center mb-8 bg-[#1e293b] p-5 rounded-xl shadow-2xl border border-slate-700/50">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Admin Panel</h1>
@@ -131,15 +121,17 @@ const AdminPage = () => {
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Vartotojo kūrimas */}
         <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
           <h2 className="text-lg font-semibold mb-6 text-white flex items-center gap-2">
             <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
             Create New User
           </h2>
-          <AdminUserCreate onUserCreated={fetchUsers} />
+          <AdminUserCreate onUserCreated={handleDataChange} />
         </div>
 
+        {/* Vartotojų lentelė */}
         <div className="bg-[#1e293b] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden">
           <div className="p-6 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
             <h2 className="text-lg font-semibold text-white">User Management</h2>
@@ -181,15 +173,9 @@ const AdminPage = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2">Edit</button>
-                        <button
-                          onClick={() => handleDelete(user.id || user._id)}
-                          className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-2"
-                        >
-                          Delete
-                        </button>
+                        <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Edit</button>
+                        <button onClick={() => handleDelete(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
                       </td>
-
                     </tr>
                   ))
                 ) : (
@@ -202,14 +188,30 @@ const AdminPage = () => {
               </tbody>
             </table>
           </div>
-          
-          {editingUser && <AdminUserEdit user={editingUser} onClose={() => setEditingUser(null)} onUpdated={fetchUsers} />}
         </div>
 
-        {/* Categories */}
-        <div className="max-w-7xl mx-auto space-y-6">
-            <AddCategoriesAdmin/>
-            <ListCategoriesAdmin/>
+        {/* Redagavimo modalo atvaizdavimas */}
+        {editingUser && (
+          <AdminUserEdit 
+            user={editingUser} 
+            onClose={() => setEditingUser(null)} 
+            onUpdated={handleDataChange} 
+          />
+        )}
+
+        {/* Kategorijų valdymas */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
+             <AddCategoriesAdmin />
+          </div>
+          <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
+             <ListCategoriesAdmin />
+          </div>
+        </div>
+
+        {/* Veiklos logai */}
+        <div className="mt-8">
+           <AdminLogs key={refreshLogsKey} />
         </div>
       </div>
     </div>
