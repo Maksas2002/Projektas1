@@ -6,15 +6,17 @@ export const userHistoryC = async (req, res, next) => {
     const { id } = req.user;
 
     const userIncome = await userIncomeM(id);
-  const userExpenses = await userExpenseM(id);
+    const userExpenses = await userExpenseM(id);
 
-    if (userIncome.length == 0 ) {
+    const combinedHistory = { ...userIncome, expensesData: userExpenses };
+
+    if (combinedHistory.length == 0) {
       throw new AppError("No patients found", 404);
     }
 
     res.status(200).json({
       status: "success",
-      data: userIncome,
+      incomeData: combinedHistory,
     });
   } catch (error) {
     next(error);
