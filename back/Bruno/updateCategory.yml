@@ -1,0 +1,22 @@
+info:
+  name: updateCategory
+  type: http
+  seq: 11
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/v1/admin/categories/7
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Something?",
+        "type": "income"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

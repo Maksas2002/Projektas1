@@ -2,25 +2,27 @@ import express from 'express';
 import { sql } from '../dbConnection.js'; 
 import argon2 from 'argon2';
 import { authenticateToken } from '../middleware/auth.js';
-import { getAllUsers, deleteUser, updateUser } from '../controller/adminController.js';
-import { getAllLogs } from '../controller/logController.js'; // Importuojame logų valdiklį
-import { createLogM } from '../modules/logModule.js'; // Importuojame logų kūrimo funkciją
+import { getAllUsers, deleteUser, updateUser } from '../controller/adminController.js'; 
+import { getAllLogs } from '../controller/logController.js';
+import { createLogM } from '../modules/logModule.js';
 import editUser from '../validation/editUser.js';
 import validate from '../validation/validate.js';
+import CategoryVal from '../validation/categoryVal.js';
+import { createCategory, deleteCategory, getCategories, updateCategory } from '../controller/categoryAdminController.js';
 
 const router = express.Router();
 
-// Pagalbinė funkcija admin teisėms patikrinti (kad nereiktų kartoti kodo)
+
 const isAdmin = (req, res, next) => {
-    if (req.user.role !== 'Admin') {
+    if (req.user && req.user.role === 'Admin') {
+        next();
+    } else {
         return res.status(403).json({ error: "Access denied. Admins only." });
     }
-    next();
 };
 
-// --- LOGŲ PERŽIŪRA ---
 
-// Naujas maršrutas logams gauti
+// --- LOGŲ PERŽIŪRA ---
 router.get('/logs', authenticateToken, isAdmin, getAllLogs);
 
 
@@ -46,10 +48,9 @@ router.post('/users', authenticateToken, isAdmin, async (req, res) => {
             RETURNING id, name, email, role
         `;
 
-        // REGISTRUOJAME LOGĄ: Vartotojo sukūrimas
         await createLogM(
             req.user.id, 
-            req.user.name || 'Admin', // Jei tokene nėra name, naudojam 'Admin'
+            req.user.name || 'Admin', 
             'create', 
             `Admin created new user: ${email} with role ${role || 'User'}`
         );
@@ -72,7 +73,6 @@ router.delete('/users/:id', authenticateToken, isAdmin, async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Pirmiausia surandame vartotoją, kad žinotume jo el. paštą logams
         const [userToDelete] = await sql`
             SELECT email FROM users WHERE id = ${id}
         `;
@@ -81,13 +81,10 @@ router.delete('/users/:id', authenticateToken, isAdmin, async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        // Ištriname vartotoją iš DB
         await sql`
             DELETE FROM users WHERE id = ${id}
         `;
 
-        // REGISTRUOJAME LOGĄ: Svarbu naudoti 'delete' (mažosiomis raidėmis), 
-        // kad sutaptų su tavo Front-end filtrais
         await createLogM(
             req.user.id, 
             req.user.name || 'Admin', 
@@ -108,14 +105,12 @@ router.patch('/users/:id', authenticateToken, isAdmin, editUser, validate, async
     const { name, email, role } = req.body;
 
     try {
-        // 1. Surandame seną vartotoją, kad žinotume, ką keičiame
         const [oldUser] = await sql`SELECT email FROM users WHERE id = ${id}`;
         
         if (!oldUser) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        // 2. Atnaujiname DUOMENIS
         const [updatedUser] = await sql`
             UPDATE users 
             SET 
@@ -126,7 +121,6 @@ router.patch('/users/:id', authenticateToken, isAdmin, editUser, validate, async
             RETURNING id, name, email, role
         `;
 
-        // 3. REGISTRUOJAME LOGĄ
         await createLogM(
             req.user.id, 
             req.user.name || 'Admin', 
@@ -147,5 +141,12 @@ router.patch('/users/:id', authenticateToken, isAdmin, editUser, validate, async
         res.status(500).json({ error: "Internal server error." });
     }
 });
+
+
+// categories
+router.get('/categories', authenticateToken, getCategories);
+router.post('/categories', authenticateToken, isAdmin, CategoryVal, validate, createCategory);
+router.delete('/categories/:id', authenticateToken, isAdmin, deleteCategory);
+router.patch('/categories/:id', authenticateToken, isAdmin, CategoryVal, validate, updateCategory);
 
 export default router;
