@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     type category_type NOT NULL,
+    created_at DATE DEFAULT CURRENT_DATE,
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
@@ -70,7 +71,7 @@ INSERT INTO expenses (amount, description, date, user_id, category_id) VALUES
 (70.00, 'Groceries', '2026-04-05', 3, 3),
 (15.00, 'Taxi', '2026-04-06', 4, 4);
 
--- 2. Įterpiame pradinį administratorių su tavo sistemos sugeneruotu hash
+
 -- Slaptažodis išlieka: admin
 INSERT INTO users (name, email, password, role)
 VALUES (
@@ -81,3 +82,12 @@ VALUES (
 )
 ON CONFLICT (email) DO UPDATE 
 SET password = EXCLUDED.password, role = EXCLUDED.role;
+
+CREATE TABLE logs (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    username VARCHAR(255),
+    action VARCHAR(50) NOT NULL,
+    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

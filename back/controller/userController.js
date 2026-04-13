@@ -2,6 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
+import { createLogM } from "../modules/logModule.js";
 
 const signToken = (user) => {
   return jwt.sign(
@@ -50,17 +51,28 @@ export const loginC = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await getUserByEmailM(email);
+    
     if (!user) {
       throw new AppError("Invalid user email or password", 401);
     }
+    
     const isMatch = await argon2.verify(user.password, password);
     if (!isMatch) {
       throw new AppError("Invalid user email or password", 401);
     }
 
+    // --- REGISTRUOJAME LOGĄ: PRISIJUNGIMAS ---
+    await createLogM(
+      user.id, 
+      user.name || 'User', 
+      'login', 
+      `User logged in: ${user.email}`
+    );
+
     const token = signToken(user);
     sendTokenCookie(token, res);
     user.password = undefined;
+
     res.status(200).json({
       status: "success",
       token: token,
@@ -72,11 +84,24 @@ export const loginC = async (req, res, next) => {
 };
 
 //logout user
-export const logoutC = (req, res) => {
-  return res.clearCookie("jwt").status(200).json({
-    status: "success",
-    message: "Your are now logged out",
-  });
+export const logoutC = async (req, res) => {
+  try {
+    if (req.user) {
+      await createLogM(
+        req.user.id, 
+        req.user.name || 'User', 
+        'logout', 
+        `User logged out successfully`
+      );
+    }
+
+    return res.clearCookie("jwt").status(200).json({
+      status: "success",
+      message: "You are now logged out",
+    });
+  } catch (err) {
+    return res.clearCookie("jwt").status(200).json({ status: "success" });
+  }
 };
 
 // EDIT User
