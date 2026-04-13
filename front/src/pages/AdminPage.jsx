@@ -2,6 +2,10 @@ import { useEffect, useState, useCallback } from 'react';
 import axios from "axios"
 import AdminUserCreate from '../components/AdminUserCreate';
 import AdminUserEdit from '../components/AdminUserEdit';
+import AddCategoriesAdmin from '../components/categories/AddCategoriesAdmin';
+import ListCategoriesAdmin from '../components/categories/ListCategoriesAdmin';
+
+
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -198,7 +202,14 @@ const AdminPage = () => {
               </tbody>
             </table>
           </div>
+          
           {editingUser && <AdminUserEdit user={editingUser} onClose={() => setEditingUser(null)} onUpdated={fetchUsers} />}
+        </div>
+
+        {/* Categories */}
+        <div className="max-w-7xl mx-auto space-y-6">
+            <AddCategoriesAdmin/>
+            <ListCategoriesAdmin/>
         </div>
       </div>
     </div>

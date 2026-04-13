@@ -1,0 +1,94 @@
+import { createCategoryM, deleteCategoryM, getAllCategoriesM, getCategoryByIdM, getCategoryByNameM, updateCategoryM } from "../modules/categoryModule.js";
+
+export const createCategory = async (req, res, next) => {
+    try {
+      const {name, type} = req.body;
+      const user_id = req.user.id;
+
+      //patikrina ar existuoja vardas
+      const existing = await getCategoryByNameM(name);
+      if (existing) {
+        return res.status(409).json({
+          message: "Category name already exists",
+        });
+      }
+
+      //sukurema kategorija
+      const category = await createCategoryM(name, type, user_id);
+
+      res.status(200).json({
+        message: "Category created successfully",
+        data: category
+      });
+    } catch (error) {
+      next(error)
+    }
+};
+
+export const getCategories = async (req, res, next) => {
+    try {
+      const categories = await getAllCategoriesM();
+
+      res.status(200).json({
+        message: "Categories fetched successfully",
+        data: categories,
+      })
+
+    } catch (error) {
+      next(error);
+    }
+};
+
+export const updateCategory = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const { name, type } = req.body;
+
+      const existingCategory = await getCategoryByIdM(id);
+      if (!existingCategory) {
+        return res.status(404).json({
+          message: "Category not found",
+        });
+      }
+
+      //tikrina ar id egzistuoja
+      const nameTaken = await getCategoryByNameM(name);
+      if (nameTaken && nameTaken.id !== Number(id)) {
+        return res.status(409).json({
+          message: "Category name already exists",
+        });
+      }
+
+      //atnaujina kategorija
+      const updated = await updateCategoryM(id, name, type);
+
+      res.status(200).json({
+        message: "Categories fetched successfully",
+        data: updated,
+      })
+
+    } catch (error) {
+      next(error);
+    }
+};
+
+export const deleteCategory = async (req, res, next) => {
+    try {
+      const {id} = req.params;
+
+      const existingCategory = await getCategoryByIdM(id);
+      if (!existingCategory) {
+        return res.status(404).json({
+          message: "Category not found",
+        });
+      }
+
+      await deleteCategoryM(id);
+
+      res.status(200).json({
+        message: "Category deleted successfully",
+      });
+    } catch (error) {
+      next(error)
+    }
+};
