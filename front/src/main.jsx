@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { UserContextProvider } from "./utlis/UserContext.jsx";
 import { BrowserRouter } from "react-router";
+import { TransactionContextProvider } from "./utlis/TransactionContext.jsx";
 import "./index.css";
 import App from "./App.jsx";
 
@@ -9,7 +10,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <UserContextProvider>
       <BrowserRouter>
-        <App />
+        <TransactionContextProvider>
+          <App />
+        </TransactionContextProvider>
       </BrowserRouter>
     </UserContextProvider>
   </StrictMode>,
