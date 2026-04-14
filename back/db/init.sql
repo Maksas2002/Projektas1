@@ -83,11 +83,13 @@ VALUES (
 ON CONFLICT (email) DO UPDATE 
 SET password = EXCLUDED.password, role = EXCLUDED.role;
 
-CREATE TABLE logs (
+
+CREATE TABLE IF NOT EXISTS logs (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     username VARCHAR(255),
     action VARCHAR(50) NOT NULL,
+    target_name VARCHAR(255),
     details TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

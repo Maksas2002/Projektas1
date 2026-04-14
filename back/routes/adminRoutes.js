@@ -12,7 +12,6 @@ import { createCategory, deleteCategory, getCategories, updateCategory } from '.
 
 const router = express.Router();
 
-
 const isAdmin = (req, res, next) => {
     if (req.user && req.user.role === 'Admin') {
         next();
@@ -21,10 +20,8 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-
 // --- LOGŲ PERŽIŪRA ---
 router.get('/logs', authenticateToken, isAdmin, getAllLogs);
-
 
 // --- VARTOTOJŲ VALDYMAS ---
 
@@ -51,8 +48,9 @@ router.post('/users', authenticateToken, isAdmin, async (req, res) => {
         await createLogM(
             req.user.id, 
             req.user.name || 'Admin', 
-            'create', 
-            `Admin created new user: ${email} with role ${role || 'User'}`
+            'CREATE_USER', 
+            email, 
+            `Admin created new user with role ${role || 'User'}`
         );
 
         res.status(201).json({ 
@@ -88,8 +86,9 @@ router.delete('/users/:id', authenticateToken, isAdmin, async (req, res) => {
         await createLogM(
             req.user.id, 
             req.user.name || 'Admin', 
-            'delete', 
-            `Admin deleted user: ${userToDelete.email} (ID: ${id})`
+            'DELETE_USER', 
+            userToDelete.email, 
+            `Admin deleted user (ID: ${id})`
         );
 
         res.json({ message: "User deleted successfully" });
@@ -124,8 +123,9 @@ router.patch('/users/:id', authenticateToken, isAdmin, editUser, validate, async
         await createLogM(
             req.user.id, 
             req.user.name || 'Admin', 
-            'update', 
-            `Admin updated user: ${oldUser.email}. New data: ${email} (${role})`
+            'UPDATE_USER', 
+            email, 
+            `Admin updated user from ${oldUser.email}. New role: ${role}`
         );
 
         res.json({ 
@@ -142,8 +142,6 @@ router.patch('/users/:id', authenticateToken, isAdmin, editUser, validate, async
     }
 });
 
-
-// categories
 router.get('/categories', authenticateToken, getCategories);
 router.post('/categories', authenticateToken, isAdmin, CategoryVal, validate, createCategory);
 router.delete('/categories/:id', authenticateToken, isAdmin, deleteCategory);
