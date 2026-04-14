@@ -3,7 +3,7 @@ import UserTransactionTable from "./UserTransactionTable";
 function UserHistoryBase() {
   return (
     <>
-      <section>
+      <section className="flex justify-center border-red-500 border ml-200 mr-200">
         <UserTransactionTable />
       </section>
     </>
