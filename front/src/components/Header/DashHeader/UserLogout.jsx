@@ -7,7 +7,7 @@ import { useState, useContext } from "react";
 
 function UserLogout({ notToShow }) {
   let navigate = useNavigate();
-  const { setTransaction } = useContext();
+  const { setTransaction } = useContext(TransactionContext);
   const { setUser } = useContext(UserContext);
   const [error, setError] = useState(null);
 
@@ -18,7 +18,7 @@ function UserLogout({ notToShow }) {
       });
 
       localStorage.removeItem("user");
-      setTransaction({})
+      setTransaction([]);
       setUser(null);
       navigate(`/login`);
     } catch (error) {

@@ -20,7 +20,7 @@ function UserHistoryBase() {
       //   const income = response.data.incomeData
       //   const expenses = response.data.incomeData.expensesData
         console.log(response.data.incomeData);
-    //   setTransaction(response.data.incomeData);
+      setTransaction(response.data.incomeData);
     } catch (error) {
       console.log(error);
       setError(errorHandler(error));
@@ -35,12 +35,12 @@ function UserHistoryBase() {
     <>
       <section className="flex flex-col items-center justify-center border-red-500 border ml-200 mr-200">
         <p className="text-red text-center">{error}</p>
-        {transaction.transaction.map((transaction) => (
+        {/* {transaction.transaction.map((transaction) => (
           <UserTransactionTable
             key={transaction.id}
             transaction={transaction}
           />
-        ))}
+        ))} */}
       </section>
     </>
   );
