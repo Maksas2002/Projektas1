@@ -14,8 +14,10 @@ return userIncomeHistory;
 
 export const userExpenseM = async (id) => {
   const userExpenseHistory = await sql`
-SELECT * FROM expenses
-WHERE user_id = ${Number(id)}
+SELECT *, categories.name FROM expenses
+JOIN categories
+ON expenses.category_id = categories.id
+WHERE expenses.user_id = ${Number(id)}
 `;
 
 return userExpenseHistory;

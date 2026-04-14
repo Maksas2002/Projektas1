@@ -14,7 +14,7 @@ export const userHistoryC = async (req, res, next) => {
       totalExpenses: userExpenses.length,
       expensesData: userExpenses,
     };
-console.log(combinedHistory);
+
     if (userIncome.length == 0 && userExpenses.length == 0) {
       throw new AppError("No incomes or expenses found", 404);
     }
