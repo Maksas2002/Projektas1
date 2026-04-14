@@ -11,7 +11,7 @@ import { createIncomeC } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
 import { createExpenseC } from "../controller/expensesController.js";
 
-import { userHistoryC } from "../controller/userHistoryController.js";
+import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
@@ -57,7 +57,7 @@ userRoutes.get(
   "/history",
   authProtect,
   allowAccessTo("User"),
-  userHistoryC
+  userCombinedHistoryC
 );
 
 export default userRoutes;
