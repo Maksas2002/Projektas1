@@ -138,7 +138,6 @@ export const updateUserC = async (req, res, next) => {
   }
 };
 
-// SUTVARKYTA: Dabar ima duomenis iš DB
 export const getAllUsers = async (req, res, next) => {
   try {
     const users = await getAllUsersM(); 

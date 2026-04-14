@@ -2,8 +2,8 @@ import { useEffect, useState, useCallback } from 'react';
 import AdminUserCreate from '../components/AdminUserCreate';
 import AdminUserEdit from '../components/AdminUserEdit';
 import AdminLogs from '../components/AdminLogs';
-import AddCategoriesAdmin from '../components/categories/AddCategoriesAdmin';
-import ListCategoriesAdmin from '../components/categories/ListCategoriesAdmin';
+import AddCategoriesAdmin from '../components/Categories/AddCategoriesAdmin';
+import ListCategoriesAdmin from '../components/Categories/ListCategoriesAdmin';
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -11,14 +11,14 @@ const AdminPage = () => {
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [refreshLogsKey, setRefreshLogsKey] = useState(0);
+  const [refreshCategoriesKey, setRefreshCategoriesKey] = useState(0);
 
-  // Pagalbinė funkcija tokenui gauti
   const getToken = () => {
     const savedUser = localStorage.getItem('user');
     if (!savedUser) return null;
     try {
       const parsed = JSON.parse(savedUser);
-      return parsed.token;
+      return parsed.token || parsed.accessToken;
     } catch {
       return savedUser;
     }
@@ -44,6 +44,7 @@ const AdminPage = () => {
       const data = await res.json();
 
       if (res.ok) {
+        // Pritaikyta tavo duomenų struktūrai
         const usersList = data.data || data.users || (Array.isArray(data) ? data : []);
         setUsers(usersList);
         setError(null);
@@ -52,23 +53,23 @@ const AdminPage = () => {
           setError("Sesija pasibaigė. Prašome prisijungti iš naujo.");
           localStorage.removeItem('user');
         } else {
-          setError(data.message || data.error || "Nepavyko užkrauti vartotojų");
+          setError(data.message || "Nepavyko užkrauti vartotojų");
         }
       }
     } catch (err) {
-      setError("Serverio ryšio klaida (Patikrinkite ar veikia Backend)");
+      setError("Serverio ryšio klaida");
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Funkcija, kviečiama po sėkmingo veiksmo (sukūrimo, redagavimo, trynimo)
   const handleDataChange = () => {
     fetchUsers();
-    setRefreshLogsKey(prev => prev + 1); // Priverčiame AdminLogs persikrauti
+    setRefreshCategoriesKey(prev => prev + 1);
+    setRefreshLogsKey(prev => prev + 1);
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteUser = async (id) => {
     if (!window.confirm("Ar tikrai norite ištrinti vartotoją?")) return;
     const token = getToken();
 
@@ -76,16 +77,16 @@ const AdminPage = () => {
       const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
       if (res.ok) {
-        handleDataChange(); // Atnaujinam sąrašą ir logus
+        handleDataChange();
       } else {
         const errorData = await res.json();
-        alert(`Ištrinti nepavyko: ${errorData.message || errorData.error || 'Serverio klaida'}`);
+        alert(`Klaida: ${errorData.message || 'Nepavyko ištrinti'}`);
       }
     } catch (err) {
       alert("Klaida susisiekiant su serveriu");
@@ -97,11 +98,8 @@ const AdminPage = () => {
   }, [fetchUsers]);
 
   if (loading) return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white font-sans">
-      <div className="flex flex-col items-center gap-4">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <p className="text-slate-400 animate-pulse">Kraunama valdymo panelė...</p>
-      </div>
+    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center text-white italic">
+      Kraunama valdymo panelė...
     </div>
   );
 
@@ -124,14 +122,10 @@ const AdminPage = () => {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Vartotojo kūrimas */}
         <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
-          <h2 className="text-lg font-semibold mb-6 text-white flex items-center gap-2">
-            <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
-            Create New User
-          </h2>
           <AdminUserCreate onUserCreated={handleDataChange} />
         </div>
 
-        {/* Vartotojų lentelė */}
+        {/* Vartotojų lentelė - ATKURTA PAGAL TAVO DIZAINĄ */}
         <div className="bg-[#1e293b] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden">
           <div className="p-6 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
             <h2 className="text-lg font-semibold text-white">User Management</h2>
@@ -142,7 +136,7 @@ const AdminPage = () => {
 
           {error && (
             <div className="m-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-sm text-center">
-              <span className="font-bold mr-2">⚠️ Klaida:</span> {error}
+              {error}
             </div>
           )}
 
@@ -157,40 +151,32 @@ const AdminPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-700/50">
-                {users.length > 0 ? (
-                  users.map((user) => (
-                    <tr key={user.id || user._id || Math.random()} className="hover:bg-slate-800/40 transition-all group">
-                      <td className="px-6 py-4 flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm font-bold text-white uppercase shadow-lg">
-                          {user.name?.charAt(0) || 'U'}
-                        </div>
-                        <span className="font-semibold text-white">{user.name}</span>
-                      </td>
-                      <td className="px-6 py-4 text-slate-300 text-sm">{user.email}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${user.role === 'Admin' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
-                          {user.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Edit</button>
-                        <button onClick={() => handleDelete(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  !loading && !error && (
-                    <tr>
-                      <td colSpan="4" className="px-6 py-10 text-center text-slate-500 italic">Vartotojų nerasta.</td>
-                    </tr>
-                  )
-                )}
+                {users.map((user) => (
+                  <tr key={user.id || user._id} className="hover:bg-slate-800/40 transition-all group">
+                    <td className="px-6 py-4 flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm font-bold text-white uppercase shadow-lg">
+                        {user.name?.charAt(0) || 'U'}
+                      </div>
+                      <span className="font-semibold text-white">{user.name}</span>
+                    </td>
+                    <td className="px-6 py-4 text-slate-300 text-sm">{user.email}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${user.role === 'Admin' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Edit</button>
+                      <button onClick={() => handleDeleteUser(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Redagavimo modalo atvaizdavimas */}
+        {/* Redagavimo modalas */}
         {editingUser && (
           <AdminUserEdit 
             user={editingUser} 
@@ -199,13 +185,13 @@ const AdminPage = () => {
           />
         )}
 
-        {/* Kategorijų valdymas */}
+        {/* Kategorijų valdymas - SU APSAUGA NUO LOOP */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
-             <AddCategoriesAdmin />
+             <AddCategoriesAdmin onCategoryCreated={handleDataChange} />
           </div>
           <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
-             <ListCategoriesAdmin />
+             <ListCategoriesAdmin key={refreshCategoriesKey} />
           </div>
         </div>
 
