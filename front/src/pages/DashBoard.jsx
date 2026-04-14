@@ -1,4 +1,5 @@
 import { useState } from "react";
+import UserHistoryBase from "../components/UserTransactionHistory/UserHistoryBase";
 import DashHeader from "../components/Header/DashHeader/DashHeader";
 import AddIncome from "../components/AddIncome/AddIncome";
 import AddExpense from "../components/AddExpense/AddExpense";
@@ -23,6 +24,8 @@ function DashBoard() {
           onToggle={() => toggleForm('expense')} 
         />
       </div>
+
+      <UserHistoryBase/>
     </main>
   );
 }
