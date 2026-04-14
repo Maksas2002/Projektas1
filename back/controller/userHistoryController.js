@@ -10,8 +10,8 @@ export const userHistoryC = async (req, res, next) => {
 
     const combinedHistory = { ...userIncome, expensesData: userExpenses };
 
-    if (combinedHistory.length == 0) {
-      throw new AppError("No patients found", 404);
+    if (userIncome.length == 0 && userExpenses.length == 0)  {
+      throw new AppError("No incomes or expenses found", 404);
     }
 
     res.status(200).json({
