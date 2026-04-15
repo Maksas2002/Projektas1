@@ -1,4 +1,4 @@
-import { createIncomeM } from "../modules/incomeModule.js";
+import { createIncomeM, deleteIncomeM } from "../modules/incomeModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -30,3 +30,22 @@ export const createIncomeC = async (req, res, next) => {
   }
 };
 
+export const deleteIncome = async (req, res) => {
+  try {
+    const incomeId = req.params.id;
+    const userId = req.user.id;
+
+    const deletedIncome = await deleteIncomeM(incomeId, userId);
+
+    if(!deletedIncome){
+      throw new AppError("Error, not enough info", 404);
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Income was deleted"
+    });
+  } catch (error) {
+    next(error);
+  }
+}
