@@ -30,15 +30,14 @@ export const createIncomeC = async (req, res, next) => {
   }
 };
 
-export const deleteIncome = async (req, res) => {
+export const deleteIncome = async (req, res, next) => {
   try {
-    const incomeId = req.params.id;
-    const userId = req.user.id;
+    const { userId, incomeId } = req.params;
 
     const deletedIncome = await deleteIncomeM(incomeId, userId);
 
     if(!deletedIncome){
-      throw new AppError("Error, not enough info", 404);
+      throw new AppError("Income entry not found", 404);
     }
 
     res.status(200).json({
