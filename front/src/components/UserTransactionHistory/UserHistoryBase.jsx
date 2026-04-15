@@ -17,10 +17,9 @@ function UserHistoryBase() {
           withCredentials: true,
         },
       );
-      //   const income = response.data.incomeData
-      //   const expenses = response.data.incomeData.expensesData
-        console.log(response.data.incomeData);
-      setTransaction(response.data.incomeData);
+        // console.log(response.data.incomeData);
+        console.log(response.data.data);
+      setTransaction(response.data.data);
     } catch (error) {
       console.log(error);
       setError(errorHandler(error));
@@ -34,13 +33,13 @@ function UserHistoryBase() {
   return (
     <>
       <section className="flex flex-col items-center justify-center border-red-500 border ml-200 mr-200">
-        <p className="text-red text-center">{error}</p>
-        {/* {transaction.transaction.map((transaction) => (
+        <p className="text-red-500 text-center">{error}</p>
+        {transaction.transaction.map((transaction) => (
           <UserTransactionTable
             key={transaction.id}
             transaction={transaction}
           />
-        ))} */}
+        ))}
       </section>
     </>
   );

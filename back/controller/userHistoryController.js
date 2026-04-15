@@ -13,7 +13,7 @@ export const userCombinedHistoryC = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      incomeData: userCombinedHistory,
+      data: userCombinedHistory,
     });
   } catch (error) {
     next(error);
