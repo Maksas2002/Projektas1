@@ -29,3 +29,4 @@ export const createIncomeC = async (req, res, next) => {
     next(error);
   }
 };
+
