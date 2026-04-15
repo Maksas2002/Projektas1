@@ -17,8 +17,6 @@ function UserHistoryBase() {
           withCredentials: true,
         },
       );
-        // console.log(response.data.incomeData);
-        console.log(response.data.data);
       setTransaction(response.data.data);
     } catch (error) {
       console.log(error);
@@ -32,13 +30,13 @@ function UserHistoryBase() {
 
   return (
     <>
-      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 border-red-500 border ml-200 mr-200">
+      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33]  border ml-200 mr-200">
         <p className="text-red-500 text-center">{error}</p>
         {transaction.transaction.map((transaction) => (
           <UserTransactionTable
             key={transaction.id}
             transaction={transaction}
-          />
+          />   
         ))}
       </section>
     </>

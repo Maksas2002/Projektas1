@@ -5,7 +5,7 @@ export const userCombinedHistoryC = async (req, res, next) => {
   try {
     const { id } = req.user;
 
-    const userCombinedHistory = await userCombinedHistoryM(id);
+    const userCombinedHistory = (await userCombinedHistoryM(id));
 
     if (userCombinedHistory.length == 0) {
       throw new AppError("No incomes or expenses found", 404);
