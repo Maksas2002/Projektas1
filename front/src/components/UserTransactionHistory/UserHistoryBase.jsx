@@ -32,7 +32,7 @@ function UserHistoryBase() {
 
   return (
     <>
-      <section className="flex flex-col items-center justify-center border-red-500 border ml-200 mr-200">
+      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 border-red-500 border ml-200 mr-200">
         <p className="text-red-500 text-center">{error}</p>
         {transaction.transaction.map((transaction) => (
           <UserTransactionTable
