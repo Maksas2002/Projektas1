@@ -5,11 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: http://localhost:3000/api/v1/user/:userId/income/delete/1
-  params:
-    - name: userId
-      value: ""
-      type: path
+  url: http://localhost:3000/api/v1/user/6/income/delete/1
   auth: inherit
 
 settings:

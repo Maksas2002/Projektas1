@@ -32,9 +32,9 @@ export const createIncomeC = async (req, res, next) => {
 
 export const deleteIncome = async (req, res, next) => {
   try {
-    const { userId, incomeId } = req.params;
+    const { id, incomeId } = req.params;
 
-    const deletedIncome = await deleteIncomeM(incomeId, userId);
+    const deletedIncome = await deleteIncomeM(incomeId, id);
 
     if(!deletedIncome){
       throw new AppError("Income entry not found", 404);

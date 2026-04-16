@@ -9,7 +9,7 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC } from "../controller/expensesController.js";
+import { createExpenseC} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -40,7 +40,9 @@ userRoutes.post(
   validate,
   createIncomeC,
 );
-userRoutes.delete("/:userId/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
+
+//delete
+userRoutes.delete("/:id/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
 
 // --- IŠLAIDOS (EXPENSES) ---
 userRoutes.post(

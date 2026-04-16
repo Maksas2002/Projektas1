@@ -12,3 +12,4 @@ export const createExpenseM = async (data, user) => {
 
   return newExpense;
 };
+
