@@ -24,6 +24,10 @@ function UserHistoryBase() {
     }
   };
 
+  const handleDeleteFromList = () => {
+    fetchTransactions();
+  };
+
   useEffect(() => {
     fetchTransactions();
   }, []);
@@ -37,6 +41,7 @@ function UserHistoryBase() {
           <UserTransactionTable
             key={transaction.id}
             transaction={transaction}
+            onDelete={handleDeleteFromList}
           />
         ))}
       </section>

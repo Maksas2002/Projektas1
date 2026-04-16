@@ -1,6 +1,6 @@
 import axios from "axios";
 
-function DeleteIncome({ userId, incomeId, onDelete }) {
+function DeleteIncome({ userId, incomeId, onDelete}) {
 
   const handleDelete = async () => {
     try {
@@ -11,7 +11,7 @@ function DeleteIncome({ userId, incomeId, onDelete }) {
         }
       );
 
-      if (onDelete) onDelete(incomeId);
+      onDelete?.();
     } catch (err) {
       console.error("Delete error:", err.response?.data || err.message);
     }
