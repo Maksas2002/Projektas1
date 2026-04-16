@@ -15,7 +15,7 @@ function UserTransactionTable({ transaction }) {
           <p className="text-white">{transaction.description}</p>
           <div className="flex gap-2">
             <p className="text-sky-400">{transaction.name}</p>
-            <p className="text-sky-400">{transaction.date}</p>
+            <p className="text-sky-400">{transaction.formatted_date}</p>
           </div>
         </div>
         <p style={{color: colorChange()}} className="text-white">€{transaction.amount}</p>
