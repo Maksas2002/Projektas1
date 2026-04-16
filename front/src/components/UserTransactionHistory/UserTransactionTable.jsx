@@ -14,7 +14,7 @@ function UserTransactionTable({ transaction }) {
         <div>
           <p className="text-white">{transaction.description}</p>
           <div className="flex gap-2">
-            <p className="text-sky-400">{transaction.name}</p>
+            <p className="text-sky-400">{transaction.category_name}</p>
             <p className="text-sky-400">{transaction.formatted_date}</p>
           </div>
         </div>
