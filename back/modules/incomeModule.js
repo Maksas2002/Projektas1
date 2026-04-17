@@ -18,6 +18,35 @@ const data = {
   return income[0];
 };
 
+// get income by id
+export const getIncomeByIdM = async (userId, incomeId) => {
+  const income = await sql`
+    SELECT *
+    FROM income
+    WHERE id = ${incomeId} AND user_id = ${userId}
+    LIMIT 1
+  `;
+
+  return income[0];
+};
+
+// update income
+export const updateIncomeM = async (userId, incomeId, newData) => {
+  const updated = await sql`
+    UPDATE income
+    SET 
+      amount = ${newData.amount},
+      description = ${newData.description},
+      date = ${newData.date},
+      category_id = ${newData.category_id}
+    WHERE id = ${incomeId} AND user_id = ${userId}
+    RETURNING *
+  `;
+
+  return updated[0];
+};
+
+
 // delete income from user
 export const deleteIncomeM = async (incomeId, id) =>{
   const deleteIncome = await sql`

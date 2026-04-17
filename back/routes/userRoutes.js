@@ -7,7 +7,7 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC, deleteIncome } from "../controller/incomeController.js";
+import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
 import { createExpenseC} from "../controller/expensesController.js";
 
@@ -40,6 +40,25 @@ userRoutes.post(
   validate,
   createIncomeC,
 );
+
+// get income by id
+userRoutes.get(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  getIncomeByIdC
+);
+
+// update income
+userRoutes.patch(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  updateIncomeC
+);
+
 
 //delete
 userRoutes.delete("/:id/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
