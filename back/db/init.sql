@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS income (
     date DATE NOT NULL,
     user_id INT NOT NULL,
     category_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
@@ -59,6 +60,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     date DATE NOT NULL,
     user_id INT NOT NULL,
     category_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
