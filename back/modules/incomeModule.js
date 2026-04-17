@@ -17,3 +17,14 @@ const data = {
 
   return income[0];
 };
+
+// delete income from user
+export const deleteIncomeM = async (incomeId, id) =>{
+  const deleteIncome = await sql`
+    delete from income
+    where id = ${incomeId} and user_id = ${id}
+    returning *
+  `;
+
+  return deleteIncome[0];
+}

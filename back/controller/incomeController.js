@@ -1,4 +1,4 @@
-import { createIncomeM } from "../modules/incomeModule.js";
+import { createIncomeM, deleteIncomeM } from "../modules/incomeModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -29,3 +29,22 @@ export const createIncomeC = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteIncome = async (req, res, next) => {
+  try {
+    const { id, incomeId } = req.params;
+
+    const deletedIncome = await deleteIncomeM(incomeId, id);
+
+    if(!deletedIncome){
+      throw new AppError("Income entry not found", 404);
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Income was deleted"
+    });
+  } catch (error) {
+    next(error);
+  }
+}

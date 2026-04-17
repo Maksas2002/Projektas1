@@ -1,0 +1,15 @@
+info:
+  name: deleteIncome
+  type: http
+  seq: 15
+
+http:
+  method: DELETE
+  url: http://localhost:3000/api/v1/user/6/income/delete/1
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

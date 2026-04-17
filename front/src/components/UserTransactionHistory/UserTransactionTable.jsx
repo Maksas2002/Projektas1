@@ -1,4 +1,6 @@
-function UserTransactionTable({ transaction }) {
+import DeleteIncome from "../DeleteIncome";
+
+function UserTransactionTable({ transaction, onDelete}) {
   // change colors basesd if its income or expense
   const colorChange = () => {
     if (transaction.type === "expense") {
@@ -19,6 +21,10 @@ function UserTransactionTable({ transaction }) {
           </div>
         </div>
         <p style={{color: colorChange()}} className="text-white">€{transaction.amount}</p>
+
+        <div>
+          { transaction.type === "income" ? <DeleteIncome userId={transaction.user_id} incomeId={transaction.id} onDelete={onDelete}/> : <p className="text-sm ">expense delete</p>}
+        </div>
       </div>
     </>
   );
