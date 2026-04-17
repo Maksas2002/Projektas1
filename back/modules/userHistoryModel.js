@@ -4,7 +4,7 @@ import { sql } from "../dbConnection.js";
 export const userCombinedHistoryM = async (id) => {
   const userCombinedHistory = await sql`
 SELECT 
-    expenses.*, 
+    expenses.*,
     TO_CHAR(expenses.date, 'YYYY-MM-DD') AS formatted_date, 
     categories.name AS category_name,
     'expense' AS type
@@ -25,7 +25,9 @@ LEFT JOIN categories
     ON income.category_id = categories.id
 WHERE income.user_id =  ${id}
 
-ORDER BY formatted_date DESC;
+ORDER BY created_at DESC;
+
+
 `;
 
   return userCombinedHistory;
