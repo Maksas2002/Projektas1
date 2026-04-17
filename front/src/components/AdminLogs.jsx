@@ -40,6 +40,10 @@ const AdminLogs = () => {
 
   const getActionBadge = (action) => {
     const base = "px-2 py-1 rounded-md text-[10px] font-bold uppercase ";
+    
+    // Nauja spalva prisijungimui (Violetinė/Indigo)
+    if (action.includes('LOGIN')) return base + "bg-indigo-500/20 text-indigo-400 border border-indigo-500/30";
+    
     if (action.includes('CREATE')) return base + "bg-green-500/20 text-green-400 border border-green-500/30";
     if (action.includes('UPDATE')) return base + "bg-blue-500/20 text-blue-400 border border-blue-500/30";
     if (action.includes('DELETE')) return base + "bg-red-500/20 text-red-400 border border-red-500/30";
@@ -61,11 +65,13 @@ const AdminLogs = () => {
           />
 
           <select 
-            className="bg-[#0f172a] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 outline-none focus:border-blue-500"
+            className="bg-[#0f172a] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 outline-none focus:border-blue-500 cursor-pointer"
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
           >
             <option value="All">All Actions</option>
+            <option value="LOGIN">User Logins</option>
+            <option value="LOGOUT">User Logouts</option>
             <option value="CREATE_CATEGORY">Create Category</option>
             <option value="UPDATE_CATEGORY">Update Category</option>
             <option value="DELETE_CATEGORY">Delete Category</option>
@@ -81,7 +87,7 @@ const AdminLogs = () => {
           <thead>
             <tr className="text-slate-400 text-[11px] uppercase font-bold tracking-wider border-b border-slate-700/50">
               <th className="px-6 py-4">Action</th>
-              <th className="px-6 py-4">Admin</th>
+              <th className="px-6 py-4">User / Admin</th>
               <th className="px-6 py-4">Target (Subject)</th>
               <th className="px-6 py-4">Details</th>
               <th className="px-6 py-4">Date</th>
