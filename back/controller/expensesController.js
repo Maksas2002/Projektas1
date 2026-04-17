@@ -1,4 +1,4 @@
-import { createExpenseM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -28,6 +28,33 @@ export const createExpenseC = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       data: post,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteExpenseC = async (req, res, next) => {
+  try {
+    const { id, expenseId } = req.params;
+
+    const deletedExpense = await deleteExpenseM(expenseId, id);
+
+    if (!deletedExpense) {
+      throw new AppError("Expense entry not found", 404);
+    }
+
+    await createLogM(
+      id,
+      req.user.name || "Vartotojas",
+      "delete",
+      `Vartotojas ištrynė išlaidą ID: ${expenseId}`,
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Expense was deleted",
+      data: deletedExpense,
     });
   } catch (error) {
     next(error);

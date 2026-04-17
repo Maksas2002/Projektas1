@@ -12,3 +12,13 @@ export const createExpenseM = async (data, user) => {
 
   return newExpense;
 };
+
+export const deleteExpenseM = async (expenseId, userId) => {
+  const deletedExpense = await sql`
+    DELETE FROM expenses
+    WHERE id = ${expenseId} AND user_id = ${userId}
+    RETURNING *
+  `;
+
+  return deletedExpense[0];
+};
