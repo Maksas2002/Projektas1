@@ -9,7 +9,7 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC} from "../controller/expensesController.js";
+import { createExpenseC, updateExpense} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -53,6 +53,8 @@ userRoutes.post(
   validate,
   createExpenseC,
 );
+userRoutes.patch("/:id/expenses/edit/:expenseId", authProtect, allowAccessTo("User"), restrictToOwnUser, updateExpense);
+
 
 // user expense and income history
 

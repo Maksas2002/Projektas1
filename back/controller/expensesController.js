@@ -34,3 +34,39 @@ export const createExpenseC = async (req, res, next) => {
   }
 };
 
+export const updateExpense = async (req, res, next) => {
+  try {
+    const expenseId = req.params.expenseId;
+    const userId = req.user.id;
+    const newData = req.body;
+
+    //1 Check if exists
+    const existing = await getExpenseByIdM(expenseId);
+    if (!existing) {
+      throw new AppError("Išlaida nerasta", 404);
+    }
+
+    //2 Check id with userId
+    if (existing.user_id !== userId) {
+      throw new AppError("Negalite redaguoti kito vartotojo išlaidų", 403);
+    }
+
+    //3 Update
+    const updated = await updateExpenseM(expenseId, newData);
+
+    await createLogM(
+      userId,
+      req.user.name || "Vartotojas",
+      "update",
+      `Vartotojas atnaujino išlaidą : ${expenseId.amount}€`
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
