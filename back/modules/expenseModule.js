@@ -13,3 +13,26 @@ export const createExpenseM = async (data, user) => {
   return newExpense;
 };
 
+export const getExpenseByIdM = async (id) =>{
+  const expense = await sql`
+    select * from expenses where id = ${id}
+  `;
+  return expense;
+}
+
+export const updateExpenseM = async (id, data) =>{
+  const { amount, date, description, category_id } = data;
+
+  const [updatedExpense] = await sql`
+    update expenses
+    set 
+      amount = coalesce(${amount}, amount),
+      date = coalesce(${date}, date),
+      description = coalesce(${description}, description),
+      category_id = coalesce(${category_id}, category_id)
+    where id = ${id}
+    returning *
+  `;
+
+  return updatedExpense;
+}
