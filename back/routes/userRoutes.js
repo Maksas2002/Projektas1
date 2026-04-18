@@ -9,6 +9,7 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
+import { createExpenseC, deleteExpenseC } from "../controller/expensesController.js";
 import { createExpenseC} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
@@ -71,6 +72,13 @@ userRoutes.post(
   restrictToOwnUser,
   validate,
   createExpenseC,
+);
+userRoutes.delete(
+  "/:id/expenses/delete/:expenseId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  deleteExpenseC,
 );
 
 // user expense and income history
