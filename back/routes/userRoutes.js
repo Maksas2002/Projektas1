@@ -7,9 +7,10 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC } from "../controller/incomeController.js";
+import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
 import { createExpenseC, deleteExpenseC } from "../controller/expensesController.js";
+import { createExpenseC} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -40,6 +41,28 @@ userRoutes.post(
   validate,
   createIncomeC,
 );
+
+// get income by id
+userRoutes.get(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  getIncomeByIdC
+);
+
+// update income
+userRoutes.patch(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  updateIncomeC
+);
+
+
+//delete
+userRoutes.delete("/:id/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
 
 // --- IŠLAIDOS (EXPENSES) ---
 userRoutes.post(

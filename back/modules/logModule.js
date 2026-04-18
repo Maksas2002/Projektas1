@@ -3,6 +3,7 @@ import { sql } from "../dbConnection.js";
 export const getLogsM = async (filters) => {
   const { user, action, startDate, endDate } = filters;
 
+
   let query = sql`
     SELECT l.*, u.name as user_display_name 
     FROM logs l
@@ -10,22 +11,33 @@ export const getLogsM = async (filters) => {
     WHERE 1=1
   `;
 
-  if (user) {
-    query = sql`${query} AND (u.name ILIKE ${'%' + user + '%'} OR l.username ILIKE ${'%' + user + '%'})`;
+  // Dinamiškai pridedame filtrus
+  if (user && user.trim() !== "") {
+    const searchPattern = `%${user}%`;
+    query = sql`${query} AND (u.name ILIKE ${searchPattern} OR l.username ILIKE ${searchPattern} OR l.target_name ILIKE ${searchPattern})`;
   }
-  if (action) {
-    query = sql`${query} AND l.action = ${action}`;
-  }
+
+  // Filtravimas pagal veiksmą (LOGIN, CREATE_USER ir t.t.)
+  if (action && action !== 'All') {
+  query = sql`${query} AND UPPER(TRIM(l.action)) = UPPER(TRIM(${action}))`;
+}
+
   if (startDate && endDate) {
     query = sql`${query} AND l.created_at BETWEEN ${startDate} AND ${endDate}`;
   }
 
+  // Galutinis rūšiavimas
   query = sql`${query} ORDER BY l.created_at DESC`;
 
-  return await query;
+  try {
+    const result = await query;
+    return result;
+  } catch (error) {
+    console.error("SQL Error in getLogsM:", error);
+    throw error;
+  }
 };
 
-// Atnaujinta funkcija su targetName palaikymu
 export const createLogM = async (userId, username, action, targetName, details) => {
   const safeUserId = userId || null;
   const safeUsername = username || 'System/Admin';

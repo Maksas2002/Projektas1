@@ -3,11 +3,14 @@ import axios from "axios";
 import errorHandler from "../../utils/errorHandler";
 import { useContext, useEffect, useState } from "react";
 import { TransactionContext } from "../../utlis/TransactionContext";
+import EditIncome from "../EditIncome/EditIncome";
 
 function UserHistoryBase() {
   const { setTransaction } = useContext(TransactionContext);
   const transaction = useContext(TransactionContext);
   const [error, setError] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedIncomeId, setSelectedIncomeId] = useState(null);
 
   const fetchTransactions = async () => {
     try {
@@ -32,6 +35,13 @@ function UserHistoryBase() {
       setError(errorHandler(error));
     }
   };
+
+  // edit income
+  const handleEdit = (transaction) => {
+    setSelectedIncomeId(transaction.id);
+    setIsEditOpen(true);
+  };
+
 
   const handleDeleteFromList = () => {
     fetchTransactions();
@@ -58,6 +68,23 @@ function UserHistoryBase() {
               onDelete={handleDeleteFromList}
             />
           ))}
+          {isEditOpen && (
+        <EditIncome
+          isOpen={isEditOpen}
+          onToggle={() => setIsEditOpen(false)}
+          incomeId={selectedIncomeId}
+        />
+      )}
+        <p className="text-white self-baseline pl-26 text-[1.2rem]">Transaction History</p>
+        <p className="text-red-500 text-center">{error}</p>
+        {transaction.transaction.map((transaction) => (
+          <UserTransactionTable
+            key={transaction.id}
+            transaction={transaction}
+            onEdit={handleEdit}
+            onDelete={handleDeleteFromList}
+          />
+        ))}
       </section>
     </>
   );
