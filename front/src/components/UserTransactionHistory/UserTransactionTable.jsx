@@ -57,7 +57,9 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
         </div>
 
         <div>
-          {transaction.type === "income" ? <DeleteIncome userId={transaction.user_id} incomeId={transaction.id} onDelete={onDelete} /> : <DeleteExpense/>}
+          {transaction.type === "income" ? <DeleteIncome userId={transaction.user_id} incomeId={transaction.id} onDelete={onDelete} /> : <DeleteExpense  userId={transaction.user_id}
+              expenseId={transaction.id}
+              onDelete={onDelete}/>}
         </div>
       </div>
       </div>
