@@ -108,17 +108,20 @@ export const totalMonthlyIncomeC = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const fDate = new Date(req.params.date);
+    const fDateShort = fDate.toISOString().slice(0, 10);
 
-    let lDate;
-    // automaticlly changes selected date (fDate, yyyy-mm-01) to another month (lDate) first day
-    if (fDate.getMonth() == 11) {
-      lDate = new Date(fDate.getFullYear() + 1, 0, 1);
-    } else {
-      lDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 1);
-    }
 
-    const monthlyIncome = await totalMonthlyIncomeM(userId, fDate, lDate);
-    
+    // changes selected month's first day to the last day
+    const lastDay = new Date(
+      fDate.getFullYear(),
+      fDate.getMonth() + 1,
+      0
+    );
+
+    const lastDayShort = lastDay.toISOString().slice(0, 10);
+
+    const monthlyIncome = await totalMonthlyIncomeM(userId, fDateShort, lastDayShort);
+
     res.status(200).json({
       status: "success",
       incomeSum: monthlyIncome,

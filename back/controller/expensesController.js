@@ -6,7 +6,7 @@ export const createExpenseC = async (req, res, next) => {
   try {
     const newData = req.body;
     // user.id gauname iš authenticateToken middleware
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     // Minimali validacija
     if (!newData.amount || !newData.date || !newData.category_id) {
@@ -40,20 +40,23 @@ export const totalMonthlyExpensesC = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const fDate = new Date(req.params.date);
+    const fDateShort = fDate.toISOString().slice(0, 10);
 
-    let lDate;
-    // automaticlly changes selected date (fDate, yyyy-mm-01) to another month (lDate) first day
-    if (fDate.getMonth() == 11) {
-      lDate = new Date(fDate.getFullYear() + 1, 0, 1);
-    } else {
-      lDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 1);
-    }
 
-    const monthlyExpenses = await totalMonthlyExpensesM(userId, fDate, lDate);
-    
+    // changes selected month's first day to the last day
+    const lastDay = new Date(
+      fDate.getFullYear(),
+      fDate.getMonth() + 1,
+      0
+    );
+
+    const lastDayShort = lastDay.toISOString().slice(0, 10);
+
+    const monthlyExpenses = await totalMonthlyExpensesM(userId, fDateShort, lastDayShort);
+
     res.status(200).json({
       status: "success",
-      incomeSum: monthlyExpenses,
+      expensesSum: monthlyExpenses,
     });
   } catch (error) {
     next(error)

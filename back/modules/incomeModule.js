@@ -60,13 +60,13 @@ export const deleteIncomeM = async (incomeId, id) =>{
 
 // calculate total user income by a month
 
-export const totalMonthlyIncomeM = async (userId, fDate, lDate) => {
+export const totalMonthlyIncomeM = async (userId, fDateShort, lastDayShort) => {
   const monthlyIncome = await sql`
   SELECT COALESCE(SUM(amount), 0) AS total_income
   FROM income
   WHERE user_id = ${Number(userId)}
-  AND date >= ${fDate}
-  AND date < ${lDate};
+  AND date >= ${fDateShort}
+  AND date <= ${lastDayShort};
   `
 
   return monthlyIncome;
