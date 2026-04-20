@@ -154,7 +154,7 @@ const AdminPage = () => {
                 {users.map((user) => (
                   <tr key={user.id || user._id} className="hover:bg-slate-800/40 transition-all group">
                     <td className="px-6 py-4 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm font-bold text-white uppercase shadow-lg">
+                      <div className="w-9 h-9 rounded-lg bg-linear-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm font-bold text-white uppercase shadow-lg">
                         {user.name?.charAt(0) || 'U'}
                       </div>
                       <span className="font-semibold text-white">{user.name}</span>
