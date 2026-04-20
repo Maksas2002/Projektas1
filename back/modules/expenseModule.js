@@ -13,3 +13,16 @@ export const createExpenseM = async (data, user) => {
   return newExpense;
 };
 
+// calculate total user expense by a month
+
+export const totalMonthlyExpensesM = async (userId, fDate, lDate) => {
+  const monthlyExpenses = await sql`
+  SELECT COALESCE(SUM(amount), 0) AS total_expenses
+  FROM expenses
+  WHERE user_id = ${Number(userId)}
+  AND date >= ${fDate}
+  AND date < ${lDate};
+  `
+
+  return monthlyExpenses;
+}

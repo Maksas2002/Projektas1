@@ -58,7 +58,7 @@ export const deleteIncomeM = async (incomeId, id) =>{
   return deleteIncome[0];
 }
 
-// calculate total user income by month
+// calculate total user income by a month
 
 export const totalMonthlyIncomeM = async (userId, fDate, lDate) => {
   const monthlyIncome = await sql`

@@ -110,7 +110,7 @@ export const totalMonthlyIncomeC = async (req, res, next) => {
     const fDate = new Date(req.params.date);
 
     let lDate;
-    // automaticlly switches selected date (fDate, yyyy-mm-01) to another month (lDate) first day
+    // automaticlly changes selected date (fDate, yyyy-mm-01) to another month (lDate) first day
     if (fDate.getMonth() == 11) {
       lDate = new Date(fDate.getFullYear() + 1, 0, 1);
     } else {

@@ -9,7 +9,7 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC } from "../controller/expensesController.js";
+import { createExpenseC, totalMonthlyExpensesC } from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -82,7 +82,7 @@ userRoutes.get(
   userCombinedHistoryC
 );
 
-
+// calculationd
 // user total monthly income (yyyy-mm-01)
 
 userRoutes.get(
@@ -92,3 +92,12 @@ userRoutes.get(
   totalMonthlyIncomeC
 )
 export default userRoutes;
+
+// user total monthly expenses(yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalExpenses",
+  authProtect,
+  allowAccessTo("User"),
+  totalMonthlyExpensesC
+)
