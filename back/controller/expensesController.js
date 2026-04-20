@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, deleteExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -60,6 +60,7 @@ export const deleteExpenseC = async (req, res, next) => {
     next(error);
   }
 };
+
 // calculate total user income by month
 
 export const totalMonthlyExpensesC = async (req, res, next) => {

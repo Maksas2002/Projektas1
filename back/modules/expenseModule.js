@@ -22,6 +22,7 @@ export const deleteExpenseM = async (expenseId, userId) => {
 
   return deletedExpense[0];
 };
+
 // calculate total user expense by a month
 
 export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) => {
