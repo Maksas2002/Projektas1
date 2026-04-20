@@ -1,7 +1,7 @@
 import DeleteExpense from "../DeleteExpenses.jsx";
-
-function UserTransactionTable({ transaction, onDelete }) {
 import DeleteIncome from "../DeleteIncome";
+
+// function UserTransactionTable({ transaction, onDelete }) {
 
 function UserTransactionTable({ transaction, onEdit, onDelete }) {
   // change colors basesd if its income or expense
@@ -15,10 +15,10 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
 
   return (
     <>
-      <div
+      {/* <div
         style={{ color: colorChange() }}
         className="border flex justify-between items-center pt-2 pb-2 pr-2 pl-2 w-[70%] rounded-[13px] bg-[#070c20]"
-      >
+      > */}
       <div style={{ color: colorChange() }} className="border flex justify-between items-center pt-2 pb-2 pr-2 pl-2 w-[70%] rounded-[13px] bg-[#070c20]">
         <div>
           <p className="text-white">{transaction.description}</p>
