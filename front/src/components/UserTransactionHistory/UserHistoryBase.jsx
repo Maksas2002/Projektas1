@@ -7,6 +7,7 @@ import EditIncome from "../EditIncome/EditIncome";
 
 function UserHistoryBase() {
   const { transaction, setTransaction } = useContext(TransactionContext);
+  
   const [error, setError] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedIncomeId, setSelectedIncomeId] = useState(null);
@@ -59,8 +60,8 @@ function UserHistoryBase() {
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
-        {transaction?.transaction?.length > 0 ? (
-          transaction.transaction.map((item) => (
+        {transaction?.length > 0 ? (
+          transaction.map((item) => (
             <UserTransactionTable
               key={item.id}
               transaction={item}

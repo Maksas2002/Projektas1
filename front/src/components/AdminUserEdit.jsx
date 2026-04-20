@@ -34,7 +34,7 @@ const AdminUserEdit = ({ user, onClose, onUpdated }) => {
             onUpdated();
             onClose();
         } catch (error) {
-            alert(err.response?.data?.error || "Nepavyko atnaujinti vartotojo");
+            alert(error.response?.data?.error || "Nepavyko atnaujinti vartotojo");
         }
     }
 
