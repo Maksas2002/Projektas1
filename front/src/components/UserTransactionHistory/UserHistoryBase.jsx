@@ -8,6 +8,7 @@ import EditIncome from "../EditIncome/EditIncome";
 function UserHistoryBase() {
   const { setTransaction } = useContext(TransactionContext);
   const transaction = useContext(TransactionContext);
+
   const [error, setError] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedIncomeId, setSelectedIncomeId] = useState(null);
@@ -36,12 +37,10 @@ function UserHistoryBase() {
     }
   };
 
-  // edit income
   const handleEdit = (transaction) => {
     setSelectedIncomeId(transaction.id);
     setIsEditOpen(true);
   };
-
 
   const handleDeleteFromList = () => {
     fetchTransactions();
@@ -65,26 +64,18 @@ function UserHistoryBase() {
             <UserTransactionTable
               key={`${transaction.type}-${transaction.id}`}
               transaction={transaction}
+              onEdit={handleEdit}
               onDelete={handleDeleteFromList}
             />
           ))}
-          {isEditOpen && (
-        <EditIncome
-          isOpen={isEditOpen}
-          onToggle={() => setIsEditOpen(false)}
-          incomeId={selectedIncomeId}
-        />
-      )}
-        <p className="text-white self-baseline pl-26 text-[1.2rem]">Transaction History</p>
-        <p className="text-red-500 text-center">{error}</p>
-        {transaction.transaction.map((transaction) => (
-          <UserTransactionTable
-            key={transaction.id}
-            transaction={transaction}
-            onEdit={handleEdit}
-            onDelete={handleDeleteFromList}
+
+        {isEditOpen && (
+          <EditIncome
+            isOpen={isEditOpen}
+            onToggle={() => setIsEditOpen(false)}
+            incomeId={selectedIncomeId}
           />
-        ))}
+        )}
       </section>
     </>
   );

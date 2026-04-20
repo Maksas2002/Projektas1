@@ -1,16 +1,10 @@
 import DeleteExpense from "../DeleteExpenses.jsx";
-
-function UserTransactionTable({ transaction, onDelete }) {
-import DeleteIncome from "../DeleteIncome";
+import DeleteIncome from "../DeleteIncome.jsx";
 
 function UserTransactionTable({ transaction, onEdit, onDelete }) {
-  // change colors basesd if its income or expense
   const colorChange = () => {
-    if (transaction.type === "expense") {
-      return "red";
-    } else if (transaction.type === "income") {
-      return "green";
-    }
+    if (transaction.type === "expense") return "red";
+    if (transaction.type === "income") return "green";
   };
 
   return (
@@ -19,7 +13,6 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
         style={{ color: colorChange() }}
         className="border flex justify-between items-center pt-2 pb-2 pr-2 pl-2 w-[70%] rounded-[13px] bg-[#070c20]"
       >
-      <div style={{ color: colorChange() }} className="border flex justify-between items-center pt-2 pb-2 pr-2 pl-2 w-[70%] rounded-[13px] bg-[#070c20]">
         <div>
           <p className="text-white">{transaction.description}</p>
           <div className="flex gap-2">
@@ -40,25 +33,24 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
               onDelete={onDelete}
             />
           )}
-        </div>
-        <div className="flex items-center gap-3">
-        <p style={{ color: colorChange() }} className="text-white">€{transaction.amount}</p>
 
-        <div>
           {transaction.type === "income" && (
-            <button
-              onClick={() => onEdit(transaction)}
-              className="text-yellow-400 hover:text-yellow-300 text-sm"
-            >
-              Edit
-            </button>
+            <>
+              <button
+                onClick={() => onEdit(transaction)}
+                className="text-yellow-400 hover:text-yellow-300 text-sm"
+              >
+                Edit
+              </button>
+
+              <DeleteIncome
+                userId={transaction.user_id}
+                incomeId={transaction.id}
+                onDelete={onDelete}
+              />
+            </>
           )}
         </div>
-
-        <div>
-          {transaction.type === "income" ? <DeleteIncome userId={transaction.user_id} incomeId={transaction.id} onDelete={onDelete} /> : <p className="text-sm ">expense delete</p>}
-        </div>
-      </div>
       </div>
     </>
   );
