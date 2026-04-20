@@ -8,6 +8,7 @@ import {
   deleteMe,
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
+import { userMonthlyBalanceC } from "../controller/userBalanceController.js"
 // NAUJAS IMPORTAS:
 import { createExpenseC, totalMonthlyExpensesC } from "../controller/expensesController.js";
 
@@ -100,4 +101,13 @@ userRoutes.get(
   authProtect,
   allowAccessTo("User"),
   totalMonthlyExpensesC
+)
+
+// user monthly balance expenses(yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalBalance",
+  authProtect,
+  allowAccessTo("User"),
+  userMonthlyBalanceC
 )
