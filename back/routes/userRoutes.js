@@ -7,9 +7,9 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
+import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC} from "../controller/expensesController.js";
+import { createExpenseC } from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -82,4 +82,13 @@ userRoutes.get(
   userCombinedHistoryC
 );
 
+
+// user total monthly income (yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalIncome",
+  authProtect,
+  allowAccessTo("User"),
+  totalMonthlyIncomeC
+)
 export default userRoutes;

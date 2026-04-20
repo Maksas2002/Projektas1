@@ -1,4 +1,4 @@
-import { createIncomeM, getIncomeByIdM, updateIncomeM, deleteIncomeM } from "../modules/incomeModule.js";
+import { createIncomeM, getIncomeByIdM, updateIncomeM, deleteIncomeM, totalMonthlyIncomeM } from "../modules/incomeModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -15,9 +15,9 @@ export const createIncomeC = async (req, res, next) => {
 
     // 2. Registruojame veiksmą loguose
     await createLogM(
-      id, 
-      req.user?.name || "Vartotojas", 
-      "create", 
+      id,
+      req.user?.name || "Vartotojas",
+      "create",
       `Pridėtos pajamos: ${newData.amount}€ (${newData.description || "be aprašymo"})`
     );
 
@@ -89,7 +89,7 @@ export const deleteIncome = async (req, res, next) => {
 
     const deletedIncome = await deleteIncomeM(incomeId, id);
 
-    if(!deletedIncome){
+    if (!deletedIncome) {
       throw new AppError("Income entry not found", 404);
     }
 
@@ -99,5 +99,31 @@ export const deleteIncome = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+// calculate total user income by month
+
+export const totalMonthlyIncomeC = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const fDate = new Date(req.params.date);
+
+    let lDate;
+    // automaticlly switches selected date (fDate, yyyy-mm-01) to another month (lDate) first day
+    if (fDate.getMonth() == 11) {
+      lDate = new Date(fDate.getFullYear() + 1, 0, 1);
+    } else {
+      lDate = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 1);
+    }
+
+    const monthlyIncome = await totalMonthlyIncomeM(userId, fDate, lDate);
+    
+    res.status(200).json({
+      status: "success",
+      incomeSum: monthlyIncome,
+    });
+  } catch (error) {
+    next(error)
   }
 }
