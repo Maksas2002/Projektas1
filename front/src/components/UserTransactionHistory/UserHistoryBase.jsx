@@ -1,67 +1,84 @@
-import UserTransactionTable from "./UserTransactionTable";
+import { useContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import errorHandler from "../../utils/errorHandler";
-import { useContext, useEffect, useState } from "react";
 import { TransactionContext } from "../../utlis/TransactionContext";
+import UserTransactionTable from "./UserTransactionTable";
 import EditIncome from "../EditIncome/EditIncome";
 
 function UserHistoryBase() {
-  const { setTransaction } = useContext(TransactionContext);
-  const transaction = useContext(TransactionContext);
+  const { transaction, setTransaction } = useContext(TransactionContext);
   const [error, setError] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedIncomeId, setSelectedIncomeId] = useState(null);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/user/history`,
-        {
-          withCredentials: true,
-        },
+        "http://localhost:3000/api/v1/user/history",
+        { withCredentials: true }
       );
+
       setTransaction(response.data.data);
+      setError(null);
     } catch (error) {
       console.log(error);
+
+      if (error.response?.status === 404) {
+        setTransaction({ transaction: [] });
+        setError("No incomes or expenses found");
+        return;
+      }
+
       setError(errorHandler(error));
     }
-  };
+  }, [setTransaction]);
 
-  // edit income
-  const handleEdit = (transaction) => {
-    setSelectedIncomeId(transaction.id);
+  useEffect(() => {
+    const load = async () => {
+      await fetchTransactions();
+    };
+    load();
+  }, [fetchTransactions]);
+
+  const handleEdit = (item) => {
+    setSelectedIncomeId(item.id);
     setIsEditOpen(true);
   };
-
 
   const handleDeleteFromList = () => {
     fetchTransactions();
   };
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
   return (
     <>
-      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-[740px] mx-auto">
-          {isEditOpen && (
-        <EditIncome
-          isOpen={isEditOpen}
-          onToggle={() => setIsEditOpen(false)}
-          incomeId={selectedIncomeId}
-        />
-      )}
-        <p className="text-white self-baseline pl-26 text-[1.2rem]">Transaction History</p>
-        <p className="text-red-500 text-center">{error}</p>
-        {transaction.transaction.map((transaction) => (
-          <UserTransactionTable
-            key={transaction.id}
-            transaction={transaction}
-            onEdit={handleEdit}
-            onDelete={handleDeleteFromList}
+      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-185 mx-auto">
+        
+        <p className="text-white self-baseline pl-26 text-[1.2rem]">
+          Transaction History
+        </p>
+
+        {error && <p className="text-red-500 text-center">{error}</p>}
+
+        {transaction?.transaction?.length > 0 ? (
+          transaction.transaction.map((item) => (
+            <UserTransactionTable
+              key={item.id}
+              transaction={item}
+              onEdit={handleEdit}
+              onDelete={handleDeleteFromList}
+            />
+          ))
+        ) : (
+          <p className="text-gray-400">No transactions found</p>
+        )}
+
+        {isEditOpen && (
+          <EditIncome
+            isOpen={isEditOpen}
+            onToggle={() => setIsEditOpen(false)}
+            incomeId={selectedIncomeId}
           />
-        ))}
+        )}
       </section>
     </>
   );

@@ -1,11 +1,11 @@
 info:
-  name: userAllExpenses
+  name: delete expenses
   type: http
-  seq: 2
+  seq: 4
 
 http:
-  method: GET
-  url: http://localhost:api/v1/user/2024-04-01/totalExpenses
+  method: DELETE
+  url: http://localhost:3000/api/v1/user/6/expenses/delete/1
   auth: inherit
 
 settings:

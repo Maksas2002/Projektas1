@@ -8,8 +8,10 @@ import {
   deleteMe,
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
+import { userMonthlyBalanceC } from "../controller/userBalanceController.js"
 // NAUJAS IMPORTAS:
-import { createExpenseC, totalMonthlyExpensesC } from "../controller/expensesController.js";
+import { createExpenseC, totalMonthlyExpensesC , deleteExpenseC } from "../controller/expensesController.js";
+// import { createExpenseC} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
@@ -72,6 +74,13 @@ userRoutes.post(
   validate,
   createExpenseC,
 );
+userRoutes.delete(
+  "/:id/expenses/delete/:expenseId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  deleteExpenseC,
+);
 
 // user expense and income history
 
@@ -100,4 +109,13 @@ userRoutes.get(
   authProtect,
   allowAccessTo("User"),
   totalMonthlyExpensesC
+)
+
+// user monthly balance expenses(yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalBalance",
+  authProtect,
+  allowAccessTo("User"),
+  userMonthlyBalanceC
 )
