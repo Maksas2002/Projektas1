@@ -4,12 +4,16 @@ import errorHandler from "../../utils/errorHandler";
 import { TransactionContext } from "../../utlis/TransactionContext";
 import UserTransactionTable from "./UserTransactionTable";
 import EditIncome from "../EditIncome/EditIncome";
+import EditExpense from "../EditExpense/EditExpense";
 
 function UserHistoryBase() {
   const { transaction, setTransaction } = useContext(TransactionContext);
   const [error, setError] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedIncomeId, setSelectedIncomeId] = useState(null);
+  const [isExpenseEditOpen, setExpenseEditOpen] = useState(false);
+  const [selectedExpenseId, setSelectedExpenseId] = useState(null);
+
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -46,6 +50,11 @@ function UserHistoryBase() {
     setIsEditOpen(true);
   };
 
+  const handleEditExpense = (item) => {
+    setSelectedExpenseId(item.id);
+    setExpenseEditOpen(true);
+  }
+
   const handleDeleteFromList = () => {
     fetchTransactions();
   };
@@ -66,6 +75,7 @@ function UserHistoryBase() {
               key={item.id}
               transaction={item}
               onEdit={handleEdit}
+              onEditExpense={handleEditExpense}
               onDelete={handleDeleteFromList}
             />
           ))
@@ -78,6 +88,14 @@ function UserHistoryBase() {
             isOpen={isEditOpen}
             onToggle={() => setIsEditOpen(false)}
             incomeId={selectedIncomeId}
+          />
+        )}
+
+        {isExpenseEditOpen && (
+          <EditExpense
+            isOpen={isExpenseEditOpen}
+            onToggle={() => setExpenseEditOpen(false)}
+            incomeId={selectedExpenseId}
           />
         )}
       </section>

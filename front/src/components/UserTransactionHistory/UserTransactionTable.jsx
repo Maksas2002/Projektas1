@@ -1,7 +1,7 @@
 import DeleteExpense from "../DeleteExpenses.jsx";
 import DeleteIncome from "../DeleteIncome";
 
-function UserTransactionTable({ transaction, onEdit, onDelete }) {
+function UserTransactionTable({ transaction, onEdit, onEditExpense, onDelete }) {
 // change colors basesd if its income or expense
   const colorChange = () => {
     if (transaction.type === "expense") {
@@ -57,6 +57,7 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
             )}
             {transaction.type === "expense" && (
               <button
+              onClick={() => onEditExpense(transaction)}
                 className="text-yellow-400 hover:text-yellow-300 text-sm"
               >
                 Edit
