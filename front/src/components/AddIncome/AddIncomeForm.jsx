@@ -69,7 +69,7 @@ function AddIncomeForm() {
         <input
           type="number"
           step="any"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-green-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-green-500"
           placeholder="0.00"
           {...register("amount", {
             required: "Amount is required",
@@ -85,7 +85,7 @@ function AddIncomeForm() {
         <input
           type="text"
           placeholder="Source of income"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-green-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-green-500"
           {...register("description", { maxLength: 255 })}
         />
         {errors.description && <p className="text-xs text-red-500 pl-1">Too long (max 255 chars)</p>}
@@ -96,7 +96,7 @@ function AddIncomeForm() {
         <label className="block text-white text-sm pl-1">Date</label>
         <input
           type="date"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-green-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-green-500"
           {...register("date", { required: "Date is required" })}
         />
         {errors.date && <p className="text-xs text-red-500 pl-1">{errors.date.message}</p>}
@@ -106,7 +106,7 @@ function AddIncomeForm() {
       <div className="flex flex-col gap-1">
         <label className="block text-white text-sm pl-1">Category</label>
         <select
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-green-500 appearance-none"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-green-500 appearance-none"
           {...register("category_id", { required: "Select a category" })}
         >
           <option value="">Select Category</option>
@@ -119,7 +119,7 @@ function AddIncomeForm() {
 
       <input 
         type="submit" 
-        className="block border border-green-600 hover:bg-green-700 cursor-pointer rounded-[6px] bg-green-600 text-white mt-4 py-2 font-bold transition-all shadow-md" 
+        className="block border border-green-600 hover:bg-green-700 cursor-pointer rounded-md bg-green-600 text-white mt-4 py-2 font-bold transition-all shadow-md" 
         value="Save Transaction" 
       />
 

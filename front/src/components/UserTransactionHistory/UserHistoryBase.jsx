@@ -40,6 +40,7 @@ function UserHistoryBase() {
     };
     load();
   }, [fetchTransactions]);
+  
 
   const handleEdit = (item) => {
     setSelectedIncomeId(item.id);

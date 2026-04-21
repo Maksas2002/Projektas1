@@ -116,7 +116,7 @@ function EditIncomeForm({ incomeId, onClose }) {
         <input
           type="number"
           step="any"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-yellow-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-yellow-500"
           {...register("amount", {
             required: "Amount is required",
             min: { value: 0.01, message: "Number must be positive" },
@@ -132,7 +132,7 @@ function EditIncomeForm({ incomeId, onClose }) {
         <label className="text-white text-sm pl-1">Description</label>
         <input
           type="text"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-yellow-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-yellow-500"
           {...register("description", { maxLength: 255 })}
         />
         {errors.description && (
@@ -145,7 +145,7 @@ function EditIncomeForm({ incomeId, onClose }) {
         <label className="text-white text-sm pl-1">Date</label>
         <input
           type="date"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-yellow-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-yellow-500"
           {...register("date", { required: "Date is required" })}
         />
         {errors.date && (
@@ -157,7 +157,7 @@ function EditIncomeForm({ incomeId, onClose }) {
       <div className="flex flex-col gap-1">
         <label className="text-white text-sm pl-1">Category</label>
         <select
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-yellow-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-yellow-500"
           {...register("category_id", { required: "Select a category" })}
         >
           <option value="">Select Category</option>
@@ -176,7 +176,7 @@ function EditIncomeForm({ incomeId, onClose }) {
       <input
         type="submit"
         value="Save Changes"
-        className="block border border-yellow-600 hover:bg-yellow-700 cursor-pointer rounded-[6px] bg-yellow-600 text-white mt-4 py-2 font-bold transition-all shadow-md"
+        className="block border border-yellow-600 hover:bg-yellow-700 cursor-pointer rounded-md bg-yellow-600 text-white mt-4 py-2 font-bold transition-all shadow-md"
       />
 
       {/* Inline messages */}
