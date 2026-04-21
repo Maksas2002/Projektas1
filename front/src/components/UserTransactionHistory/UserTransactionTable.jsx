@@ -45,6 +45,7 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
         <div className="flex items-center gap-3">
           <p style={{ color: colorChange() }} className="text-white">€{transaction.amount}</p>
 
+          {/* edit */}
           <div>
             {transaction.type === "income" && (
               <button
@@ -54,8 +55,16 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
                 Edit
               </button>
             )}
+            {transaction.type === "expense" && (
+              <button
+                className="text-yellow-400 hover:text-yellow-300 text-sm"
+              >
+                Edit
+              </button>
+            )}
           </div>
 
+          {/* delete */}
           <div>
             {transaction.type === "income" ?
               <DeleteIncome userId={transaction.user_id}
@@ -66,10 +75,6 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
                 expenseId={transaction.id}
                 onDelete={onDelete} />}
           </div>
-        </div>
-
-        <div>
-          {transaction.type === "income" ? <DeleteIncome userId={transaction.user_id} incomeId={transaction.id} onDelete={onDelete} /> : <p className="text-sm ">expense delete</p>}
         </div>
       </div>
     </>
