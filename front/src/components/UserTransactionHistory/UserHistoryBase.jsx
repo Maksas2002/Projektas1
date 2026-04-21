@@ -40,6 +40,7 @@ function UserHistoryBase() {
     load();
   }, [fetchTransactions]);
 
+
   const handleEdit = (item) => {
     setSelectedIncomeId(item.id);
     setIsEditOpen(true);
@@ -59,8 +60,8 @@ function UserHistoryBase() {
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
-        {transaction?.transaction?.length > 0 ? (
-          transaction.transaction.map((item) => (
+        {transaction?.length > 0 ? (
+          transaction.map((item) => (
             <UserTransactionTable
               key={item.id}
               transaction={item}
