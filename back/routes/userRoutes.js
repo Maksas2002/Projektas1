@@ -7,14 +7,17 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC, deleteIncome } from "../controller/incomeController.js";
+import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC, updateExpense} from "../controller/expensesController.js";
+import { createExpenseC, deleteExpenseC, updateExpense } from "../controller/expensesController.js";
+
+// import { createExpenseC} from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
+import expenseEdit from "../validation/expenseEdit.js";
 import validate from "../validation/validate.js";
 import restrictToOwnUser from "../middleware/restrictToOwnerUser.js";
 import { allowAccessTo } from "../middleware/allowAcceesTo.js";
@@ -41,6 +44,25 @@ userRoutes.post(
   createIncomeC,
 );
 
+// get income by id
+userRoutes.get(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  getIncomeByIdC
+);
+
+// update income
+userRoutes.patch(
+  "/:id/income/:incomeId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  updateIncomeC
+);
+
+
 //delete
 userRoutes.delete("/:id/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
 
@@ -53,8 +75,14 @@ userRoutes.post(
   validate,
   createExpenseC,
 );
-userRoutes.patch("/:id/expenses/edit/:expenseId", authProtect, allowAccessTo("User"), restrictToOwnUser, updateExpense);
-
+userRoutes.delete(
+  "/:id/expenses/delete/:expenseId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  deleteExpenseC,
+);
+userRoutes.patch("/:id/expenses/edit/:expenseId", authProtect, allowAccessTo("User"), restrictToOwnUser, expenseEdit, validate, updateExpense);
 
 // user expense and income history
 
