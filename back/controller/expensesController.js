@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, deleteExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
