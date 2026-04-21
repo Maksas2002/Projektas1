@@ -13,12 +13,15 @@ export const createExpenseM = async (data, user) => {
   return newExpense;
 };
 
-export const getExpenseByIdM = async (id) =>{
-  const expense = await sql`
-    select * from expenses where id = ${id}
+export const getExpenseByIdM = async (userId, expenseId) => {
+  const [expense] = await sql`
+    SELECT *
+    FROM expenses
+    WHERE id = ${expenseId} AND user_id = ${userId}
   `;
   return expense;
-}
+};
+
 
 export const updateExpenseM = async (id, data) =>{
   const { amount, date, description, category_id } = data;

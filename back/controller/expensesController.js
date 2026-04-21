@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, getExpenseByIdM, updateExpenseM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -34,6 +34,25 @@ export const createExpenseC = async (req, res, next) => {
   }
 };
 
+export const getExpenseByIdC = async (req, res, next) => {
+  try {
+    const { id: userId, expenseId } = req.params;
+
+    const expense = await getExpenseByIdM(userId, expenseId);
+
+    if (!expense) {
+      throw new AppError("Expense record not found", 404);
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: expense,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const updateExpense = async (req, res, next) => {
   try {
     const expenseId = req.params.expenseId;
@@ -41,7 +60,7 @@ export const updateExpense = async (req, res, next) => {
     const newData = req.body;
 
     //1 Check if exists
-    const existing = await getExpenseByIdM(expenseId);
+    const existing = await getExpenseByIdM(userId, expenseId);
     if (!existing) {
       throw new AppError("Išlaida nerasta", 404);
     }

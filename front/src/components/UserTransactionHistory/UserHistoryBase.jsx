@@ -95,7 +95,7 @@ function UserHistoryBase() {
           <EditExpense
             isOpen={isExpenseEditOpen}
             onToggle={() => setExpenseEditOpen(false)}
-            incomeId={selectedExpenseId}
+            expenseId={selectedExpenseId}
           />
         )}
       </section>
