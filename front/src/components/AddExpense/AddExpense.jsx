@@ -8,7 +8,7 @@ function AddExpense({ isOpen, onToggle }) {
         <p className="text-white text-[1.2rem]">Add Expense</p>
         <button
           type="button"
-          className="flex items-center gap-2 py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-[6px]"
+          className="flex items-center gap-2 py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-md"
           onClick={onToggle}
         >
           <img src={plus} alt="plus" className="w-4 h-4 brightness-0 invert" />

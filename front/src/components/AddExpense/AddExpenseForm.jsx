@@ -69,7 +69,7 @@ function AddExpenseForm() {
         <input
           type="number"
           step="any"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-red-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-red-500"
           placeholder="0.00"
           {...register("amount", {
             required: "Amount is required",
@@ -85,7 +85,7 @@ function AddExpenseForm() {
         <input
           type="text"
           placeholder="E.g. Groceries"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-red-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-red-500"
           {...register("description", { maxLength: 255 })}
         />
         {errors.description && <p className="text-xs text-red-500 pl-1">Max 255 characters</p>}
@@ -96,7 +96,7 @@ function AddExpenseForm() {
         <label className="block text-white text-sm pl-1">Date</label>
         <input
           type="date"
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-red-500"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-red-500"
           {...register("date", { required: "Date is required" })}
         />
         {errors.date && <p className="text-xs text-red-500 pl-1">{errors.date.message}</p>}
@@ -106,7 +106,7 @@ function AddExpenseForm() {
       <div className="flex flex-col gap-1">
         <label className="block text-white text-sm pl-1">Category</label>
         <select
-          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-[6px] text-white outline-none focus:border-red-500 appearance-none"
+          className="p-2 border bg-[#4e5263b2] border-blue-900 rounded-md text-white outline-none focus:border-red-500 appearance-none"
           {...register("category_id", { required: "Select a category" })}
         >
           <option value="">Select Category</option>
@@ -119,7 +119,7 @@ function AddExpenseForm() {
 
       <input 
         type="submit" 
-        className="block border border-red-600 hover:bg-red-700 cursor-pointer rounded-[6px] bg-red-600 text-white mt-4 py-2 font-bold transition-all" 
+        className="block border border-red-600 hover:bg-red-700 cursor-pointer rounded-md bg-red-600 text-white mt-4 py-2 font-bold transition-all" 
         value="Save Transaction" 
       />
 
