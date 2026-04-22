@@ -9,13 +9,12 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC, deleteExpenseC } from "../controller/expensesController.js";
-// import { createExpenseC} from "../controller/expensesController.js";
-
+import { createExpenseC, deleteExpenseC, getExpenseByIdC, updateExpense } from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
+import expenseEdit from "../validation/expenseEdit.js";
 import validate from "../validation/validate.js";
 import restrictToOwnUser from "../middleware/restrictToOwnerUser.js";
 import { allowAccessTo } from "../middleware/allowAcceesTo.js";
@@ -79,6 +78,15 @@ userRoutes.delete(
   allowAccessTo("User"),
   restrictToOwnUser,
   deleteExpenseC,
+);
+userRoutes.patch("/:id/expenses/edit/:expenseId", authProtect, allowAccessTo("User"), restrictToOwnUser, expenseEdit, validate, updateExpense);
+
+userRoutes.get(
+  "/:id/expense/:expenseId",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  getExpenseByIdC
 );
 
 // user expense and income history

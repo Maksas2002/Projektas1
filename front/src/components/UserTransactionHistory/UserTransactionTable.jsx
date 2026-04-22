@@ -1,7 +1,8 @@
 import DeleteExpense from "../DeleteExpenses.jsx";
 import DeleteIncome from "../DeleteIncome";
 
-function UserTransactionTable({ transaction, onEdit, onDelete }) {
+function UserTransactionTable({ transaction, onEdit, onEditExpense, onDelete }) {
+// change colors basesd if its income or expense
   const colorChange = () => {
     if (transaction.type === "expense") {
       return "red";
@@ -20,7 +21,6 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
             <p className="text-sky-400">{transaction.formatted_date}</p>
           </div>
         </div>
-
         <div className="flex items-center gap-4">
           {/* <p style={{ color: colorChange() }} className="text-white">
             €{transaction.amount}
@@ -45,6 +45,7 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
         <div className="flex items-center gap-3">
           <p style={{ color: colorChange() }} className="text-white">€{transaction.amount}</p>
 
+          {/* edit */}
           <div>
             {transaction.type === "income" && (
               <button
@@ -54,8 +55,17 @@ function UserTransactionTable({ transaction, onEdit, onDelete }) {
                 Edit
               </button>
             )}
+            {transaction.type === "expense" && (
+              <button
+              onClick={() => onEditExpense(transaction)}
+                className="text-yellow-400 hover:text-yellow-300 text-sm"
+              >
+                Edit
+              </button>
+            )}
           </div>
 
+          {/* delete */}
           <div>
             {transaction.type === "income" ?
               <DeleteIncome userId={transaction.user_id}
