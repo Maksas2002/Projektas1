@@ -1,11 +1,13 @@
+import MonthSelector from "./MonthSelector";
 import { useContext } from "react";
 import { UserContext } from "../../utlis/UserContext";
+import { TransactionContext } from "../../utlis/TransactionContext";
 
 function UpperPageBase() {
   const user = useContext(UserContext);
+  const { transaction } = useContext(TransactionContext);
 
   // get name from context
-
   const getUserName = () => {
     return user?.user?.name || user?.user?.data?.name || null;
   };
@@ -21,6 +23,12 @@ function UpperPageBase() {
             Here's your financial overview for month
           </p>
         </div>
+
+        <section>
+          <select className="border  border-[#061a75] bg-[#020b33] h-[0.7cm]">
+          <MonthSelector transaction={transaction} />
+          </select>
+        </section>
       </section>
     </>
   );
