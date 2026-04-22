@@ -14,7 +14,7 @@ function UpperPageBase() {
 
   return (
     <>
-      <section className="flex justify-around">
+      <section className="flex justify-around gap-55 pt-10">
         <div>
           <h1 className="text-white text-[1.5rem]">
             Welckome back, {getUserName()}
@@ -24,8 +24,8 @@ function UpperPageBase() {
           </p>
         </div>
 
-        <section>
-          <select className="border text-white border-[#061a75] bg-[#020b33] h-[0.7cm]">
+        <section className="relative right-3">
+          <select className="border pl-10 pr-10 rounded-[5px] text-white border-[#061a75] bg-[#020b33] h-[0.7cm]">
           <MonthSelector transaction={transaction} />
           </select>
         </section>
