@@ -25,7 +25,7 @@ function UpperPageBase() {
         </div>
 
         <section>
-          <select className="border  border-[#061a75] bg-[#020b33] h-[0.7cm]">
+          <select className="border text-white border-[#061a75] bg-[#020b33] h-[0.7cm]">
           <MonthSelector transaction={transaction} />
           </select>
         </section>
