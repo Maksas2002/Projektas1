@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../../utlis/UserContext";
 import errorHandler from "../../utils/errorHandler";
+import { toast } from "react-toastify";
 
 function EditExpenseForm({ expenseId, onClose }) {
   const [loading, setLoading] = useState(true);
@@ -78,6 +79,7 @@ function EditExpenseForm({ expenseId, onClose }) {
       );
 
       setSuccess("Expense updated successfully!");
+      toast.success("Expense updated successfully!");
 
       setTimeout(() => {
         onClose();
@@ -85,7 +87,10 @@ function EditExpenseForm({ expenseId, onClose }) {
       }, 800);
 
     } catch (err) {
-      setServerError(errorHandler(err));
+       const errorMessage = errorHandler(err);
+
+  setServerError(errorMessage);
+  toast.error(errorMessage);
     }
   };
 

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
 import errorHandler from "../utils/errorHandler";
+import { toast } from "react-toastify";
 
 function SignUpForm() {
   const [error, setError] = useState(null);
@@ -31,13 +32,16 @@ function SignUpForm() {
 
       console.log(response.data);
       setSuccess("Account created successfully");
+      toast.success("Account created successfully");
       reset();
 
       setTimeout(() => {
         navigate("/login");
       }, 1200);
     } catch (error) {
-      setError(errorHandler(error));
+      const errorMessage = errorHandler(error);
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
