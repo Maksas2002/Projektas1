@@ -6,6 +6,7 @@ import errorHandler from "../../utils/errorHandler";
 
 function AddExpenseForm() {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [categories, setCategories] = useState([]);
   const user = useContext(UserContext);
 
@@ -52,9 +53,10 @@ function AddExpenseForm() {
       );
 
       if (res.data.status === "success" || res.status === 200) {
-        alert("Expense added successfully!");
+      
+        setSuccess("Expense added successfully!");
         reset();
-        window.location.reload();
+       
       }
     } catch (error) {
       setError(errorHandler(error));
@@ -124,6 +126,22 @@ function AddExpenseForm() {
       />
 
       {error && <p className="text-center text-red-500 mt-2 text-sm">{error}</p>}
+      
+      {success && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
+    <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+      <p className="mb-6 text-lg font-medium">{success}</p>
+
+      <button
+        type="button"
+        onClick={() => window.location.reload()}
+        className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
     </form>
   );
 }

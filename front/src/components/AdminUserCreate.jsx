@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 const AdminUserCreate = ({ onUserCreated }) => {
   const [formData, setFormData] = useState({ 
@@ -38,22 +39,29 @@ const AdminUserCreate = ({ onUserCreated }) => {
         // Išvalome formą
         setFormData({ name: '', email: '', password: '', role: 'User' });
         if (onUserCreated) onUserCreated(); 
-        alert("Vartotojas sėkmingai sukurtas!");
+        toast.success("User created successfully!");
       }
       
     } catch (err) {
-      // 3. DETALUS KLAIDŲ APDOROJIMAS
       console.error("Registracijos klaida:", err.response);
       
       if (err.response?.status === 409) {
         setError("Šis el. pašto adresas jau užimtas.");
+        toast.error("Šis el. pašto adresas jau užimtas.");
       } else {
-        setError(err.response?.data?.message || err.response?.data?.error || "Serverio klaida. Patikrinkite ryšį.");
+        const errorMessage =
+          err.response?.data?.message ||
+          err.response?.data?.error ||
+          "Serverio klaida. Patikrinkite ryšį.";
+
+        setError(errorMessage);
+        toast.error(errorMessage);
       }
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
