@@ -40,7 +40,7 @@ function MonthlyBalance() {
 
  const balanceSituation = () => {
   switch (true) {
-    case !balance:
+    case Number(!balance) === 0:
       return "oklch(74.6% 0.16 232.661)";
     case Number(income) >= Number(expenses):
       return "green";
