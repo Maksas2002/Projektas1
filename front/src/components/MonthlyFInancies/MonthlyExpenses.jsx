@@ -1,12 +1,14 @@
 import axios from "axios";
 import errorHandler from "../../utils/errorHandler";
-import {ExpensesContext} from "../../utlis/ExpensesContext";
+import { ExpensesContext } from "../../utlis/ExpensesContext";
+import { TransactionContext } from "../../utlis/TransactionContext";
 import { useContext, useEffect, useState } from "react";
 import { MonthContext } from "../../utlis/MonthContext";
 
 function MonthlyExpenses() {
   const month = useContext(MonthContext);
-  const {  expenses, setExpenses } = useContext(ExpensesContext);
+  const { transaction } = useContext(TransactionContext);
+  const { expenses, setExpenses } = useContext(ExpensesContext);
   const [error, setError] = useState(null);
 
   // get income
@@ -28,7 +30,7 @@ function MonthlyExpenses() {
 
   useEffect(() => {
     getMonth();
-  }, [month.month]);
+  }, [month.month, transaction]);
 
   return (
     <>
