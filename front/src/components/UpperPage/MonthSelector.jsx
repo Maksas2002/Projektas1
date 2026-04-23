@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { MonthContext } from "../../utlis/MonthContext";
 
 function MonthSelector({ transaction }) {
-  const { setMonth } = useContext(MonthContext);
+  const { month, setMonth } = useContext(MonthContext);
 
   //  this loop makes the dates appear in the selection. I dont know why it doesnt work without this
   //  pushes all objects into array
@@ -19,36 +19,25 @@ function MonthSelector({ transaction }) {
     ...new Set(
       getAllFormattedDates()
         .map((t) => t.formatted_date?.slice(0, 7))
-        .filter(Boolean),
+        .filter(Boolean)
     ),
   ];
 
-  // upload date to context
-  const getMonth = (month) => {
-    setMonth(month);
-  };
-
-
-  // if no transactions → reset month
-  useEffect(() => {
-    if (!uniqueMonths || uniqueMonths.length === 0) {
-      setMonth(null);
-    }
-  }, [transaction, setMonth]);
-
   return (
-    <>
-      {uniqueMonths.map((month) => (
-        <option
-          onClick={() => getMonth(month)}
-          key={month}
-          value={month}
-          className="text-white"
-        >
-          {month}
+    <select
+      // if no transactions → reset month
+      value={month || ""}
+      onChange={(e) => setMonth(e.target.value)}
+      className="border pl-3 pr-3 rounded-[5px] text-white border-[#061a75] bg-[#020b33] h-[0.7cm]"
+    >
+      <option value="">Select month</option>
+
+      {uniqueMonths.map((m) => (
+        <option key={m} value={m}>
+          {m}
         </option>
       ))}
-    </>
+    </select>
   );
 }
 
