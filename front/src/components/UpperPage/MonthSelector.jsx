@@ -24,16 +24,14 @@ function MonthSelector({ transaction }) {
   ];
 
   // removes month feom text if no noi trasactions exist
-  const removeMonth = () => {
-    if (getAllFormattedDates().length === 0) {
-       setMonth(null);
-    }
-  }
+//   const removeMonth = () => {
+//     if (transaction.length == 0) {
+//     setMonth(null);
+//     }
+//   }
 
-  useEffect(() => {
-    removeMonth();
-  }, [getAllFormattedDates()])
 
+  
   return (
     <select
       // if no transactions → reset month
