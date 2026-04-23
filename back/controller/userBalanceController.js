@@ -27,11 +27,12 @@ export const userMonthlyBalanceC = async (req, res, next) => {
         const numIncome = Number(monthlyIncome[0].total_income);
         const numExpenses = Number(monthlyExpenses[0].total_expenses);
 
-        const usersMonthlyBalance = numIncome - numExpenses;
+        const usersMonthlyBalance = Number(numIncome) - Number(numExpenses);
+        const usersMonthlyBalanceR = (Math.round(usersMonthlyBalance* 100) / 100).toFixed(2);
 
         res.status(200).json({
             status: "success",
-            userMonthlyBalance: usersMonthlyBalance,
+            userMonthlyBalance: usersMonthlyBalanceR,
         });
     } catch (error) {
         next(error);
