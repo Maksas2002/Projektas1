@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EditCategoriesAdmin from "./EditCategoriesAdmin";
+import { toast } from "react-toastify";
 
 const ListCategoriesAdmin = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [deletingCategoryId, setDeletingCategoryId] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -30,15 +32,21 @@ const ListCategoriesAdmin = () => {
     fetchCategories();
   }, []); 
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure?")) return;
-    try {
-      await axios.delete(`http://localhost:3000/api/v1/admin/categories/${id}`, { withCredentials: true });
-      setCategories(prev => prev.filter(c => c.id !== id));
-    } catch (err) {
-      alert("Delete failed");
-    }
-  };
+const handleDelete = async (id) => {
+  try {
+    await axios.delete(
+      `http://localhost:3000/api/v1/admin/categories/${id}`,
+      { withCredentials: true }
+    );
+
+    setDeletingCategoryId(null);
+    toast.success("Category deleted successfully!");
+    setCategories((prev) => prev.filter((c) => c.id !== id));
+  } catch (err) {
+    setError("Delete failed");
+    toast.error("Failed to delete category.");
+  }
+};
 
   return (
     <div className="bg-[#1e293b] rounded-xl overflow-hidden">
@@ -70,7 +78,7 @@ const ListCategoriesAdmin = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => setEditingCategory(cat)} className="text-blue-500 mr-3 text-xs font-bold">Edit</button>
-                    <button onClick={() => handleDelete(cat.id)} className="text-red-500 text-xs font-bold">Delete</button>
+                    <button onClick={() => setDeletingCategoryId(cat.id)} className="text-red-500 text-xs font-bold">Delete</button>
                   </td>
                 </tr>
               ))
@@ -86,6 +94,33 @@ const ListCategoriesAdmin = () => {
           onUpdated={fetchCategories} 
         />
       )}
+      {deletingCategoryId && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
+    <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+      <p className="mb-6 text-lg font-medium">
+        Are you sure you want to delete this category?
+      </p>
+
+      <div className="flex justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => handleDelete(deletingCategoryId)}
+          className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+        >
+          Yes
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setDeletingCategoryId(null)}
+          className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

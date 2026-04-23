@@ -7,6 +7,7 @@ const AddCategoriesAdmin = ({ onCategoryCreated }) => {
         type: "income",
     });
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -23,7 +24,7 @@ const AddCategoriesAdmin = ({ onCategoryCreated }) => {
 
             if (response.status === 200 || response.status === 201) {
                 setFormData({ name: "", type: "income" });
-                alert("Category created successfully!");
+                setSuccess("Category created successfully!");
                 if (onCategoryCreated) onCategoryCreated(); // Informuojame tėvą
             }
         } catch (err) {
@@ -72,6 +73,21 @@ const AddCategoriesAdmin = ({ onCategoryCreated }) => {
                     </button>
                 </div>
                 {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
+                {success && (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
+        <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+            <p className="mb-6 text-lg font-medium">{success}</p>
+
+            <button
+                type="button"
+                onClick={() => setSuccess(null)}
+                className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+            >
+                OK
+            </button>
+        </div>
+    </div>
+)}
             </form>
         </div>
     );

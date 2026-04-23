@@ -4,6 +4,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../utlis/UserContext";
 import errorHandler from "../utils/errorHandler";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ function LoginForm() {
       setUser(authResponse.data);
 
       reset();
+      toast.success("Logged in successfully!");
 
       if (authResponse.data && authResponse.data.role === "Admin") {
         navigate("/adminpage");
@@ -43,7 +45,9 @@ function LoginForm() {
         navigate("/user/dashboard");
       }
     } catch (err) {
+      const errorMessage = errorHandler(err);
       setError(errorHandler(err));
+      toast.error("Failed to log in.");
     }
   };
 

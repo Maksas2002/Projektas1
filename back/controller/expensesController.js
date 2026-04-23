@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -28,6 +28,61 @@ export const createExpenseC = async (req, res, next) => {
     res.status(201).json({
       status: "success",
       data: post,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getExpenseByIdC = async (req, res, next) => {
+  try {
+    const { id: userId, expenseId } = req.params;
+
+    const expense = await getExpenseByIdM(userId, expenseId);
+
+    if (!expense) {
+      throw new AppError("Expense record not found", 404);
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: expense,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const updateExpense = async (req, res, next) => {
+  try {
+    const expenseId = req.params.expenseId;
+    const userId = req.user.id;
+    const newData = req.body;
+
+    //1 Check if exists
+    const existing = await getExpenseByIdM(userId, expenseId);
+    if (!existing) {
+      throw new AppError("Išlaida nerasta", 404);
+    }
+
+    //2 Check id with userId
+    if (existing.user_id !== userId) {
+      throw new AppError("Negalite redaguoti kito vartotojo išlaidų", 403);
+    }
+
+    //3 Update
+    const updated = await updateExpenseM(expenseId, newData);
+
+    await createLogM(
+      userId,
+      req.user.name || "Vartotojas",
+      "update",
+      `Vartotojas atnaujino išlaidą : ${expenseId.amount}€`
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: updated,
     });
   } catch (error) {
     next(error);

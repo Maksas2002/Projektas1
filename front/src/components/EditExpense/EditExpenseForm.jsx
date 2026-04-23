@@ -5,7 +5,7 @@ import { UserContext } from "../../utlis/UserContext";
 import errorHandler from "../../utils/errorHandler";
 import { toast } from "react-toastify";
 
-function EditIncomeForm({ incomeId, onClose }) {
+function EditExpenseForm({ expenseId, onClose }) {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [serverError, setServerError] = useState(null);
@@ -24,7 +24,6 @@ function EditIncomeForm({ incomeId, onClose }) {
     formState: { errors },
   } = useForm();
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,27 +32,23 @@ function EditIncomeForm({ incomeId, onClose }) {
           setServerError("User ID not found. Please log in again.");
           return;
         }
-
-        // Load categories
         const catRes = await axios.get("http://localhost:3000/api/v1/categories", {
           withCredentials: true,
         });
-        const incomeCats = catRes.data.filter((cat) => cat.type === "income");
-        setCategories(incomeCats);
-
-        // Load income
-        const incomeRes = await axios.get(
-          `http://localhost:3000/api/v1/user/${userId}/income/${incomeId}`,
+        const expenseCats = catRes.data.filter((cat) => cat.type === "expense");
+        setCategories(expenseCats);
+        const expenseRes = await axios.get(
+          `http://localhost:3000/api/v1/user/${userId}/expense/${expenseId}`,
           { withCredentials: true }
         );
 
-        const inc = incomeRes.data.data;
+        const exp = expenseRes.data.data;
 
         reset({
-          amount: inc.amount,
-          description: inc.description,
-          date: inc.date?.slice(0, 10),
-          category_id: inc.category_id,
+          amount: exp.amount,
+          description: exp.description,
+          date: exp.date?.slice(0, 10),
+          category_id: exp.category_id,
         });
 
       } catch (err) {
@@ -64,8 +59,7 @@ function EditIncomeForm({ incomeId, onClose }) {
     };
 
     fetchData();
-  }, [incomeId, reset]);
-
+  }, [expenseId, reset]);
 
   const onSubmit = async (data) => {
     const userId = getId();
@@ -79,13 +73,13 @@ function EditIncomeForm({ incomeId, onClose }) {
       setSuccess(null);
 
       await axios.patch(
-        `http://localhost:3000/api/v1/user/${userId}/income/${incomeId}`,
+        `http://localhost:3000/api/v1/user/${userId}/expenses/edit/${expenseId}`,
         data,
         { withCredentials: true }
       );
 
-      setSuccess("Income updated successfully!");
-      toast.success("Income updated successfully!");
+      setSuccess("Expense updated successfully!");
+      toast.success("Expense updated successfully!");
 
       setTimeout(() => {
         onClose();
@@ -93,26 +87,26 @@ function EditIncomeForm({ incomeId, onClose }) {
       }, 800);
 
     } catch (err) {
-      setServerError(errorHandler(err));
+       const errorMessage = errorHandler(err);
+
+  setServerError(errorMessage);
+  toast.error(errorMessage);
     }
   };
-
 
   if (loading) {
     return (
       <div className="text-center text-white py-6 animate-pulse">
-        Loading income data...
+        Loading expense data...
       </div>
     );
   }
-
 
   return (
     <form
       className="flex flex-col pt-5 gap-3 animate-fadeIn"
       onSubmit={handleSubmit(onSubmit)}
     >
-      {/* Amount */}
       <div className="flex flex-col gap-1">
         <label className="text-white text-sm pl-1">Amount (EUR)</label>
         <input
@@ -129,7 +123,6 @@ function EditIncomeForm({ incomeId, onClose }) {
         )}
       </div>
 
-      {/* Description */}
       <div className="flex flex-col gap-1">
         <label className="text-white text-sm pl-1">Description</label>
         <input
@@ -142,7 +135,6 @@ function EditIncomeForm({ incomeId, onClose }) {
         )}
       </div>
 
-      {/* Date */}
       <div className="flex flex-col gap-1">
         <label className="text-white text-sm pl-1">Date</label>
         <input
@@ -155,7 +147,6 @@ function EditIncomeForm({ incomeId, onClose }) {
         )}
       </div>
 
-      {/* Category */}
       <div className="flex flex-col gap-1">
         <label className="text-white text-sm pl-1">Category</label>
         <select
@@ -174,14 +165,12 @@ function EditIncomeForm({ incomeId, onClose }) {
         )}
       </div>
 
-      {/* Submit */}
       <input
         type="submit"
         value="Save Changes"
         className="block border border-yellow-600 hover:bg-yellow-700 cursor-pointer rounded-md bg-yellow-600 text-white mt-4 py-2 font-bold transition-all shadow-md"
       />
 
-      {/* Inline messages */}
       {serverError && (
         <p className="text-center text-red-600 mt-2 bg-red-100 rounded py-1">
           {serverError}
@@ -197,4 +186,4 @@ function EditIncomeForm({ incomeId, onClose }) {
   );
 }
 
-export default EditIncomeForm;
+export default EditExpenseForm;
