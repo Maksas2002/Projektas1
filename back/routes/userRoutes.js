@@ -9,7 +9,7 @@ import {
 } from "../controller/userController.js";
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
 // NAUJAS IMPORTAS:
-import { createExpenseC, deleteExpenseC, getExpenseByIdC, updateExpense } from "../controller/expensesController.js";
+import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense } from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
@@ -19,6 +19,7 @@ import validate from "../validation/validate.js";
 import restrictToOwnUser from "../middleware/restrictToOwnerUser.js";
 import { allowAccessTo } from "../middleware/allowAcceesTo.js";
 import { authProtect } from "../middleware/authProtect.js";
+import { expensesByCategory } from "../validation/expensesByCategory.js";
 
 const userRoutes = express.Router();
 
@@ -96,6 +97,17 @@ userRoutes.get(
   authProtect,
   allowAccessTo("User"),
   userCombinedHistoryC
+);
+
+// shows all expense by category and dates with all amount in total
+userRoutes.get(
+  "/:id/expenses/byCategory",
+  authProtect,
+  allowAccessTo("User"),
+  restrictToOwnUser,
+  expensesByCategory,
+  validate,
+  expensesByCategoryD
 );
 
 export default userRoutes;
