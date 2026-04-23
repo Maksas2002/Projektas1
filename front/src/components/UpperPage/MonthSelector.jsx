@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MonthContext } from "../../utlis/MonthContext";
 
 function MonthSelector({ transaction }) {
@@ -22,6 +22,17 @@ function MonthSelector({ transaction }) {
         .filter(Boolean)
     ),
   ];
+
+  // removes month feom text if no noi trasactions exist
+  const removeMonth = () => {
+    if (getAllFormattedDates().length === 0) {
+       setMonth(null);
+    }
+  }
+
+  useEffect(() => {
+    removeMonth();
+  }, [getAllFormattedDates()])
 
   return (
     <select

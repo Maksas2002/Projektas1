@@ -50,7 +50,7 @@ function MonthlyBalance() {
       return "";
   }
 };
-console.log(Number(income) >= Number(expenses));
+
 
   return (
     <>
