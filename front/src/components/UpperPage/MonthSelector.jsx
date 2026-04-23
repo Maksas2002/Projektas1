@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MonthContext } from "../../utlis/MonthContext";
 
 function MonthSelector({ transaction }) {
@@ -14,6 +14,7 @@ function MonthSelector({ transaction }) {
     return list;
   };
 
+  // selects only uinque months
   const uniqueMonths = [
     ...new Set(
       getAllFormattedDates()
@@ -26,6 +27,14 @@ function MonthSelector({ transaction }) {
   const getMonth = (month) => {
     setMonth(month);
   };
+
+
+  // if no transactions → reset month
+  useEffect(() => {
+    if (!uniqueMonths || uniqueMonths.length === 0) {
+      setMonth(null);
+    }
+  }, [transaction, setMonth]);
 
   return (
     <>
