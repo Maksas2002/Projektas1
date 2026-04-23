@@ -1,6 +1,7 @@
 import axios from "axios";
 import errorHandler from "../../..//utils/errorHandler";
 import { TransactionContext } from "../../../utlis/TransactionContext";
+import { MonthContext } from "../../../utlis/MonthContext";
 import { UserContext } from "../../../utlis/UserContext";
 import { useNavigate } from "react-router";
 import { useState, useContext } from "react";
@@ -8,6 +9,7 @@ import { useState, useContext } from "react";
 function UserLogout({ notToShow }) {
   let navigate = useNavigate();
   const { setTransaction } = useContext(TransactionContext);
+  const { setMonth } = useContext(MonthContext);
   const { setUser } = useContext(UserContext);
   const [error, setError] = useState(null);
 
@@ -18,6 +20,7 @@ function UserLogout({ notToShow }) {
       });
 
       localStorage.removeItem("user");
+      setMonth(null);
       setTransaction([]);
       setUser(null);
       navigate(`/login`);
