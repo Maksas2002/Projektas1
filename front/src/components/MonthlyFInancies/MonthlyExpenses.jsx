@@ -1,10 +1,12 @@
 import axios from "axios";
+import errorHandler from "../../utils/errorHandler";
+import {ExpensesContext} from "../../utlis/ExpensesContext";
 import { useContext, useEffect, useState } from "react";
-import errorHandler from "../../utils/errorHandler"
 import { MonthContext } from "../../utlis/MonthContext";
 
 function MonthlyExpenses() {
   const month = useContext(MonthContext);
+  const {  expenses, setExpenses } = useContext(ExpensesContext);
   const [error, setError] = useState(null);
 
   // get income
@@ -17,22 +19,23 @@ function MonthlyExpenses() {
           withCredentials: true,
         },
       );
-      console.log(response);
+      setExpenses(response.data.expensesSum[0].total_expenses);
+      // setExpenses();
     } catch (error) {
-        setError(errorHandler(error));
+      setError(errorHandler(error));
     }
   };
 
   useEffect(() => {
-    getMonth()
-  }, [month.month])
+    getMonth();
+  }, [month.month]);
 
   return (
     <>
       <section className="border border-red-500 bg-linear-to-br from-[#020b33] to-[#14215a] rounded-[20px] p-8 mt-5 w-45">
-        <p>Expenses</p>
-        <p>Money</p>
-        <p>This month</p>
+        <p className="text-sky-400 pb-2 text-[0.8rem]">Expenses</p>
+        <p className="text-white text-[1.5rem] pb-2">€{expenses}</p>
+        <p className="text-sky-400 text-[0.8rem]">This month</p>
         <p className="text-red-500">{error}</p>
       </section>
     </>
