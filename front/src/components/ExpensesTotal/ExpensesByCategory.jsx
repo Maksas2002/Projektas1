@@ -2,7 +2,7 @@
 function ExpensesByCategory() {
     return(
         <>
-        <div className="text-center text-white">test</div>
+            <div className="text-center text-white">test</div>
         </>
     )
 }
