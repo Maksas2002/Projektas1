@@ -49,3 +49,17 @@ export const deleteExpenseM = async (expenseId, userId) => {
 
   return deletedExpense[0];
 };
+
+// calculate total user expense by a month
+
+export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) => {
+  const monthlyExpenses = await sql`
+  SELECT COALESCE(SUM(amount), 0) AS total_expenses
+  FROM expenses
+  WHERE user_id = ${Number(userId)}
+  AND date >= ${fDateShort}
+  AND date < ${lastDayShort};
+  `
+
+  return monthlyExpenses;
+}

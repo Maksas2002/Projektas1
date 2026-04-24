@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, getExpenseByIdM, updateExpenseM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -6,7 +6,7 @@ export const createExpenseC = async (req, res, next) => {
   try {
     const newData = req.body;
     // user.id gauname iš authenticateToken middleware
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     // Minimali validacija
     if (!newData.amount || !newData.date || !newData.category_id) {
@@ -115,3 +115,32 @@ export const deleteExpenseC = async (req, res, next) => {
     next(error);
   }
 };
+
+// calculate total user income by month
+
+export const totalMonthlyExpensesC = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const fDate = new Date(req.params.date);
+    const fDateShort = fDate.toISOString().slice(0, 10);
+
+
+    // changes selected month's first day to the last day
+    const lastDay = new Date(
+      fDate.getFullYear(),
+      fDate.getMonth() + 1,
+      0
+    );
+
+    const lastDayShort = lastDay.toISOString().slice(0, 10);
+
+    const monthlyExpenses = await totalMonthlyExpensesM(userId, fDateShort, lastDayShort);
+
+    res.status(200).json({
+      status: "success",
+      expensesSum: monthlyExpenses,
+    });
+  } catch (error) {
+    next(error)
+  }
+}

@@ -3,6 +3,10 @@ import { createRoot } from "react-dom/client";
 import { UserContextProvider } from "./utlis/UserContext.jsx";
 import { BrowserRouter } from "react-router";
 import { TransactionContextProvider } from "./utlis/TransactionContext.jsx";
+import { MonthContextProvider } from "./utlis/MonthContext.jsx";
+import { BalanceContextProvider } from "./utlis/BalanceContext.jsx";
+import { IncomeContextProvider } from "./utlis/IncomeContext.jsx";
+import { ExpensesContextProvider } from "./utlis/ExpensesContext.jsx";
 import "./index.css";
 import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
@@ -13,7 +17,15 @@ createRoot(document.getElementById("root")).render(
     <UserContextProvider>
       <BrowserRouter>
         <TransactionContextProvider>
-          <App />
+          <MonthContextProvider>
+            <BalanceContextProvider>
+              <IncomeContextProvider>
+                <ExpensesContextProvider>
+                  <App />
+                </ExpensesContextProvider>
+              </IncomeContextProvider>
+            </BalanceContextProvider>
+          </MonthContextProvider>
           <ToastContainer
             autoClose={3000}
             theme="dark"
