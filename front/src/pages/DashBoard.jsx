@@ -3,6 +3,7 @@ import UserHistoryBase from "../components/UserTransactionHistory/UserHistoryBas
 import DashHeader from "../components/Header/DashHeader/DashHeader";
 import AddIncome from "../components/AddIncome/AddIncome";
 import AddExpense from "../components/AddExpense/AddExpense";
+import ExpensesByCategory from "../components/ExpensesByCategory";
 
 function DashBoard() {
   const [activeForm, setActiveForm] = useState(null);
@@ -26,6 +27,7 @@ function DashBoard() {
       </div>
 
       <UserHistoryBase/>
+      <ExpensesByCategory/>
     </main>
   );
 }
