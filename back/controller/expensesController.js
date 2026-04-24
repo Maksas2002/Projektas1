@@ -119,12 +119,15 @@ export const deleteExpenseC = async (req, res, next) => {
 
 export const expensesByCategoryD = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const { id } = req.params;
     const { startDate, endDate } = req.query;
 
-    const results = await expensesByCategoryDM(userId, startDate, endDate);
+    const results = await expensesByCategoryDM(id, startDate, endDate);
 
-    return res.json(results);
+    res.status(200).json({
+      status: "success",
+      data: results,
+    });
   } catch (error) {
     next(error);
   }

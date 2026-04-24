@@ -104,7 +104,6 @@ userRoutes.get(
   "/:id/expenses/byCategory",
   authProtect,
   allowAccessTo("User"),
-  restrictToOwnUser,
   expensesByCategory,
   validate,
   expensesByCategoryD
