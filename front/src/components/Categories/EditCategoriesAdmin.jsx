@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EditCategoriesAdmin = ({ category, onClose, onUpdated }) => {
   const [formData, setFormData] = useState({
@@ -17,12 +18,12 @@ const EditCategoriesAdmin = ({ category, onClose, onUpdated }) => {
         { withCredentials: true }
       );
 
-      alert("Category updated successfully!");
+     toast.success("Category updated successfully!");
       onUpdated();
       onClose();
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to update category");
+      toast.error(err.response?.data?.message || "Failed to update category");
     }
   };
 

@@ -4,6 +4,7 @@ import AdminUserEdit from '../components/AdminUserEdit';
 import AdminLogs from '../components/AdminLogs';
 import AddCategoriesAdmin from '../components/Categories/AddCategoriesAdmin';
 import ListCategoriesAdmin from '../components/Categories/ListCategoriesAdmin';
+import { toast } from "react-toastify";
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ const AdminPage = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [refreshLogsKey, setRefreshLogsKey] = useState(0);
   const [refreshCategoriesKey, setRefreshCategoriesKey] = useState(0);
+  const [deletingUserId, setDeletingUserId] = useState(null);
 
   const getToken = () => {
     const savedUser = localStorage.getItem('user');
@@ -70,27 +72,28 @@ const AdminPage = () => {
   };
 
   const handleDeleteUser = async (id) => {
-    if (!window.confirm("Ar tikrai norite ištrinti vartotoją?")) return;
     const token = getToken();
 
-    try {
-      const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+try {
+  const res = await fetch(`http://localhost:3000/api/v1/admin/users/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
 
-      if (res.ok) {
-        handleDataChange();
-      } else {
-        const errorData = await res.json();
-        alert(`Klaida: ${errorData.message || 'Nepavyko ištrinti'}`);
-      }
-    } catch (err) {
-      alert("Klaida susisiekiant su serveriu");
-    }
+  if (res.ok) {
+    setDeletingUserId(null);
+    toast.success("User deleted successfully!");
+    handleDataChange();
+  } else {
+    const errorData = await res.json();
+    toast.error(errorData.message || "Failed to delete user.");
+  }
+} catch (err) {
+  toast.error("Server connection error.");
+}
   };
 
   useEffect(() => {
@@ -167,7 +170,7 @@ const AdminPage = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Edit</button>
-                      <button onClick={() => handleDeleteUser(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
+                      <button onClick={() => setDeletingUserId(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -177,13 +180,42 @@ const AdminPage = () => {
         </div>
 
         {/* Redagavimo modalas */}
-        {editingUser && (
-          <AdminUserEdit 
-            user={editingUser} 
-            onClose={() => setEditingUser(null)} 
-            onUpdated={handleDataChange} 
-          />
-        )}
+       {editingUser && (
+  <AdminUserEdit 
+    user={editingUser} 
+    onClose={() => setEditingUser(null)} 
+    onUpdated={handleDataChange} 
+  />
+)}
+
+{deletingUserId && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
+    <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+      <p className="mb-6 text-lg font-medium">
+        Are you sure you want to delete this user?
+      </p>
+
+      <div className="flex justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => handleDeleteUser(deletingUserId)}
+          className="bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+        >
+          Yes
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setDeletingUserId(null)}
+          className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {/* Kategorijų valdymas - SU APSAUGA NUO LOOP */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

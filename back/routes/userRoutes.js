@@ -7,9 +7,10 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome } from "../controller/incomeController.js";
+import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
+import { userMonthlyBalanceC } from "../controller/userBalanceController.js"
 // NAUJAS IMPORTAS:
-import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense } from "../controller/expensesController.js";
+import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense , totalMonthlyExpensesC} from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
@@ -99,6 +100,7 @@ userRoutes.get(
   userCombinedHistoryC
 );
 
+
 // shows all expense by category and dates with all amount in total
 userRoutes.get(
   "/:id/expenses/byCategory",
@@ -108,5 +110,33 @@ userRoutes.get(
   validate,
   expensesByCategoryD
 );
+
+// calculationd
+// user total monthly income (yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalIncome",
+  authProtect,
+  allowAccessTo("User"),
+  totalMonthlyIncomeC
+)
+
+// user total monthly expenses(yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalExpenses",
+  authProtect,
+  allowAccessTo("User"),
+  totalMonthlyExpensesC
+)
+
+// user monthly balance expenses(yyyy-mm-01)
+
+userRoutes.get(
+  "/:date/totalBalance",
+  authProtect,
+  allowAccessTo("User"),
+  userMonthlyBalanceC
+)
 
 export default userRoutes;

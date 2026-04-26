@@ -6,6 +6,7 @@ import errorHandler from "../../utils/errorHandler";
 
 function AddIncomeForm() {
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [categories, setCategories] = useState([]); // Būsena kategorijoms
   const user = useContext(UserContext);
 
@@ -53,9 +54,9 @@ function AddIncomeForm() {
         { withCredentials: true }
       );
 
-      alert("Income added successfully!");
+      setSuccess("Income added successfully!");
       reset();
-      window.location.reload(); // Atnaujiname puslapį duomenų sinchronizacijai
+  
     } catch (error) {
       setError(errorHandler(error));
     }
@@ -124,6 +125,22 @@ function AddIncomeForm() {
       />
 
       {error && <p className="text-center text-red-600 mt-2 bg-red-100 rounded py-1">{error}</p>}
+      
+      {success && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
+    <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+      <p className="mb-6 text-lg font-medium">{success}</p>
+
+      <button
+        type="button"
+        onClick={() => window.location.reload()}
+        className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
     </form>
   );
 }

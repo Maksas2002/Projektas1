@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 const AdminUserEdit = ({ user, onClose, onUpdated }) => {
     const [formData, setFormData] = useState({
@@ -30,11 +31,11 @@ const AdminUserEdit = ({ user, onClose, onUpdated }) => {
             );
 
             //atnaujina ir uždaro
-            alert("Pavyko atnaujinti")
+            toast.success("User updated successfully!");
             onUpdated();
             onClose();
         } catch (error) {
-            alert(error.response?.data?.error || "Nepavyko atnaujinti vartotojo");
+            toast.error(error.response?.data?.error || "Failed to update user.");
         }
     }
 

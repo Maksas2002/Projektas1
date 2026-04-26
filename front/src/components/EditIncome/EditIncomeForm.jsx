@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../../utlis/UserContext";
 import errorHandler from "../../utils/errorHandler";
+import { toast } from "react-toastify";
 
 function EditIncomeForm({ incomeId, onClose }) {
   const [loading, setLoading] = useState(true);
@@ -84,6 +85,7 @@ function EditIncomeForm({ incomeId, onClose }) {
       );
 
       setSuccess("Income updated successfully!");
+      toast.success("Income updated successfully!");
 
       setTimeout(() => {
         onClose();
