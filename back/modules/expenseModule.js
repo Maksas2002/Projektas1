@@ -50,6 +50,22 @@ export const deleteExpenseM = async (expenseId, userId) => {
   return deletedExpense[0];
 };
 
+//collects all amounts as total from dates from start to end
+export const expensesByCategoryDM = async (userId, startDate, endDate) => {
+  return await sql`
+    SELECT 
+      categories.name AS category_name,
+      SUM(expenses.amount) AS total
+    FROM expenses
+    LEFT JOIN categories
+      ON expenses.category_id = categories.id
+    WHERE expenses.user_id = ${userId}
+      AND expenses.date >= ${startDate}
+      AND expenses.date <= ${endDate}
+    GROUP BY categories.name
+    ORDER BY total DESC;
+  `;
+};
 // calculate total user expense by a month
 
 export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) => {

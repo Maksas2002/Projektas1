@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, expensesByCategoryDM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -110,6 +110,22 @@ export const deleteExpenseC = async (req, res, next) => {
       status: "success",
       message: "Expense was deleted",
       data: deletedExpense,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const expensesByCategoryD = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { startDate, endDate } = req.query;
+
+    const results = await expensesByCategoryDM(id, startDate, endDate);
+
+    res.status(200).json({
+      status: "success",
+      data: results,
     });
   } catch (error) {
     next(error);
