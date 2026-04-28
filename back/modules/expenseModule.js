@@ -74,7 +74,7 @@ export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) =>
   FROM expenses
   WHERE user_id = ${Number(userId)}
   AND date >= ${fDateShort}
-  AND date < ${lastDayShort};
+  AND date <= ${lastDayShort};
   `
 
   return monthlyExpenses;
