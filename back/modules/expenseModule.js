@@ -79,3 +79,31 @@ export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) =>
 
   return monthlyExpenses;
 }
+
+
+
+export const getExpensesForExport = async (userId, startDate, endDate) => {
+  let expenses = sql`
+    select
+      expenses.date,
+      expenses.amount,
+      categories.category_name as category,
+      expenses.description
+    from expenses
+    left join categories on expenses.category = categories.id
+    where expenses.user_id = ${userId}
+  `;
+
+  if (startDate) {
+    expenses = sql`${expenses} AND expenses.date >= ${startDate}`;
+  }
+
+  if (endDate) {
+    expenses = sql`${expenses} AND expenses.date <= ${endDate}`;
+  }
+
+  expenses = sql`${expenses} order by expenses.date DESC`;
+
+  const result = await expenses;
+  return result;
+}
