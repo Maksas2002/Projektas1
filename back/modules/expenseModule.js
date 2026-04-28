@@ -81,7 +81,7 @@ export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) =>
 }
 
 
-
+//gets users all expenses with/without date
 export const getExpensesForExport = async (userId, startDate, endDate) => {
   let expenses = sql`
     select
