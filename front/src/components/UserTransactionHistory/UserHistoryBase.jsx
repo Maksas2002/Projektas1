@@ -87,7 +87,7 @@ function UserHistoryBase() {
           <p className="text-white  pl-26 text-[1.2rem]">Transaction History</p>
 
           <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
-            <HistoryCategorySelector key={categories.id} categories={categories}/>
+            <HistoryCategorySelector categories={categories}/>
           </select>
         </div>
 

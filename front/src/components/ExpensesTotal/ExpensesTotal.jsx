@@ -30,8 +30,6 @@ function ExpensesTotal() {
                 withCredentials: true
             }
         )
-        console.log(res.data.data)
-
         setData(res.data.data);
       } catch (error) {
         setError(errorHandler(error));
