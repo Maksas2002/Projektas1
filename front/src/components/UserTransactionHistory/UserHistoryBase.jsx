@@ -5,6 +5,7 @@ import { TransactionContext } from "../../utlis/TransactionContext";
 import UserTransactionTable from "./UserTransactionTable";
 import EditIncome from "../EditIncome/EditIncome";
 import EditExpense from "../EditExpense/EditExpense";
+import HistoryCategorySelector from "./HistoryCategorySelector";
 
 function UserHistoryBase() {
   const { transaction, setTransaction } = useContext(TransactionContext);
@@ -13,13 +14,18 @@ function UserHistoryBase() {
   const [selectedIncomeId, setSelectedIncomeId] = useState(null);
   const [isExpenseEditOpen, setExpenseEditOpen] = useState(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState(null);
-
+  const [categories, setCategories] = useState([]);
 
   const fetchTransactions = useCallback(async () => {
     try {
       const response = await axios.get(
         "http://localhost:3000/api/v1/user/history",
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          // params: {
+          //   category: 2
+          // },
+        },
       );
 
       setTransaction(response.data.data);
@@ -37,13 +43,28 @@ function UserHistoryBase() {
     }
   }, [setTransaction]);
 
+  // get all categories
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/v1/categories", {
+        withCredentials: true,
+      });
+      setCategories(res.data);
+    } catch (err) {
+      console.error("Kategorijų užkrauti nepavyko");
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     const load = async () => {
       await fetchTransactions();
     };
     load();
   }, [fetchTransactions]);
-
 
   const handleEdit = (item) => {
     setSelectedIncomeId(item.id);
@@ -53,7 +74,7 @@ function UserHistoryBase() {
   const handleEditExpense = (item) => {
     setSelectedExpenseId(item.id);
     setExpenseEditOpen(true);
-  }
+  };
 
   const handleDeleteFromList = () => {
     fetchTransactions();
@@ -62,10 +83,13 @@ function UserHistoryBase() {
   return (
     <>
       <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-185 mx-auto">
-        
-        <p className="text-white self-baseline pl-26 text-[1.2rem]">
-          Transaction History
-        </p>
+        <div className="flex relative right-13 gap-50">
+          <p className="text-white  pl-26 text-[1.2rem]">Transaction History</p>
+
+          <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
+            <HistoryCategorySelector key={categories.id} categories={categories}/>
+          </select>
+        </div>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 
