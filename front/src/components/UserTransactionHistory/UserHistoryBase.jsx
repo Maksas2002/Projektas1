@@ -15,6 +15,7 @@ function UserHistoryBase() {
   const [isExpenseEditOpen, setExpenseEditOpen] = useState(false);
   const [selectedExpenseId, setSelectedExpenseId] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState();
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -22,9 +23,9 @@ function UserHistoryBase() {
         "http://localhost:3000/api/v1/user/history",
         {
           withCredentials: true,
-          // params: {
-          //   category: 2
-          // },
+          params: {
+            category: parseInt(category),
+          }
         },
       );
 
@@ -41,7 +42,7 @@ function UserHistoryBase() {
 
       setError(errorHandler(error));
     }
-  }, [setTransaction]);
+  }, [setTransaction, category]);
 
   // get all categories
   const fetchCategories = async () => {
@@ -59,12 +60,18 @@ function UserHistoryBase() {
     fetchCategories();
   }, []);
 
+  const getCatId = (c) => {
+    setCategory(c);
+  }
+
+  //---------------------------------------------------
+
   useEffect(() => {
     const load = async () => {
       await fetchTransactions();
     };
     load();
-  }, [fetchTransactions]);
+  }, [fetchTransactions, category]);
 
   const handleEdit = (item) => {
     setSelectedIncomeId(item.id);
@@ -87,7 +94,7 @@ function UserHistoryBase() {
           <p className="text-white  pl-26 text-[1.2rem]">Transaction History</p>
 
           <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
-            <HistoryCategorySelector categories={categories}/>
+            <HistoryCategorySelector categories={categories} getCatId={getCatId} />
           </select>
         </div>
 
