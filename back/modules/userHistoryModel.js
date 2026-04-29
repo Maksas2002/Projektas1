@@ -2,7 +2,11 @@ import { sql } from "../dbConnection.js";
 
 // gets users combined history
 export const userCombinedHistoryM = async (id, categories) => {
-  
+  const category = {
+    
+  }
+
+
   const userCombinedHistory = await sql`
 SELECT 
     expenses.*,

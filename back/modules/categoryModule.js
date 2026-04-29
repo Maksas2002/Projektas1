@@ -17,6 +17,17 @@ export const getAllCategoriesM = async () => {
   return categoryLists;
 };
 
+// get all categories without users 
+
+export const getAllCategoriesNoUsersM = async () => {
+  const categoryLists = await sql`
+    SELECT 
+    id, name, type, created_at
+    FROM categories;
+  `;
+
+  return categoryLists;
+};
 
 
 //add category

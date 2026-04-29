@@ -1,11 +1,11 @@
 import { userCombinedHistoryM } from "../modules/userHistoryModel.js";
-import { getAllCategoriesM } from "../modules/categoryModule.js";
+import { getAllCategoriesNoUsersM} from "../modules/categoryModule.js";
 import AppError from "../utils/appError.js";
 
 export const userCombinedHistoryC = async (req, res, next) => {
   try {
     // get categories
-    const categories = await getAllCategoriesM();
+    const categories = await getAllCategoriesNoUsersM();
 
     const { id } = req.user;
 
