@@ -79,3 +79,15 @@ export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) =>
 
   return monthlyExpenses;
 }
+
+export const getTotalExpensesByPeriodM = async (userId, startDate, endDate) => {
+  const [result] = await sql`
+    SELECT COALESCE(SUM(amount), 0) AS total_expenses
+    FROM expenses
+    WHERE user_id = ${userId}
+    AND date >= ${startDate}
+    AND date <= ${endDate}
+  `;
+
+  return result;
+};

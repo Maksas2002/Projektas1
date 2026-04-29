@@ -10,7 +10,7 @@ import {
 import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
 import { userMonthlyBalanceC } from "../controller/userBalanceController.js"
 // NAUJAS IMPORTAS:
-import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense , totalMonthlyExpensesC} from "../controller/expensesController.js";
+import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense , totalMonthlyExpensesC, getTotalExpensesByPeriodC} from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
@@ -120,6 +120,12 @@ userRoutes.get(
   allowAccessTo("User"),
   totalMonthlyIncomeC
 )
+userRoutes.get(
+  "/expenses/total-by-period",
+  authProtect,
+  allowAccessTo("User"),
+  getTotalExpensesByPeriodC
+);
 
 // user total monthly expenses(yyyy-mm-01)
 
