@@ -1,10 +1,7 @@
 import { sql } from "../dbConnection.js";
 
 // gets users combined history
-export const userCombinedHistoryM = async (id, categories) => {
-  const category = {
-    
-  }
+export const userCombinedHistoryM = async (id, categoryIds) => {
 
 
   const userCombinedHistory = await sql`
@@ -17,6 +14,7 @@ FROM expenses
 LEFT JOIN categories
     ON expenses.category_id = categories.id
 WHERE expenses.user_id = ${id}
+${categoryIds ? sql` AND expenses.category_id = ${categoryIds}` : sql``}
 
 UNION ALL
 
@@ -29,6 +27,7 @@ FROM income
 LEFT JOIN categories
     ON income.category_id = categories.id
 WHERE income.user_id =  ${id}
+${categoryIds ? sql` AND income.category_id = ${categoryIds}` : sql``}
 
 ORDER BY created_at DESC;
 

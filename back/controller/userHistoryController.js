@@ -1,16 +1,17 @@
 import { userCombinedHistoryM } from "../modules/userHistoryModel.js";
-import { getAllCategoriesNoUsersM} from "../modules/categoryModule.js";
 import AppError from "../utils/appError.js";
 
 export const userCombinedHistoryC = async (req, res, next) => {
   try {
-    // get categories
-    const categories = await getAllCategoriesNoUsersM();
-
     const { id } = req.user;
 
+    // get selected categories from query ?category=categoryId
+    const categoryIds = req.query.category
+      ? parseInt(req.query.category)
+      : null;
+
     // get history
-    const userCombinedHistory = await userCombinedHistoryM(id, categories);
+    const userCombinedHistory = await userCombinedHistoryM(id, categoryIds);
 
     if (userCombinedHistory.length == 0) {
       throw new AppError("No incomes or expenses found", 404);
