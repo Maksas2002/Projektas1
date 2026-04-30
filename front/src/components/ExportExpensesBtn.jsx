@@ -18,7 +18,7 @@ const ExportExpensesBtn = () => {
     }
 
     return(
-        <button onClick={handleExport}>
+        <button className="bg-[#1f2747] text-white p-2 rounded" onClick={handleExport}>
             Export expenses
         </button>
     );
