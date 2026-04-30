@@ -87,10 +87,10 @@ export const getExpensesForExport = async (userId, startDate, endDate) => {
     select
       expenses.date,
       expenses.amount,
-      categories.category_name as category,
+      categories.name as category,
       expenses.description
     from expenses
-    left join categories on expenses.category = categories.id
+    left join categories on expenses.category_id = categories.id
     where expenses.user_id = ${userId}
   `;
 

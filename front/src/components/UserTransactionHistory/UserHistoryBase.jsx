@@ -5,6 +5,7 @@ import { TransactionContext } from "../../utlis/TransactionContext";
 import UserTransactionTable from "./UserTransactionTable";
 import EditIncome from "../EditIncome/EditIncome";
 import EditExpense from "../EditExpense/EditExpense";
+import ExportExpensesBtn from "../ExportExpensesBtn";
 
 function UserHistoryBase() {
   const { transaction, setTransaction } = useContext(TransactionContext);
@@ -62,10 +63,12 @@ function UserHistoryBase() {
   return (
     <>
       <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-185 mx-auto">
-        
-        <p className="text-white self-baseline pl-26 text-[1.2rem]">
-          Transaction History
-        </p>
+        <div>
+          <p className="text-white self-baseline pl-26 text-[1.2rem]">
+            Transaction History
+          </p>
+          <ExportExpensesBtn/>
+        </div>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
 

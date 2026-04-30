@@ -1,7 +1,24 @@
+import axios from "axios";
+import { saveAs } from "file-saver"
+import errorHandler from "../utils/errorHandler";
 
-function ExportExpensesBtn() {
+const ExportExpensesBtn = () => {
+
+    const handleExport = async () =>{
+        try {
+            const response = await axios.get("http://localhost:3000/api/v1/user/expenses/export", {
+                withCredentials: true, 
+                responseType: "blob"
+            });
+            
+            saveAs(response.data, "expenses.csv");
+        } catch (error) {
+            console.error("CSV download failed:", errorHandler(error));
+        }
+    }
+
     return(
-        <button>
+        <button onClick={handleExport}>
             Export expenses
         </button>
     );
