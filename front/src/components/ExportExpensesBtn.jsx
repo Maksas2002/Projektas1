@@ -2,13 +2,19 @@ import axios from "axios";
 import { saveAs } from "file-saver"
 import errorHandler from "../utils/errorHandler";
 
-const ExportExpensesBtn = () => {
+const ExportExpensesBtn = ({ startDate, endDate }) => {
 
     const handleExport = async () =>{
         try {
+            const params = {};
+
+            if (startDate) params.startDate = startDate;
+            if (endDate) params.endDate = endDate;
+
             const response = await axios.get("http://localhost:3000/api/v1/user/expenses/export", {
-                withCredentials: true, 
-                responseType: "blob"
+                params,
+                responseType: "blob",
+                withCredentials: true
             });
             
             saveAs(response.data, "expenses.csv");
