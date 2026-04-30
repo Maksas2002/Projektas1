@@ -21,12 +21,12 @@ export const exportExpenses = async (req, res, next) => {
 
         //puts lines 
         for (const expense of expenses) {
-            const date = expense.date;
+            const formattedDate = new Date(expense.date).toISOString().split("T")[0];
             const amount = expense.amount;
             const category = expense.category ? expense.category : "";
             const description = expense.description ? expense.description : "";
 
-            const line = `"${date}","${amount}","${category}","${description}"\n`;
+            const line = `"${formattedDate}","${amount}","${category}","${description}"\n`;
 
             csv += line;
         }
