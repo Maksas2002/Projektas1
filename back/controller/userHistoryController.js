@@ -5,7 +5,13 @@ export const userCombinedHistoryC = async (req, res, next) => {
   try {
     const { id } = req.user;
 
-    const userCombinedHistory = (await userCombinedHistoryM(id));
+    // get selected categories from query ?category=categoryId
+    const categoryIds = req.query.category
+      ? parseInt(req.query.category)
+      : null;
+
+    // get history
+    const userCombinedHistory = await userCombinedHistoryM(id, categoryIds);
 
     if (userCombinedHistory.length == 0) {
       throw new AppError("No incomes or expenses found", 404);

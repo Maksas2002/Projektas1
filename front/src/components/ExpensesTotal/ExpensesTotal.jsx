@@ -24,14 +24,12 @@ function ExpensesTotal() {
 
         const { startDate, endDate } = getDateRange(month);
 
-        console.log(userId)
+
         const res = await axios.get(`http://localhost:3000/api/v1/user/${userId}/expenses/byCategory?startDate=${startDate}&endDate=${endDate}`,
             {
                 withCredentials: true
             }
         )
-        console.log(res.data.data)
-
         setData(res.data.data);
       } catch (error) {
         setError(errorHandler(error));
