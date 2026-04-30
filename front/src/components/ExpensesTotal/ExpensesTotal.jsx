@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ExpensesByCategory from "./ExpensesByCategory";
 import errorHandler from "../../utils/errorHandler";
+import ExportExpensesBtn from "../ExportExpensesBtn";
 
 function ExpensesTotal() {
     const [data, setData] = useState([]);
@@ -24,14 +25,12 @@ function ExpensesTotal() {
 
         const { startDate, endDate } = getDateRange(month);
 
-        console.log(userId)
+
         const res = await axios.get(`http://localhost:3000/api/v1/user/${userId}/expenses/byCategory?startDate=${startDate}&endDate=${endDate}`,
             {
                 withCredentials: true
             }
         )
-        console.log(res.data.data)
-
         setData(res.data.data);
       } catch (error) {
         setError(errorHandler(error));
@@ -51,12 +50,15 @@ function ExpensesTotal() {
                 <p className="text-white self-baseline text-[1.2rem]">
                     Expenses Total 
                 </p>
-                <input
-                    type="month"
-                    value={month}
-                    onChange={(e) => setMonth(e.target.value)}
-                    className="bg-[#1f2747] text-white p-2 rounded"
-                />
+                <div>
+                    <input
+                        type="month"
+                        value={month}
+                        onChange={(e) => setMonth(e.target.value)}
+                        className="bg-[#1f2747] max-w-30 text-white p-2 mr-2 rounded"
+                    />
+                    <ExportExpensesBtn/>
+                </div>
             </div>
 
             <ExpensesByCategory data={data} loading={loading}/>

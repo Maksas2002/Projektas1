@@ -6,37 +6,35 @@ import DashHeader from "../components/Header/DashHeader/DashHeader";
 import AddIncome from "../components/AddIncome/AddIncome";
 import AddExpense from "../components/AddExpense/AddExpense";
 import ExpensesTotal from "../components/ExpensesTotal/ExpensesTotal";
+import BudgetSection from "../components/BudgetSection"; 
 
 function DashBoard() {
   const [activeForm, setActiveForm] = useState(null);
-
-  const toggleForm = (formName) => {
-    setActiveForm(activeForm === formName ? null : formName);
-  };
+  const toggleForm = (formName) => setActiveForm(activeForm === formName ? null : formName);
 
   return (
-    <main className="min-h-screen bg-[#01081f]">
+    <main className="min-h-screen bg-[#01081f] pb-20">
       <DashHeader />
-
-      <UpperPageBase/>
       
-      <MonthlyFinanciesBase/>
+      {/* Pagrindinis konteineris su vertikaliais tarpais (gap-12) */}
+      <div className="max-w-[1400px] mx-auto px-5 pt-8 flex flex-col gap-12">
+        
+        <UpperPageBase />
+        <MonthlyFinanciesBase />
 
-      <div className="flex flex-wrap justify-center gap-10 p-5 pt-10">
-        <AddIncome 
-          isOpen={activeForm === 'income'} 
-          onToggle={() => toggleForm('income')} 
-        />
-        <AddExpense 
-          isOpen={activeForm === 'expense'} 
-          onToggle={() => toggleForm('expense')} 
-        />
-      </div>
+        {/* Biudžeto sekcija gauna pilną plotį */}
+        <section className="w-full">
+          <BudgetSection />
+        </section>
 
-      <UserHistoryBase/>
-      
-      <div className="my-7">
-        <ExpensesTotal/>
+        {/* Formų mygtukai */}
+        <div className="flex flex-wrap justify-center gap-10">
+          <AddIncome isOpen={activeForm === 'income'} onToggle={() => toggleForm('income')} />
+          <AddExpense isOpen={activeForm === 'expense'} onToggle={() => toggleForm('expense')} />
+        </div>
+
+        <UserHistoryBase />
+        <ExpensesTotal />
       </div>
     </main>
   );

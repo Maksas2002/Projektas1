@@ -7,11 +7,26 @@ import {
   updateUserC,
   deleteMe,
 } from "../controller/userController.js";
-import { createIncomeC, getIncomeByIdC, updateIncomeC, deleteIncome, totalMonthlyIncomeC } from "../controller/incomeController.js";
-import { userMonthlyBalanceC } from "../controller/userBalanceController.js"
-// NAUJAS IMPORTAS:
-import { createExpenseC, deleteExpenseC, expensesByCategoryD, getExpenseByIdC, updateExpense , totalMonthlyExpensesC} from "../controller/expensesController.js";
+import { 
+  createIncomeC, 
+  getIncomeByIdC, 
+  updateIncomeC, 
+  deleteIncome, 
+  totalMonthlyIncomeC 
+} from "../controller/incomeController.js";
+import { userMonthlyBalanceC } from "../controller/userBalanceController.js";
+import { 
+  createExpenseC, 
+  deleteExpenseC, 
+  expensesByCategoryD, 
+  getExpenseByIdC, 
+  updateExpense, 
+  totalMonthlyExpensesC 
+} from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
+import { getUserBudgets } from "../controller/budgetController.js";
+
+// Validacijos ir Middleware
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
@@ -26,120 +41,40 @@ import { exportExpensesVal } from "../validation/exportExpensesVal.js";
 
 const userRoutes = express.Router();
 
-// --- BAZINIAI VARTOTOJO MARŠRUTAI ---
-userRoutes.get("/", authProtect, getAllUsers);
-userRoutes.get("/logout", authProtect, logoutC);
+// 1. Vieši maršrutai
 userRoutes.post("/signup", userSignUp, validate, signup);
 userRoutes.post("/login", userLogin, validate, loginC);
-userRoutes.patch("/edit", authProtect, updateUserC);
-userRoutes.route("/me").delete(authProtect, deleteMe);
 
-// --- PAJAMOS (INCOME) ---
-userRoutes.post(
-  "/:id/income/add",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  incomeVal,
-  validate,
-  createIncomeC,
-);
+// 2. Apsauga
+userRoutes.use(authProtect);
 
-// get income by id
-userRoutes.get(
-  "/:id/income/:incomeId",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  getIncomeByIdC
-);
+// Vartotojo valdymas
+userRoutes.get("/", getAllUsers);
+userRoutes.get("/logout", logoutC);
+userRoutes.patch("/edit", updateUserC);
+userRoutes.delete("/me", deleteMe);
 
-// update income
-userRoutes.patch(
-  "/:id/income/:incomeId",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  updateIncomeC
-);
+// 3. Dashboard maršrutai
+userRoutes.get("/my-budgets", allowAccessTo("User"), getUserBudgets);
+userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
 
+// 4. Pajamos (Income)
+userRoutes.post("/:id/income/add", allowAccessTo("User"), restrictToOwnUser, incomeVal, validate, createIncomeC);
+userRoutes.get("/:id/income/:incomeId", allowAccessTo("User"), restrictToOwnUser, getIncomeByIdC);
+userRoutes.patch("/:id/income/:incomeId", allowAccessTo("User"), restrictToOwnUser, updateIncomeC);
+userRoutes.delete("/:id/income/delete/:incomeId", allowAccessTo("User"), restrictToOwnUser, deleteIncome);
 
-//delete
-userRoutes.delete("/:id/income/delete/:incomeId", authProtect, allowAccessTo("User"), restrictToOwnUser, deleteIncome);
+// 5. Išlaidos (Expenses)
+userRoutes.post("/:id/expenses/add", allowAccessTo("User"), restrictToOwnUser, validate, createExpenseC);
+userRoutes.get("/:id/expense/:expenseId", allowAccessTo("User"), restrictToOwnUser, getExpenseByIdC);
+userRoutes.patch("/:id/expenses/edit/:expenseId", allowAccessTo("User"), restrictToOwnUser, expenseEdit, validate, updateExpense);
+userRoutes.delete("/:id/expenses/delete/:expenseId", allowAccessTo("User"), restrictToOwnUser, deleteExpenseC);
 
-// --- IŠLAIDOS (EXPENSES) ---
-userRoutes.post(
-  "/:id/expenses/add",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  validate,
-  createExpenseC,
-);
-userRoutes.delete(
-  "/:id/expenses/delete/:expenseId",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  deleteExpenseC,
-);
-userRoutes.patch("/:id/expenses/edit/:expenseId", authProtect, allowAccessTo("User"), restrictToOwnUser, expenseEdit, validate, updateExpense);
-
-userRoutes.get(
-  "/:id/expense/:expenseId",
-  authProtect,
-  allowAccessTo("User"),
-  restrictToOwnUser,
-  getExpenseByIdC
-);
-
-// user expense and income history
-
-userRoutes.get(
-  "/history",
-  authProtect,
-  allowAccessTo("User"),
-  userCombinedHistoryC
-);
-
-
-// shows all expense by category and dates with all amount in total
-userRoutes.get(
-  "/:id/expenses/byCategory",
-  authProtect,
-  allowAccessTo("User"),
-  expensesByCategory,
-  validate,
-  expensesByCategoryD
-);
-
-// calculationd
-// user total monthly income (yyyy-mm-01)
-
-userRoutes.get(
-  "/:date/totalIncome",
-  authProtect,
-  allowAccessTo("User"),
-  totalMonthlyIncomeC
-)
-
-// user total monthly expenses(yyyy-mm-01)
-
-userRoutes.get(
-  "/:date/totalExpenses",
-  authProtect,
-  allowAccessTo("User"),
-  totalMonthlyExpensesC
-)
-
-// user monthly balance expenses(yyyy-mm-01)
-
-userRoutes.get(
-  "/:date/totalBalance",
-  authProtect,
-  allowAccessTo("User"),
-  userMonthlyBalanceC
-)
+// 6. Statistika
+userRoutes.get("/:id/expenses/byCategory", allowAccessTo("User"), expensesByCategory, validate, expensesByCategoryD);
+userRoutes.get("/:date/totalIncome", allowAccessTo("User"), totalMonthlyIncomeC);
+userRoutes.get("/:date/totalExpenses", allowAccessTo("User"), totalMonthlyExpensesC);
+userRoutes.get("/:date/totalBalance", allowAccessTo("User"), userMonthlyBalanceC);
 
 
 

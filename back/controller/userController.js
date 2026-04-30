@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
+import { budgetQueries } from "../db/queries.js";
 
 const signToken = (user) => {
   return jwt.sign(
@@ -12,7 +13,7 @@ const signToken = (user) => {
   );
 };
 
- const sendTokenCookie = (token, res) => {
+const sendTokenCookie = (token, res) => {
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
@@ -28,16 +29,32 @@ export const signup = async (req, res, next) => {
     if (!name || !email || !password) {
       throw new AppError("name, email and password are required", 400);
     }
+    
     const existing = await getUserByEmailM(email);
     if (existing) {
       throw new AppError("User with this email already exists", 409);
     }
+    
     const hash = await argon2.hash(password);
+    
+    // 1. Sukuriamas vartotojas
     const createdUser = await createUserM({
       name,
       email,
       password: hash,
     });
+
+    // Saugus ID ištraukimas
+    const userId = createdUser?.id || (Array.isArray(createdUser) && createdUser[0]?.id);
+
+    if (userId) {
+      // 2. AUTOMATINIS LIMITŲ PRIDĖJIMAS
+      await budgetQueries.setDefaultBudgets(userId);
+
+      // 3. Registruojame registracijos veiksmą loguose
+      await createLogM(userId, name, 'SIGNUP', `New user registered: ${email}`);
+    }
+
     res.status(201).json({
       status: "success",
       data: createdUser,
@@ -61,11 +78,10 @@ export const loginC = async (req, res, next) => {
       throw new AppError("Invalid user email or password", 401);
     }
 
-    // --- REGISTRUOJAME LOGĄ: PRISIJUNGIMAS ---
     await createLogM(
       user.id, 
       user.name || 'User', 
-      'login', 
+      'LOGIN', 
       `User logged in: ${user.email}`
     );
 
@@ -83,14 +99,13 @@ export const loginC = async (req, res, next) => {
   }
 };
 
-//logout user
 export const logoutC = async (req, res) => {
   try {
     if (req.user) {
       await createLogM(
         req.user.id, 
         req.user.name || 'User', 
-        'logout', 
+        'LOGOUT', 
         `User logged out successfully`
       );
     }
@@ -104,12 +119,9 @@ export const logoutC = async (req, res) => {
   }
 };
 
-// EDIT User
-
 export const updateUserC = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-
     if (!name && !email && !password) {
       throw new AppError("Provide at least one field to update", 400);
     }
@@ -120,12 +132,13 @@ export const updateUserC = async (req, res, next) => {
     }
 
     const updates = {};
-
     if (name) updates.name = name;
     if (email) updates.email = email;
     if (password) updates.password = await argon2.hash(password);
 
     const updatedUser = await updateUserM(userId, updates);
+
+    await createLogM(userId, name || 'User', 'UPDATE_USER', `User updated profile details`);
 
     updatedUser.password = undefined;
 
@@ -151,17 +164,19 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
-//delete account
 export const deleteMe = async (req, res, next) => {
     try {
-      const deletedUser = await deleteUserById(req.user.id);
+      const userId = req.user.id;
+      const userName = req.user.name;
 
+      await createLogM(userId, userName, 'DELETE_USER', `User deleted their own account`);
+
+      const deletedUser = await deleteUserById(userId);
       if (!deletedUser) {
         throw new AppError("User not found", 404);
       }
 
       res.clearCookie("jwt");
-
       res.status(200).json({
         status: "success",
         data: "Successfully deleted account",
