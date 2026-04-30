@@ -93,9 +93,10 @@ function UserHistoryBase() {
         <div className="flex relative right-13 gap-50">
           <p className="text-white  pl-26 text-[1.2rem]">Transaction History</p>
 
-          <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
-            <HistoryCategorySelector categories={categories} getCatId={getCatId} />
-          </select>
+
+            <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
+              <HistoryCategorySelector categories={categories} getCatId={getCatId} />
+            </select>
         </div>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
