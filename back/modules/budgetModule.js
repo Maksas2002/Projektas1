@@ -33,3 +33,27 @@ export const getHistoryFromDB = async (userId) => {
     ORDER BY date DESC LIMIT 20;
   `;
 };
+
+export const getRemainingBudgetM = async (userId, MDate) => {
+  const remainingBudget = sql`
+    select
+      categories.id as category_id,
+      categories.name as category_name,
+      budgets.amount_limit as budget_limit,
+      coalesce(sum(expenses.amount), 0) as total_spent,
+      (budgets.amount_limit - coalesce(sum(expenses.amount), 0)) as remaining
+    from budgets
+    join categories
+      on categories.id = budgets.category_id
+    left join expenses
+      on expenses.category_id = categories.id
+      and expenses.user_id = budgets.user_id
+      and date_trunc('month', expenses.date) = date_trunc('month', ${monthDate}::date)
+    where budgets.user_id = ${userId}
+    group by categories.id, categories.name, budgets.amount_limit
+    order by categories.name;
+  `;
+
+
+  return result;
+}
