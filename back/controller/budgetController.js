@@ -32,17 +32,19 @@ export const getUserBudgets = async (req, res) => {
 // update user's budget limits
 export const updateBudgetLimitsC = async (req, res, next) => {
   try {
-    const { userId } = req.user;
+    const { id } = req.user;
     const { categoryId } = req.params;
-console.log(categoryId);
-console.log(userId);
+
     const newBudgetLimit = req.body;
 
     if (Object.keys(newBudgetLimit).length === 0) {
       throw new AppError("No fields provided to update", 400);
     }
 
-    const newBudgetLimitD = await updateBudgetLimitsM(newBudgetLimit, userId, categoryId);
+    const newBudgetLimitN = newBudgetLimit.amount_limit;
+   
+  
+    const newBudgetLimitD = await updateBudgetLimitsM(newBudgetLimitN, id, categoryId);
 
     if (!newBudgetLimitD) {
       throw new AppError("Category not found", 404);

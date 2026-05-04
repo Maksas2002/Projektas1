@@ -60,7 +60,7 @@ userRoutes.delete("/me",authProtect, deleteMe);
 // 3. Dashboard maršrutai
 userRoutes.get("/my-budgets", authProtect, allowAccessTo("User"), getUserBudgets);
 userRoutes.patch(
-  ":categoryId/my-budgets/update",
+  "/:categoryId/my-budgets/update",
   authProtect,
   allowAccessTo("User"),
   updateBudgetLimitsC,
