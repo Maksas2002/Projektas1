@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { TransactionContext } from '../utlis/TransactionContext';
 import axios from 'axios';
 
 const BudgetSection = () => {
     const [budgets, setBudgets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const transaction = useContext(TransactionContext);
 
     useEffect(() => {
         const fetchBudgets = async () => {
@@ -22,7 +24,7 @@ const BudgetSection = () => {
             }
         };
         fetchBudgets();
-    }, []);
+    }, [transaction]);
 
     if (loading) return <div className="p-10 text-slate-500 text-center italic">Kraunama...</div>;
 
@@ -76,7 +78,7 @@ const BudgetSection = () => {
                     })
                 ) : (
                     <div className="col-span-full py-10 text-center text-slate-500 italic border border-dashed border-[#283046] rounded-xl">
-                        Nėra nustatytų biudžeto limitų šiam vartotojui.
+                        There are no category limits set for this user
                     </div>
                 )}
             </div>
