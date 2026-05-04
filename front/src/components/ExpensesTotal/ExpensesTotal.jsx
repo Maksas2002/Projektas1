@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ExpensesByCategory from "./ExpensesByCategory";
 import errorHandler from "../../utils/errorHandler";
+import ExportExpensesBtn from "../ExportExpensesBtn";
 
 function ExpensesTotal() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [month, setMonth] = useState("2026-04");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     const getDateRange = (monthString) => {
         const [year, month] = monthString.split("-");
@@ -49,16 +53,41 @@ function ExpensesTotal() {
                 <p className="text-white self-baseline text-[1.2rem]">
                     Expenses Total 
                 </p>
-                <input
-                    type="month"
-                    value={month}
-                    onChange={(e) => setMonth(e.target.value)}
-                    className="bg-[#1f2747] text-white p-2 rounded"
-                />
+                <div>
+                    <input
+                        type="month"
+                        value={month}
+                        onChange={(e) => setMonth(e.target.value)}
+                        className="bg-[#1f2747] max-w-30 text-white p-2 mr-2 rounded"
+                    />
+                </div>
             </div>
 
             <ExpensesByCategory data={data} loading={loading}/>
             
+            <div className="flex w-full justify-around items-center border-t-2 border-t-[#061a75] pt-4">
+                <ExportExpensesBtn startDate={startDate} endDate={endDate}/>
+                <div className="flex flex-row">
+                    <div>
+                        <label className="text-white text-sm block">Start</label>
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="bg-[#1f2747] max-w-30 text-white p-2 mr-2 rounded"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-white text-sm block">End</label>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="bg-[#1f2747] max-w-30 text-white p-2 mr-2 rounded"
+                        />
+                    </div>
+                </div>
+            </div>
         </section>
     )
 }
