@@ -53,23 +53,24 @@ userRoutes.use(authProtect);
 
 // Vartotojo valdymas
 userRoutes.get("/", getAllUsers);
-userRoutes.get("/logout", logoutC);
-userRoutes.patch("/edit", updateUserC);
-userRoutes.delete("/me", deleteMe);
+userRoutes.get("/logout", authProtect, logoutC);
+userRoutes.patch("/edit", authProtect, updateUserC);
+userRoutes.delete("/me",authProtect, deleteMe);
 
 // 3. Dashboard maršrutai
-userRoutes.get("/my-budgets", allowAccessTo("User"), getUserBudgets);
+userRoutes.get("/my-budgets", authProtect, allowAccessTo("User"), getUserBudgets);
 userRoutes.patch(
   ":categoryId/my-budgets/update",
   authProtect,
   allowAccessTo("User"),
   updateBudgetLimitsC,
 );
-userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
+userRoutes.get("/history", authProtect, allowAccessTo("User"), userCombinedHistoryC);
 
 // 4. Pajamos (Income)
 userRoutes.post(
   "/:id/income/add",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   incomeVal,
@@ -78,18 +79,21 @@ userRoutes.post(
 );
 userRoutes.get(
   "/:id/income/:incomeId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   getIncomeByIdC,
 );
 userRoutes.patch(
   "/:id/income/:incomeId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   updateIncomeC,
 );
 userRoutes.delete(
   "/:id/income/delete/:incomeId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   deleteIncome,
@@ -98,6 +102,7 @@ userRoutes.delete(
 // 5. Išlaidos (Expenses)
 userRoutes.post(
   "/:id/expenses/add",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   validate,
@@ -105,12 +110,14 @@ userRoutes.post(
 );
 userRoutes.get(
   "/:id/expense/:expenseId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   getExpenseByIdC,
 );
 userRoutes.patch(
   "/:id/expenses/edit/:expenseId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   expenseEdit,
@@ -119,6 +126,7 @@ userRoutes.patch(
 );
 userRoutes.delete(
   "/:id/expenses/delete/:expenseId",
+  authProtect,
   allowAccessTo("User"),
   restrictToOwnUser,
   deleteExpenseC,
@@ -127,6 +135,7 @@ userRoutes.delete(
 // 6. Statistika
 userRoutes.get(
   "/:id/expenses/byCategory",
+  authProtect,
   allowAccessTo("User"),
   expensesByCategory,
   validate,
@@ -134,16 +143,19 @@ userRoutes.get(
 );
 userRoutes.get(
   "/:date/totalIncome",
+  authProtect,
   allowAccessTo("User"),
   totalMonthlyIncomeC,
 );
 userRoutes.get(
   "/:date/totalExpenses",
+  authProtect,
   allowAccessTo("User"),
   totalMonthlyExpensesC,
 );
 userRoutes.get(
   "/:date/totalBalance",
+  authProtect,
   allowAccessTo("User"),
   userMonthlyBalanceC,
 );
