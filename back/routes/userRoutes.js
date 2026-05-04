@@ -24,7 +24,10 @@ import {
   totalMonthlyExpensesC,
 } from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
-import { getUserBudgets } from "../controller/budgetController.js";
+import {
+  getUserBudgets,
+  updateBudgetLimitsC,
+} from "../controller/budgetController.js";
 
 // Validacijos ir Middleware
 import userLogin from "../validation/userLoginV.js";
@@ -56,6 +59,12 @@ userRoutes.delete("/me", deleteMe);
 
 // 3. Dashboard maršrutai
 userRoutes.get("/my-budgets", allowAccessTo("User"), getUserBudgets);
+userRoutes.patch(
+  ":categoryId/my-budgets/update",
+  authProtect,
+  allowAccessTo("User"),
+  updateBudgetLimitsC,
+);
 userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
 
 // 4. Pajamos (Income)
@@ -139,8 +148,6 @@ userRoutes.get(
   userMonthlyBalanceC,
 );
 
-
-
 //exports a expanses csv
 userRoutes.get(
   "/expenses/export",
@@ -148,7 +155,7 @@ userRoutes.get(
   allowAccessTo("User"),
   exportExpensesVal,
   validate,
-  exportExpenses
+  exportExpenses,
 );
 
 export default userRoutes;
