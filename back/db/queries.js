@@ -1,49 +1,65 @@
 import { sql } from "../dbConnection.js";
 
 export const budgetQueries = {
-    // 1. Gauname biudžetus ir SUJUNGIAME su išlaidomis pagal teisingą datą
-    getUserBudgetsWithExpenses: async (userId, year, month) => {
-        const targetYear = parseInt(year) || new Date().getFullYear();
-        const targetMonth = parseInt(month) || (new Date().getMonth() + 1);
-        
-        // Formuojame YYYY-MM formatą (pvz., '2026-05')
-        const dateFilter = `${targetYear}-${String(targetMonth).padStart(2, '0')}`;
+    /**
+     * 1. Gauna vartotojo biudžetus kartu su susumuotomis išlaidomis.
+     */
+    getUserBudgetsWithExpenses: async (userId, startDateOrYear, nextMonthDateOrMonth) => {
+        let startDate = startDateOrYear;
+        let nextMonthDate = nextMonthDateOrMonth;
+
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(startDateOrYear || ""))) {
+            const now = new Date();
+            const year = Number(startDateOrYear) || now.getFullYear();
+            const month = Number(nextMonthDateOrMonth) || now.getMonth() + 1;
+            startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+            nextMonthDate = new Date(Date.UTC(year, month, 1))
+                .toISOString()
+                .slice(0, 10);
+        }
 
         return await sql`
             SELECT 
-                b.id, 
+                c.id AS category_id, 
                 c.name AS category_name, 
-                b.amount_limit, 
-                COALESCE(
-                    (SELECT SUM(e.amount) 
-                     FROM expenses e 
-                     WHERE e.category_id = b.category_id 
-                     AND e.user_id = ${userId}
-                     AND TO_CHAR(e.date, 'YYYY-MM') = ${dateFilter}
-                    ), 0
-                ) AS total_spent
-            FROM budgets b
-            JOIN categories c ON b.category_id = c.id
-            WHERE b.user_id = ${userId}
+                COALESCE(b.amount_limit, 500.00)::FLOAT AS amount_limit,
+                COALESCE((
+                    SELECT SUM(amount)::FLOAT 
+                    FROM expenses 
+                    WHERE category_id = c.id AND user_id = ${userId}
+                    AND date >= ${startDate}
+                    AND date < ${nextMonthDate}
+                ), 0) AS amount_used
+            FROM categories c
+            LEFT JOIN budgets b ON c.id = b.category_id AND b.user_id = ${userId}
+            WHERE c.name IN ('Food', 'Transport', 'Entertainment', 'Shopping', 'Health', 'Travel')
+            ORDER BY c.id ASC;
         `;
     },
 
-    // 2. Sukuriame numatytuosius limitus (€500) tik išlaidų kategorijoms
+    /**
+     * 2. Sukuria standartinius limitus naujam vartotojui registracijos metu.
+     */
     setDefaultBudgets: async (userId) => {
-        // Pasiimame visas kategorijas, kurios NĖRA pajamos
-        const categories = await sql`
-            SELECT id FROM categories 
-            WHERE name NOT IN ('Salary', 'Freelance', 'Income', 'Pajamos')
-        `;
+        const defaultBudgets = [
+            { name: 'Food', limit: 500 },
+            { name: 'Transport', limit: 200 },
+            { name: 'Entertainment', limit: 150 },
+            { name: 'Shopping', limit: 250 },
+            { name: 'Health', limit: 300 },
+            { name: 'Travel', limit: 500 }
+        ];
 
-        for (const cat of categories) {
-            await sql`
+        return await Promise.allSettled(defaultBudgets.map(item => 
+            sql`
                 INSERT INTO budgets (user_id, category_id, amount_limit)
-                VALUES (${userId}, ${cat.id}, 500)
-                ON CONFLICT (user_id, category_id) 
-                DO UPDATE SET amount_limit = 500; -- Jei jau buvo €1, pakeis į €500
-            `;
-        }
+                VALUES (
+                    ${userId}, 
+                    (SELECT id FROM categories WHERE name = ${item.name} LIMIT 1), 
+                    ${item.limit}
+                ) ON CONFLICT (user_id, category_id) DO NOTHING;
+            `
+        ));
     }
 };
 

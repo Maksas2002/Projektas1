@@ -55,10 +55,14 @@ export const getMyBudgets = async (req, res, next) => {
     try {
         const userId = req.user.id;
         const { year, month } = req.query;
+        const selectedMonth = /^\d{4}-\d{2}$/.test(month || "") ? month : null;
+        const [selectedYear, selectedMonthNumber] = selectedMonth
+            ? selectedMonth.split("-").map(Number)
+            : [];
 
         // Jei front-end nesiunčia datos, naudojame šiandienos
-        const targetYear = year || new Date().getFullYear();
-        const targetMonth = month || (new Date().getMonth() + 1);
+        const targetYear = selectedYear || Number(year) || new Date().getFullYear();
+        const targetMonth = selectedMonthNumber || Number(month) || (new Date().getMonth() + 1);
 
         console.log(`Ieškome biudžeto: Vartotojas ${userId}, Data: ${targetYear}-${targetMonth}`);
 
