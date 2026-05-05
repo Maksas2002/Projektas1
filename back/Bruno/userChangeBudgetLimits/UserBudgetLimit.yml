@@ -1,0 +1,21 @@
+info:
+  name: UserBudgetLimit
+  type: http
+  seq: 1
+
+http:
+  method: PATCH
+  url: http://localhost:3000/api/v1/user/8/my-budgets/update
+  body:
+    type: json
+    data: |-
+      {
+        "amount_limit": 5.1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

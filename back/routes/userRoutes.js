@@ -41,6 +41,7 @@ import { authProtect } from "../middleware/authProtect.js";
 import { expensesByCategory } from "../validation/expensesByCategory.js";
 import { exportExpenses } from "../controller/exportController.js";
 import { exportExpensesVal } from "../validation/exportExpensesVal.js";
+import budgetLimitVal from "../validation/budgetLimitVal.js";
 
 const userRoutes = express.Router();
 
@@ -63,6 +64,8 @@ userRoutes.patch(
   "/:categoryId/my-budgets/update",
   authProtect,
   allowAccessTo("User"),
+  budgetLimitVal,
+  validate,
   updateBudgetLimitsC,
 );
 userRoutes.get("/history", authProtect, allowAccessTo("User"), userCombinedHistoryC);
