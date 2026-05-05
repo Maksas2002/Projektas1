@@ -1,6 +1,6 @@
 function BudgetLimitUpdate({ budgets, limit, setLimit }) {
 
-    console.log(budgets);
+
 
     // user's budget limit  update
     const updateUsersBudgetLimits = async (setLimit) => {
@@ -14,7 +14,7 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
     return (
         <>
             <div>
-
+                <p>{budgets.category_name}</p>
             </div>
         </>
     );

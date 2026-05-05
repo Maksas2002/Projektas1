@@ -9,7 +9,7 @@ const BudgetSection = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(true);
     const [showUpdates, setShowUpdates] = useState(false);
-   
+
     const [limit, setLimit] = useState([]);
     const transaction = useContext(TransactionContext);
 
@@ -54,7 +54,17 @@ const BudgetSection = () => {
                 </button>
             </div>
 
-            {showUpdates ? <BudgetLimitUpdate budgets={budgets} limit={limit} setLimit={setLimit}/> : null}
+
+            {showUpdates
+                ? budgets.map((b) => (
+                    <BudgetLimitUpdate
+                        key={b.id}
+                        budgets={b}
+                        limit={limit}
+                        setLimit={setLimit}
+                    />
+                ))
+                : null}
             {show ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {budgets.length > 0 ? (
                     budgets.map((b) => {
