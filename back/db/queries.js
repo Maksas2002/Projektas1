@@ -4,7 +4,20 @@ export const budgetQueries = {
     /**
      * 1. Gauna vartotojo biudžetus kartu su susumuotomis išlaidomis.
      */
-    getUserBudgetsWithExpenses: async (userId) => {
+    getUserBudgetsWithExpenses: async (userId, startDateOrYear, nextMonthDateOrMonth) => {
+        let startDate = startDateOrYear;
+        let nextMonthDate = nextMonthDateOrMonth;
+
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(startDateOrYear || ""))) {
+            const now = new Date();
+            const year = Number(startDateOrYear) || now.getFullYear();
+            const month = Number(nextMonthDateOrMonth) || now.getMonth() + 1;
+            startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+            nextMonthDate = new Date(Date.UTC(year, month, 1))
+                .toISOString()
+                .slice(0, 10);
+        }
+
         return await sql`
             SELECT 
                 c.id AS category_id, 
@@ -14,6 +27,8 @@ export const budgetQueries = {
                     SELECT SUM(amount)::FLOAT 
                     FROM expenses 
                     WHERE category_id = c.id AND user_id = ${userId}
+                    AND date >= ${startDate}
+                    AND date < ${nextMonthDate}
                 ), 0) AS amount_used
             FROM categories c
             LEFT JOIN budgets b ON c.id = b.category_id AND b.user_id = ${userId}
@@ -47,3 +62,5 @@ export const budgetQueries = {
         ));
     }
 };
+
+export default budgetQueries;
