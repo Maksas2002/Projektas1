@@ -24,7 +24,7 @@ import {
   totalMonthlyExpensesC 
 } from "../controller/expensesController.js";
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
-import { getUserBudgets } from "../controller/budgetController.js";
+import { getRemainingBudgetC, getUserBudgets } from "../controller/budgetController.js";
 
 // Validacijos ir Middleware
 import userLogin from "../validation/userLoginV.js";
@@ -57,6 +57,7 @@ userRoutes.delete("/me", deleteMe);
 // 3. Dashboard maršrutai
 userRoutes.get("/my-budgets", allowAccessTo("User"), getUserBudgets);
 userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
+userRoutes.get("/remaining-budget", allowAccessTo("User"), getRemainingBudgetC);
 
 // 4. Pajamos (Income)
 userRoutes.post("/:id/income/add", allowAccessTo("User"), restrictToOwnUser, incomeVal, validate, createIncomeC);
