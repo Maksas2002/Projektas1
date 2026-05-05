@@ -9,8 +9,11 @@ const BudgetSection = () => {
     const [loading, setLoading] = useState(true);
     const [show, setShow] = useState(true);
     const [showUpdates, setShowUpdates] = useState(false);
+   
+    const [limit, setLimit] = useState([]);
     const transaction = useContext(TransactionContext);
 
+    // chnage view of the tables
     const changeView = (show, showUpdates, setShow, setShowUpdates) => {
         if (show) {
             setShow(false);
@@ -51,7 +54,7 @@ const BudgetSection = () => {
                 </button>
             </div>
 
-            {showUpdates ? <BudgetLimitUpdate /> : null}
+            {showUpdates ? <BudgetLimitUpdate budgets={budgets} limit={limit} setLimit={setLimit}/> : null}
             {show ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {budgets.length > 0 ? (
                     budgets.map((b) => {
