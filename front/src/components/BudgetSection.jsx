@@ -1,11 +1,25 @@
+import BudgetLimitUpdate from './BudgetLimitUpdate';
 import { useEffect, useState, useContext } from 'react';
 import { TransactionContext } from '../utlis/TransactionContext';
 import axios from 'axios';
 
+
 const BudgetSection = () => {
     const [budgets, setBudgets] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [show, setShow] = useState(true);
+    const [showUpdates, setShowUpdates] = useState(false);
     const transaction = useContext(TransactionContext);
+
+    const changeView = (show, showUpdates, setShow, setShowUpdates) => {
+        if (show) {
+            setShow(false);
+            setShowUpdates(true);
+        } else if (showUpdates) {
+            setShow(true);
+            setShowUpdates(false);
+        }
+    };
 
     useEffect(() => {
         const fetchBudgets = async () => {
@@ -13,7 +27,7 @@ const BudgetSection = () => {
                 const res = await axios.get('http://localhost:3000/api/v1/user/my-budgets', {
                     withCredentials: true
                 });
-                
+
                 if (res.data.status === 'success') {
                     setBudgets(res.data.data);
                 }
@@ -32,18 +46,19 @@ const BudgetSection = () => {
         <div className="bg-[#161d31] p-8 rounded-2xl border border-[#283046] mt-6 shadow-xl">
             <div className="flex justify-between items-center mb-8">
                 <h2 className="text-white text-xl font-medium tracking-tight">Budget Limits by Category</h2>
-                <button className="text-[#7367f0] text-sm flex items-center gap-2 hover:brightness-125 transition-all">
+                <button onClick={() => changeView(show, showUpdates, setShow, setShowUpdates)} className="text-[#7367f0] text-sm flex items-center gap-2 hover:brightness-125 transition-all">
                     <span className="material-icons-outlined text-lg"></span> Manage Budgets
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {showUpdates ? <BudgetLimitUpdate /> : null}
+            {show ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {budgets.length > 0 ? (
                     budgets.map((b) => {
                         const used = Number(b.amount_used || 0);
                         const limit = Number(b.amount_limit || 0);
                         const percent = limit > 0 ? Math.min((used / limit) * 100, 100) : 0;
-                        
+
                         // NAUJA: Patikriname ar limitas viršytas
                         const isOverLimit = used >= limit && limit > 0;
 
@@ -57,9 +72,9 @@ const BudgetSection = () => {
                                     </span>
                                 </div>
                                 <div className="w-full bg-[#1e293b] h-1.5 rounded-full overflow-hidden mb-3">
-                                    <div 
+                                    <div
                                         // PAKEISTA SPALVA PROGRESO JUOSTAI
-                                        className={`h-full rounded-full transition-all duration-1000 ${isOverLimit ? 'bg-red-500' : 'bg-[#7367f0]'}`} 
+                                        className={`h-full rounded-full transition-all duration-1000 ${isOverLimit ? 'bg-red-500' : 'bg-[#7367f0]'}`}
                                         style={{ width: `${percent}%` }}
                                     ></div>
                                 </div>
@@ -81,7 +96,7 @@ const BudgetSection = () => {
                         There are no category limits set for this user
                     </div>
                 )}
-            </div>
+            </div> : null}
         </div>
     );
 };
