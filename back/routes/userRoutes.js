@@ -40,6 +40,8 @@ import restrictToOwnUser from "../middleware/restrictToOwnerUser.js";
 import { allowAccessTo } from "../middleware/allowAcceesTo.js";
 import { authProtect } from "../middleware/authProtect.js";
 import { expensesByCategory } from "../validation/expensesByCategory.js";
+import { exportExpenses } from "../controller/exportController.js";
+import { exportExpensesVal } from "../validation/exportExpensesVal.js";
 
 const userRoutes = express.Router();
 
@@ -79,5 +81,17 @@ userRoutes.get("/:id/expenses/byCategory", allowAccessTo("User"), expensesByCate
 userRoutes.get("/:date/totalIncome", allowAccessTo("User"), totalMonthlyIncomeC);
 userRoutes.get("/:date/totalExpenses", allowAccessTo("User"), totalMonthlyExpensesC);
 userRoutes.get("/:date/totalBalance", allowAccessTo("User"), userMonthlyBalanceC);
+
+
+
+//exports a expanses csv
+userRoutes.get(
+  "/expenses/export",
+  authProtect,
+  allowAccessTo("User"),
+  exportExpensesVal,
+  validate,
+  exportExpenses
+);
 
 export default userRoutes;
