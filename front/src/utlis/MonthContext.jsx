@@ -6,7 +6,7 @@ export const MonthContextProvider = ({ children }) => {
   const [month, setMonth] = useState(() => {
     // load from localStorage on first render
     const savedMonth = localStorage.getItem("month");
-    return savedMonth ? JSON.parse(savedMonth) : [];
+    return savedMonth ? JSON.parse(savedMonth) : new Date().toISOString().slice(0, 7);
   });
 
   useEffect(() => {
