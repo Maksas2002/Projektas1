@@ -34,15 +34,29 @@ export const getHistoryFromDB = async (userId) => {
   `;
 };
 
-// update user's budget limits
+// update user's monthly budget limits
 
-export const updateBudgetLimitsM = async (newBudgetLimitN, id, categoryId) => {
+export const updateBudgetLimitsM = async (newBudgetLimitN, id, categoryId, fDateShort, lastDayShort) => {
   const newBudgetLimit = await sql`
-   UPDATE budgets 
+   UPDATE budgets AS b
    SET amount_limit = ${parseInt(newBudgetLimitN)}
-   WHERE user_id = ${parseInt(id)}
-   AND category_id  = ${parseInt(categoryId)}
-   RETURNING *;
+   WHERE b.user_id = ${parseInt(id)}
+   AND b.category_id = ${parseInt(categoryId)}
+   AND (
+      EXISTS (
+          SELECT 1
+          FROM expenses e
+          WHERE e.user_id = b.user_id
+            AND e.date BETWEEN ${fDateShort} AND ${lastDayShort}
+      )
+      OR NOT EXISTS (
+          SELECT 1
+          FROM expenses e
+          WHERE e.user_id = b.user_id
+            AND e.date BETWEEN ${fDateShort} AND ${lastDayShort}
+      )
+  )
+    RETURNING *;
   `;
 
   return newBudgetLimit[0];

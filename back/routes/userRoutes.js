@@ -64,8 +64,9 @@ userRoutes.delete("/me",authProtect, deleteMe);
 
 // 3. Dashboard maršrutai
 userRoutes.get("/my-budgets", authProtect, allowAccessTo("User"), getMyBudgets);
+// month format yyy-mm-01. Automaticly changes dates to the lsat day of the month.
 userRoutes.patch(
-  "/:categoryId/my-budgets/update",
+  "/:categoryId/my-budgets/:date/update",
   authProtect,
   allowAccessTo("User"),
   budgetLimitVal,
