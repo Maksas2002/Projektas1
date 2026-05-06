@@ -1,18 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import ExpensesByCategory from "./ExpensesByCategory";
 import errorHandler from "../../utils/errorHandler";
+import ExportExpensesBtn from "../ExportExpensesBtn";
+import { MonthContext } from "../../utlis/MonthContext";
 
 function ExpensesTotal() {
+  const { month, setMonth } = useContext(MonthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [month, setMonth] = useState("2026-04");
+  const selectedMonth =
+    typeof month === "string" && month
+      ? month
+      : new Date().toISOString().slice(0, 7);
 
   const [showPeriodFilter, setShowPeriodFilter] = useState(false);
-  const [startDate, setStartDate] = useState("2026-04-01");
-  const [endDate, setEndDate] = useState("2026-04-30");
+  const [startDate, setStartDate] = useState(`${selectedMonth}-01`);
+  const [endDate, setEndDate] = useState("");
   const [periodTotal, setPeriodTotal] = useState(null);
   const [periodError, setPeriodError] = useState(null);
 
@@ -30,15 +35,12 @@ function ExpensesTotal() {
       setError(null);
 
       const user = JSON.parse(localStorage.getItem("user"));
-      const userId = user?.data?.id;
-
-      const { startDate, endDate } = getDateRange(month);
+      const userId = user?.data?.id || user?.id;
+      const { startDate, endDate } = getDateRange(selectedMonth);
 
       const res = await axios.get(
         `http://localhost:3000/api/v1/user/${userId}/expenses/byCategory?startDate=${startDate}&endDate=${endDate}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       setData(res.data.data);
@@ -56,9 +58,7 @@ function ExpensesTotal() {
 
       const res = await axios.get(
         `http://localhost:3000/api/v1/user/expenses/total-by-period?startDate=${startDate}&endDate=${endDate}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       setPeriodTotal(res.data.data.totalExpenses);
@@ -74,22 +74,23 @@ function ExpensesTotal() {
   };
 
   useEffect(() => {
+    const { startDate, endDate } = getDateRange(selectedMonth);
+    setStartDate(startDate);
+    setEndDate(endDate);
     fetchCategoryTotal();
-  }, [month]);
+  }, [selectedMonth]);
 
   return (
     <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-185 mx-auto">
       {error && <p className="text-red-500 text-center">{error}</p>}
 
       <div className="flex w-full justify-between items-center gap-3 flex-wrap px-10">
-        <p className="text-white text-[1.2rem]">
-          Expenses Total
-        </p>
+        <p className="text-white text-[1.2rem]">Expenses Total</p>
 
         <div className="flex items-center gap-3">
           <input
             type="month"
-            value={month}
+            value={selectedMonth}
             onChange={(e) => setMonth(e.target.value)}
             className="bg-[#1f2747] text-white p-2 rounded"
           />
@@ -101,6 +102,8 @@ function ExpensesTotal() {
           >
             Filter by period
           </button>
+
+          <ExportExpensesBtn startDate={startDate} endDate={endDate} />
         </div>
       </div>
 
@@ -148,14 +151,12 @@ function ExpensesTotal() {
         <p className="text-white mt-2">
           Period total expenses:{" "}
           <span className="font-bold">
-            {Number(periodTotal).toFixed(2)} €
+            EUR {Number(periodTotal).toFixed(2)}
           </span>
         </p>
       )}
 
-      {periodError && (
-        <p className="text-red-500 text-center">{periodError}</p>
-      )}
+      {periodError && <p className="text-red-500 text-center">{periodError}</p>}
 
       <ExpensesByCategory data={data} loading={loading} />
     </section>

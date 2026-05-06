@@ -18,7 +18,6 @@ export const getAllCategoriesM = async () => {
 };
 
 
-
 //add category
 export const createCategoryM = async (name, type, user_id) => {
   const result = await sql`
