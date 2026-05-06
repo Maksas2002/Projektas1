@@ -7,6 +7,7 @@ import AddIncome from "../components/AddIncome/AddIncome";
 import AddExpense from "../components/AddExpense/AddExpense";
 import ExpensesTotal from "../components/ExpensesTotal/ExpensesTotal";
 import BudgetSection from "../components/BudgetSection"; 
+import RemainingBudgetSection from "../components/RemainingBudgetSection";
 
 function DashBoard() {
   const [activeForm, setActiveForm] = useState(null);
@@ -25,6 +26,7 @@ function DashBoard() {
         {/* Biudžeto sekcija gauna pilną plotį */}
         <section className="w-full">
           <BudgetSection />
+          <RemainingBudgetSection/>
         </section>
 
         {/* Formų mygtukai */}
