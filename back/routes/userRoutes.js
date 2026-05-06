@@ -6,7 +6,9 @@ import {
   logoutC,
   updateUserC,
   deleteMe,
+  getMyBudgets, // Naujai suimportuota funkcija
 } from "../controller/userController.js";
+
 import {
   createIncomeC,
   getIncomeByIdC,
@@ -14,6 +16,7 @@ import {
   deleteIncome,
   totalMonthlyIncomeC,
 } from "../controller/incomeController.js";
+
 import { userMonthlyBalanceC } from "../controller/userBalanceController.js";
 import {
   createExpenseC,
@@ -23,6 +26,7 @@ import {
   updateExpense,
   totalMonthlyExpensesC,
 } from "../controller/expensesController.js";
+
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import {
   getUserBudgets,
@@ -45,21 +49,21 @@ import budgetLimitVal from "../validation/budgetLimitVal.js";
 
 const userRoutes = express.Router();
 
-// 1. Vieši maršrutai
+// --- 1. VIEŠI MARŠRUTAI ---
 userRoutes.post("/signup", userSignUp, validate, signup);
 userRoutes.post("/login", userLogin, validate, loginC);
 
-// 2. Apsauga
+// --- 2. APSAUGA (AUTH) ---
 userRoutes.use(authProtect);
 
-// Vartotojo valdymas
+// Vartotojo profilis
 userRoutes.get("/", getAllUsers);
 userRoutes.get("/logout", authProtect, logoutC);
 userRoutes.patch("/edit", authProtect, updateUserC);
 userRoutes.delete("/me",authProtect, deleteMe);
 
 // 3. Dashboard maršrutai
-userRoutes.get("/my-budgets", authProtect, allowAccessTo("User"), getUserBudgets);
+userRoutes.get("/my-budgets", authProtect, allowAccessTo("User"), getMyBudgets);
 userRoutes.patch(
   "/:categoryId/my-budgets/update",
   authProtect,

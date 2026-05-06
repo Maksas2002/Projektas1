@@ -1,187 +1,242 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { getUserByEmailM, createUserM, updateUserM, getAllUsersM, deleteUserById } from "../modules/userModule.js";
+import { 
+    getUserByEmailM, 
+    createUserM, 
+    updateUserM, 
+    getAllUsersM, 
+    deleteUserById 
+} from "../modules/userModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
-import { budgetQueries } from "../db/queries.js";
+import budgetQueries from "../db/queries.js";
 
+/**
+ * Pagalbinė funkcija JWT tokenui sugeneruoti
+ */
 const signToken = (user) => {
-  return jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN }
-  );
-};
-
-const sendTokenCookie = (token, res) => {
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
-    ),
-    httpOnly: true,
-  };
-  res.cookie("jwt", token, cookieOptions);
-};
-
-export const signup = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      throw new AppError("name, email and password are required", 400);
-    }
-    
-    const existing = await getUserByEmailM(email);
-    if (existing) {
-      throw new AppError("User with this email already exists", 409);
-    }
-    
-    const hash = await argon2.hash(password);
-    
-    // 1. Sukuriamas vartotojas
-    const createdUser = await createUserM({
-      name,
-      email,
-      password: hash,
-    });
-
-    // Saugus ID ištraukimas
-    const userId = createdUser?.id || (Array.isArray(createdUser) && createdUser[0]?.id);
-
-    if (userId) {
-      // 2. AUTOMATINIS LIMITŲ PRIDĖJIMAS
-      await budgetQueries.setDefaultBudgets(userId);
-
-      // 3. Registruojame registracijos veiksmą loguose
-      await createLogM(userId, name, 'SIGNUP', `New user registered: ${email}`);
-    }
-
-    res.status(201).json({
-      status: "success",
-      data: createdUser,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const loginC = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await getUserByEmailM(email);
-    
-    if (!user) {
-      throw new AppError("Invalid user email or password", 401);
-    }
-    
-    const isMatch = await argon2.verify(user.password, password);
-    if (!isMatch) {
-      throw new AppError("Invalid user email or password", 401);
-    }
-
-    await createLogM(
-      user.id, 
-      user.name || 'User', 
-      'LOGIN', 
-      `User logged in: ${user.email}`
+    return jwt.sign(
+        { id: user.id, role: user.role },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || "90d" }
     );
+};
 
+/**
+ * Pagalbinė funkcija slapuko (cookie) nustatymui ir atsakymo išsiuntimui
+ */
+const createSendToken = (user, statusCode, res) => {
     const token = signToken(user);
-    sendTokenCookie(token, res);
-    user.password = undefined;
+    
+    const cookieOptions = {
+        expires: new Date(
+            Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN || 90) * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    };
 
-    res.status(200).json({
-      status: "success",
-      token: token,
-      data: user,
+    res.cookie("jwt", token, cookieOptions);
+
+    // Pašaliname slaptažodį iš atsakymo saugumo sumetimais
+    if (user.password) user.password = undefined;
+
+    res.status(statusCode).json({
+        status: "success",
+        token,
+        data: user,
     });
-  } catch (err) {
-    next(err);
-  }
 };
 
+/**
+ * GAUNA VARTOTOJO BIUDŽETUS (Supaprastinta - be metų ir mėnesio)
+ */
+export const getMyBudgets = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { year, month } = req.query;
+        const selectedMonth = /^\d{4}-\d{2}$/.test(month || "") ? month : null;
+        const [selectedYear, selectedMonthNumber] = selectedMonth
+            ? selectedMonth.split("-").map(Number)
+            : [];
+
+        // Jei front-end nesiunčia datos, naudojame šiandienos
+        const targetYear = selectedYear || Number(year) || new Date().getFullYear();
+        const targetMonth = selectedMonthNumber || Number(month) || (new Date().getMonth() + 1);
+
+        console.log(`Ieškome biudžeto: Vartotojas ${userId}, Data: ${targetYear}-${targetMonth}`);
+
+        let budgets = await budgetQueries.getUserBudgetsWithExpenses(userId, targetYear, targetMonth);
+
+        // Jei tuščia, sugeneruojame defaultus
+        if (budgets.length === 0) {
+            await budgetQueries.setDefaultBudgets(userId);
+            budgets = await budgetQueries.getUserBudgetsWithExpenses(userId, targetYear, targetMonth);
+        }
+
+        res.status(200).json({ status: "success", data: budgets });
+    } catch (err) {
+        next(err);
+    }
+};
+
+/**
+ * VARTOTOJO REGISTRACIJA
+ */
+export const signup = async (req, res, next) => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return next(new AppError("Vardas, el. paštas ir slaptažodis yra privalomi", 400));
+        }
+        
+        const existing = await getUserByEmailM(email);
+        if (existing) {
+            return next(new AppError("Vartotojas su šiuo el. paštu jau egzistuoja", 409));
+        }
+        
+        const hash = await argon2.hash(password);
+        
+        const createdUserResult = await createUserM({
+            name,
+            email,
+            password: hash,
+        });
+
+        const user = Array.isArray(createdUserResult) ? createdUserResult[0] : createdUserResult;
+
+        if (user?.id) {
+            // Sukuriame bazinius biudžeto limitus be metų/mėnesio argumentų
+            await budgetQueries.setDefaultBudgets(user.id);
+            
+            await createLogM(user.id, name, 'SIGNUP', `Užsiregistravo naujas vartotojas: ${email}`);
+        }
+
+        createSendToken(user, 201, res);
+    } catch (err) {
+        console.error("Registracijos klaida:", err);
+        next(err);
+    }
+};
+
+/**
+ * PRISIJUNGIMAS
+ */
+export const loginC = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return next(new AppError("Prašome nurodyti el. paštą ir slaptažodį", 400));
+        }
+
+        const user = await getUserByEmailM(email);
+        
+        if (!user || !(await argon2.verify(user.password, password))) {
+            return next(new AppError("Neteisingas el. paštas arba slaptažodis", 401));
+        }
+
+        await createLogM(user.id, user.name, 'LOGIN', `Vartotojas prisijungė: ${user.email}`);
+
+        createSendToken(user, 200, res);
+    } catch (err) {
+        next(err);
+    }
+};
+
+/**
+ * ATSIJUNGIMAS
+ */
 export const logoutC = async (req, res) => {
-  try {
-    if (req.user) {
-      await createLogM(
-        req.user.id, 
-        req.user.name || 'User', 
-        'LOGOUT', 
-        `User logged out successfully`
-      );
-    }
+    try {
+        if (req.user) {
+            await createLogM(req.user.id, req.user.name, 'LOGOUT', `Vartotojas atsijungė`);
+        }
 
-    return res.clearCookie("jwt").status(200).json({
-      status: "success",
-      message: "You are now logged out",
-    });
-  } catch (err) {
-    return res.clearCookie("jwt").status(200).json({ status: "success" });
-  }
+        res.cookie("jwt", "loggedout", {
+            expires: new Date(Date.now() + 10 * 1000),
+            httpOnly: true,
+        });
+
+        res.status(200).json({
+            status: "success",
+            message: "Sėkmingai atsijungta",
+        });
+    } catch (err) {
+        res.status(200).json({ status: "success" });
+    }
 };
 
+/**
+ * VARTOTOJO DUOMENŲ ATNAUJINIMAS
+ */
 export const updateUserC = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name && !email && !password) {
-      throw new AppError("Provide at least one field to update", 400);
+    try {
+        const { name, email, password } = req.body;
+        const userId = req.user?.id;
+
+        if (!userId) return next(new AppError("Neautorizuota", 401));
+
+        const updates = {};
+        if (name) updates.name = name;
+        if (email) updates.email = email;
+        if (password) updates.password = await argon2.hash(password);
+
+        const updatedResult = await updateUserM(userId, updates);
+        const user = Array.isArray(updatedResult) ? updatedResult[0] : updatedResult;
+
+        await createLogM(userId, user.name || 'Vartotojas', 'UPDATE_USER', `Atnaujinti profilio duomenys`);
+
+        if (user.password) user.password = undefined;
+
+        res.status(200).json({
+            status: "success",
+            data: user,
+        });
+    } catch (err) {
+        next(err);
     }
-
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError("Not authenticated", 401);
-    }
-
-    const updates = {};
-    if (name) updates.name = name;
-    if (email) updates.email = email;
-    if (password) updates.password = await argon2.hash(password);
-
-    const updatedUser = await updateUserM(userId, updates);
-
-    await createLogM(userId, name || 'User', 'UPDATE_USER', `User updated profile details`);
-
-    updatedUser.password = undefined;
-
-    res.status(200).json({
-      status: "success",
-      data: updatedUser,
-    });
-  } catch (err) {
-    next(err);
-  }
 };
 
+/**
+ * VISI VARTOTOJAI (Administratoriams)
+ */
 export const getAllUsers = async (req, res, next) => {
-  try {
-    const users = await getAllUsersM(); 
-    res.status(200).json({
-      status: "success",
-      results: users.length,
-      data: users,
-    });
-  } catch (err) {
-    next(err);
-  }
+    try {
+        const users = await getAllUsersM(); 
+        res.status(200).json({
+            status: "success",
+            results: users.length,
+            data: users,
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
+/**
+ * PASKYROS IŠTRYNIMAS
+ */
 export const deleteMe = async (req, res, next) => {
     try {
-      const userId = req.user.id;
-      const userName = req.user.name;
+        const userId = req.user.id;
+        const userName = req.user.name;
 
-      await createLogM(userId, userName, 'DELETE_USER', `User deleted their own account`);
+        await createLogM(userId, userName, 'DELETE_USER', `Vartotojas ištrynė savo paskyrą`);
 
-      const deletedUser = await deleteUserById(userId);
-      if (!deletedUser) {
-        throw new AppError("User not found", 404);
-      }
+        const deletedUser = await deleteUserById(userId);
+        if (!deletedUser) {
+            return next(new AppError("Vartotojas nerastas", 404));
+        }
 
-      res.clearCookie("jwt");
-      res.status(200).json({
-        status: "success",
-        data: "Successfully deleted account",
-      });
+        res.clearCookie("jwt");
+        res.status(200).json({
+            status: "success",
+            data: null,
+            message: "Paskyra sėkmingai ištrinta"
+        });
     } catch (error) {
-      next(error);
+        next(error);
     }
 };
