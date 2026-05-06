@@ -29,6 +29,7 @@ import {
 } from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
+import { getMonthlyChartDataC } from "../controller/chartController.js";
 
 // Validacijos ir Middleware
 import userLogin from "../validation/userLoginV.js";
@@ -63,6 +64,7 @@ userRoutes.delete("/me", deleteMe);
 userRoutes.get("/my-budgets", allowAccessTo("User"), getMyBudgets);
 // Užtikriname, kad /history maršrutas egzistuoja (išspręs 404 klaidą image_03453d.png)
 userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
+userRoutes.get("/charts/monthly", allowAccessTo("User"), getMonthlyChartDataC);
 
 // --- 4. PAJAMOS (INCOME) ---
 userRoutes.post("/:id/income/add", allowAccessTo("User"), restrictToOwnUser, incomeVal, validate, createIncomeC);

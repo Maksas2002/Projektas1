@@ -2,83 +2,53 @@ import DeleteExpense from "../DeleteExpenses.jsx";
 import DeleteIncome from "../DeleteIncome";
 
 function UserTransactionTable({ transaction, onEdit, onEditExpense, onDelete }) {
-// change colors basesd if its income or expense
-  const colorChange = () => {
-    if (transaction.type === "expense") {
-      return "red";
-    } else if (transaction.type === "income") {
-      return "green";
-    }
-  };
+  const isExpense = transaction.type === "expense";
+  const amountColor = isExpense ? "text-rose-400" : "text-emerald-400";
+  const iconColor = isExpense ? "bg-rose-500/20 text-rose-400" : "bg-emerald-500/20 text-emerald-400";
+  const sign = isExpense ? "-" : "+";
 
   return (
-    <>
-      <div style={{ color: colorChange() }} className="border flex justify-between items-center pt-2 pb-2 pr-2 pl-2 w-[70%] rounded-[13px] bg-[#070c20]">
-        <div>
-          <p className="text-white">{transaction.description}</p>
-          <div className="flex gap-2">
-            <p className="text-sky-400">{transaction.category_name}</p>
-            <p className="text-sky-400">{transaction.formatted_date}</p>
-          </div>
+    <div className="flex items-center justify-between gap-4 rounded-md bg-[#0b1430] px-4 py-3">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className={`h-8 w-8 rounded-md flex items-center justify-center text-xs ${iconColor}`}>
+          {isExpense ? "-" : "+"}
         </div>
-        <div className="flex items-center gap-4">
-          {/* <p style={{ color: colorChange() }} className="text-white">
-            €{transaction.amount}
-          </p> */}
-
-          {/* {transaction.type === "expense" && (
-            <DeleteExpense
-              userId={transaction.user_id}
-              expenseId={transaction.id}
-              onDelete={onDelete}
-            />
-          )} */}
-
-          {/* {transaction.type === "income" && (
-            <DeleteIncome
-              userId={transaction.user_id}
-              expenseId={transaction.id}
-              onDelete={onDelete}
-            />
-          )} */}
-        </div>
-        <div className="flex items-center gap-3">
-          <p style={{ color: colorChange() }} className="text-white">€{transaction.amount}</p>
-
-          {/* edit */}
-          <div>
-            {transaction.type === "income" && (
-              <button
-                onClick={() => onEdit(transaction)}
-                className="text-yellow-400 hover:text-yellow-300 text-sm"
-              >
-                Edit
-              </button>
-            )}
-            {transaction.type === "expense" && (
-              <button
-              onClick={() => onEditExpense(transaction)}
-                className="text-yellow-400 hover:text-yellow-300 text-sm"
-              >
-                Edit
-              </button>
-            )}
-          </div>
-
-          {/* delete */}
-          <div>
-            {transaction.type === "income" ?
-              <DeleteIncome userId={transaction.user_id}
-                incomeId={transaction.id}
-                onDelete={onDelete} />
-              :
-              <DeleteExpense userId={transaction.user_id}
-                expenseId={transaction.id}
-                onDelete={onDelete} />}
-          </div>
+        <div className="min-w-0">
+          <p className="text-white text-sm truncate">{transaction.description}</p>
+          <p className="text-slate-500 text-xs truncate">
+            {transaction.category_name || transaction.type} · {transaction.formatted_date}
+          </p>
         </div>
       </div>
-    </>
+
+      <div className="flex items-center gap-3 shrink-0">
+        <p className={`${amountColor} text-sm font-semibold`}>
+          {sign}EUR {Number(transaction.amount || 0).toFixed(2)}
+        </p>
+        {transaction.type === "income" ? (
+          <button onClick={() => onEdit(transaction)} className="text-sky-300 hover:text-sky-200 text-xs">
+            Edit
+          </button>
+        ) : (
+          <button onClick={() => onEditExpense(transaction)} className="text-sky-300 hover:text-sky-200 text-xs">
+            Edit
+          </button>
+        )}
+        {transaction.type === "income" ? (
+          <DeleteIncome
+            userId={transaction.user_id}
+            incomeId={transaction.id}
+            onDelete={onDelete}
+          />
+        ) : (
+          <DeleteExpense
+            userId={transaction.user_id}
+            expenseId={transaction.id}
+            onDelete={onDelete}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 
