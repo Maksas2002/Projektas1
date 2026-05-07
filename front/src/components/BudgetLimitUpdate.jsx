@@ -1,15 +1,22 @@
 import axios from "axios";
+import { useContext } from "react";
+import { MonthContext } from "../utlis/MonthContext";
+import errorHandler from "../utils/errorHandler";
 
 function BudgetLimitUpdate({ budgets, limit, setLimit }) {
+  const { month } = useContext(MonthContext);
   const handleChange = (value) => {
-    setLimit(value);
+    setLimit((prev) => ({
+      ...prev,
+      [budgets.category_id]: value,
+    }));
   };
 
   // user's budget limit  update
   const updateUsersBudgetLimits = async () => {
     try {
       await axios.patch(
-        `http://localhost:3000/api/v1/user/:categoryId/my-budgets/:date/update`,
+        `http://localhost:3000/api/v1/user/${budgets.category_id}/my-budgets/${month}/update`,
         {
           amount_limit: limit,
         },
@@ -17,7 +24,9 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
           withCredentials: true,
         },
       );
-    } catch (error) {}
+    } catch (error) {
+        setError(errorHandler(error));
+    }
   };
 
   return (
@@ -30,7 +39,7 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
           <input
             type="number"
             placeholder={budgets.amount_limit}
-            value={limit}
+            value={limit[budgets.category_id] || ""}
             onChange={(e) => handleChange(e.target.value)}
             className="
                   w-28 rounded-xl border border-blue-900
