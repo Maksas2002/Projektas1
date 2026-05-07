@@ -5,7 +5,6 @@ import { TransactionContext } from "../../utlis/TransactionContext";
 import UserTransactionTable from "./UserTransactionTable";
 import EditIncome from "../EditIncome/EditIncome";
 import EditExpense from "../EditExpense/EditExpense";
-import HistoryCategorySelector from "./HistoryCategorySelector";
 
 function UserHistoryBase() {
   const { transaction, setTransaction } = useContext(TransactionContext);
@@ -19,23 +18,18 @@ function UserHistoryBase() {
 
   const fetchTransactions = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/api/v1/user/history",
-        {
-          withCredentials: true,
-          params: {
-            category: parseInt(category),
-          }
+      const response = await axios.get("http://localhost:3000/api/v1/user/history", {
+        withCredentials: true,
+        params: {
+          category: parseInt(category),
         },
-      );
+      });
 
       setTransaction(response.data.data);
       setError(null);
     } catch (error) {
-      console.log(error);
-
       if (error.response?.status === 404) {
-        setTransaction({ transaction: [] });
+        setTransaction([]);
         setError("No incomes or expenses found");
         return;
       }
@@ -44,7 +38,6 @@ function UserHistoryBase() {
     }
   }, [setTransaction, category]);
 
-  // get all categories
   const fetchCategories = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/v1/categories", {
@@ -52,7 +45,7 @@ function UserHistoryBase() {
       });
       setCategories(res.data);
     } catch (err) {
-      console.error("Kategorijų užkrauti nepavyko");
+      console.error("Kategoriju uzkrauti nepavyko");
     }
   };
 
@@ -60,17 +53,8 @@ function UserHistoryBase() {
     fetchCategories();
   }, []);
 
-  const getCatId = (c) => {
-    setCategory(c);
-  }
-
-  //---------------------------------------------------
-
   useEffect(() => {
-    const load = async () => {
-      await fetchTransactions();
-    };
-    load();
+    fetchTransactions();
   }, [fetchTransactions, category]);
 
   const handleEdit = (item) => {
@@ -83,55 +67,58 @@ function UserHistoryBase() {
     setExpenseEditOpen(true);
   };
 
-  const handleDeleteFromList = () => {
-    fetchTransactions();
-  };
-
   return (
-    <>
-      <section className="flex flex-col items-center justify-center pt-3 pb-3 gap-2 rounded-[13px] border-[#061a75] bg-[#020b33] border w-full max-w-185 mx-auto">
-        <div className="flex relative right-13 gap-50">
-          <p className="text-white  pl-26 text-[1.2rem]">Transaction History</p>
+    <section className="bg-[#1b2448] border border-[#1b346c] rounded-lg p-5">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
+        <h2 className="text-white text-base font-medium">Transaction History</h2>
+        <select
+          value={category || ""}
+          onChange={(event) => setCategory(event.target.value || null)}
+          className="bg-[#0b1430] text-white text-xs p-2 rounded-md border border-[#283046] w-[170px]"
+        >
+          <option value="">All Categories</option>
+          {categories.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+      </div>
 
+      {error && <p className="text-red-400 text-center text-sm mb-4">{error}</p>}
 
-            <select className="bg-[#1f2747] text-white p-2 rounded w-[150px] h-[40px]">
-              <HistoryCategorySelector categories={categories} getCatId={getCatId} />
-            </select>
-        </div>
-
-        {error && <p className="text-red-500 text-center">{error}</p>}
-
+      <div className="flex flex-col gap-3">
         {transaction?.length > 0 ? (
           transaction.map((item) => (
             <UserTransactionTable
-              key={item.id}
+              key={`${item.type}-${item.id}`}
               transaction={item}
               onEdit={handleEdit}
               onEditExpense={handleEditExpense}
-              onDelete={handleDeleteFromList}
+              onDelete={fetchTransactions}
             />
           ))
         ) : (
-          <p className="text-gray-400">No transactions found</p>
+          <p className="text-slate-500 text-center py-8">No transactions found</p>
         )}
+      </div>
 
-        {isEditOpen && (
-          <EditIncome
-            isOpen={isEditOpen}
-            onToggle={() => setIsEditOpen(false)}
-            incomeId={selectedIncomeId}
-          />
-        )}
+      {isEditOpen && (
+        <EditIncome
+          isOpen={isEditOpen}
+          onToggle={() => setIsEditOpen(false)}
+          incomeId={selectedIncomeId}
+        />
+      )}
 
-        {isExpenseEditOpen && (
-          <EditExpense
-            isOpen={isExpenseEditOpen}
-            onToggle={() => setExpenseEditOpen(false)}
-            expenseId={selectedExpenseId}
-          />
-        )}
-      </section>
-    </>
+      {isExpenseEditOpen && (
+        <EditExpense
+          isOpen={isExpenseEditOpen}
+          onToggle={() => setExpenseEditOpen(false)}
+          expenseId={selectedExpenseId}
+        />
+      )}
+    </section>
   );
 }
 

@@ -1,11 +1,9 @@
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import ExpensesByCategory from "./ExpensesByCategory";
-import errorHandler from "../../utils/errorHandler";
-import ExportExpensesBtn from "../ExportExpensesBtn";
-import { MonthContext } from "../../utlis/MonthContext";
+import FinancialChart from "../FinancialChart";
 
 function ExpensesTotal() {
+
+  return <FinancialChart />;
+  
   const { month, setMonth } = useContext(MonthContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
