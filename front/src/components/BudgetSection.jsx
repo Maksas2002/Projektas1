@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { MonthContext } from "../utlis/MonthContext";
 import { TransactionContext } from "../utlis/TransactionContext";
+import RemainingBudgetSection from "./RemainingBudgetSection";
 
 const BudgetSection = () => {
   const { month } = useContext(MonthContext);
@@ -112,6 +113,7 @@ const BudgetSection = () => {
                   ></div>
                 </div>
                 <div className="flex justify-between items-center">
+                  <RemainingBudgetSection categoryId={b.category_id}/>
                   <span
                     className={`text-[10px] font-bold uppercase tracking-widest ${
                       isOverLimit ? "text-red-500" : "text-slate-500"
