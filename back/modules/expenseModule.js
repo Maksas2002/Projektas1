@@ -22,7 +22,6 @@ export const getExpenseByIdM = async (userId, expenseId) => {
   return expense;
 };
 
-
 export const updateExpenseM = async (id, data) =>{
   const { amount, date, description, category_id } = data;
 
@@ -50,7 +49,6 @@ export const deleteExpenseM = async (expenseId, userId) => {
   return deletedExpense[0];
 };
 
-//collects all amounts as total from dates from start to end
 export const expensesByCategoryDM = async (userId, startDate, endDate) => {
   return await sql`
     SELECT 
@@ -66,7 +64,6 @@ export const expensesByCategoryDM = async (userId, startDate, endDate) => {
     ORDER BY total DESC;
   `;
 };
-// calculate total user expense by a month
 
 export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) => {
   const monthlyExpenses = await sql`
@@ -80,8 +77,18 @@ export const totalMonthlyExpensesM = async (userId, fDateShort, lastDayShort) =>
   return monthlyExpenses;
 }
 
+export const getTotalExpensesByPeriodM = async (userId, startDate, endDate) => {
+  const [result] = await sql`
+    SELECT COALESCE(SUM(amount), 0) AS total_expenses
+    FROM expenses
+    WHERE user_id = ${userId}
+    AND date >= ${startDate}
+    AND date <= ${endDate}
+  `;
 
-//gets users all expenses with/without date
+  return result;
+};
+
 export const getExpensesForExport = async (userId, startDate, endDate) => {
   let expenses = sql`
     select
