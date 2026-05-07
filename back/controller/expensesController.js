@@ -1,4 +1,4 @@
-import { createExpenseM, deleteExpenseM, expensesByCategoryDM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM } from "../modules/expenseModule.js";
+import { createExpenseM, deleteExpenseM, expensesByCategoryDM, getExpenseByIdM, updateExpenseM, totalMonthlyExpensesM, getTotalExpensesByPeriodM } from "../modules/expenseModule.js";
 import AppError from "../utils/appError.js";
 import { createLogM } from "../modules/logModule.js";
 
@@ -160,3 +160,31 @@ export const totalMonthlyExpensesC = async (req, res, next) => {
     next(error)
   }
 }
+
+export const getTotalExpensesByPeriodC = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      throw new AppError("Start date and end date are required", 400);
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      throw new AppError("Start date cannot be later than end date", 400);
+    }
+
+    const total = await getTotalExpensesByPeriodM(userId, startDate, endDate);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        totalExpenses: Number(total.total_expenses),
+        startDate,
+        endDate,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
