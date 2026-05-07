@@ -7,16 +7,13 @@ function RemainingBudgetSection() {
 
     useEffect(() => {
         const fetchRemaining = async () => {
-            //gets year and a month
-            const now = new Date();
-            const year = now.getFullYear();
-            const monthNum = String(now.getMonth() + 1).padStart(2, "0");
-            const currentMonth = `${year}-${monthNum}`;
-
             //checks if there is month
             if (!month) {
-                setMonth(currentMonth);
-                return;
+                const now = new Date();
+                const year = now.getFullYear();
+                const monthNum = String(now.getMonth() + 1).padStart(2, "0");
+                setMonth(`${year}-${monthNum}`);
+                return; // stop here, next render will fetch
             }
 
             //then fetch the info of remaining budget
