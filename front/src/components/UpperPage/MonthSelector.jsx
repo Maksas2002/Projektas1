@@ -1,8 +1,10 @@
 import { useContext, useEffect } from "react";
 import { MonthContext } from "../../utlis/MonthContext";
 
+
 function MonthSelector({ transaction }) {
   const { month, setMonth } = useContext(MonthContext);
+ 
 
   //  this loop makes the dates appear in the selection. I dont know why it doesnt work without this
   //  pushes all objects into array
@@ -19,19 +21,21 @@ function MonthSelector({ transaction }) {
     ...new Set(
       getAllFormattedDates()
         .map((t) => t.formatted_date?.slice(0, 7))
-        .filter(Boolean)
+        .filter(Boolean),
     ),
   ];
 
   // removes month feom text if no noi trasactions exist
-//   const removeMonth = () => {
-//     if (transaction.length == 0) {
-//     setMonth(null);
-//     }
-//   }
+  const removeMonth = () => {
+    if (getAllFormattedDates().length == 0) {
+      setMonth(null);
+    }
+  };
 
+  useEffect(() => {
+    removeMonth();
+  }, [transaction]);
 
-  
   return (
     <select
       // if no transactions → reset month
