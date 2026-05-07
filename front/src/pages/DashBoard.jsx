@@ -17,10 +17,10 @@ function DashBoard() {
   const toggleForm = (formName) => setActiveForm(activeForm === formName ? null : formName);
 
   return (
-    <main className="min-h-screen bg-[#01081f] pb-20">
+    <main className="min-h-screen bg-[#061126] pb-20">
       <DashHeader />
       
-      <div className="max-w-[1400px] mx-auto px-5 pt-8 flex flex-col gap-12">
+      <div className="max-w-[980px] mx-auto px-4 pt-6 flex flex-col gap-5">
         
         {/* Perduodame datą ir jos keitimo funkciją */}
         <UpperPageBase 
@@ -34,13 +34,13 @@ function DashBoard() {
           <BudgetSection selectedDate={selectedDate} />
         </section>
 
-        <div className="flex flex-wrap justify-center gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AddIncome isOpen={activeForm === 'income'} onToggle={() => toggleForm('income')} />
           <AddExpense isOpen={activeForm === 'expense'} onToggle={() => toggleForm('expense')} />
         </div>
 
-        <UserHistoryBase selectedDate={selectedDate} />
         <ExpensesTotal />
+        <UserHistoryBase selectedDate={selectedDate} />
       </div>
     </main>
   );

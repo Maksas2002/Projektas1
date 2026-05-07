@@ -31,6 +31,7 @@ import {
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
 import { getRemainingBudgetC, getUserBudgets } from "../controller/budgetController.js";
+import { getMonthlyChartDataC } from "../controller/chartController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
@@ -58,6 +59,8 @@ userRoutes.delete("/me", deleteMe);
 userRoutes.get("/my-budgets", allowAccessTo("User"), getMyBudgets);
 userRoutes.get("/history", allowAccessTo("User"), userCombinedHistoryC);
 userRoutes.get("/remaining-budget", allowAccessTo("User"), getRemainingBudgetC);
+userRoutes.get("/charts/monthly", allowAccessTo("User"), getMonthlyChartDataC);
+
 
 userRoutes.post("/:id/income/add", allowAccessTo("User"), restrictToOwnUser, incomeVal, validate, createIncomeC);
 userRoutes.get("/:id/income/:incomeId", allowAccessTo("User"), restrictToOwnUser, getIncomeByIdC);
@@ -75,5 +78,17 @@ userRoutes.get("/:date/totalExpenses", allowAccessTo("User"), totalMonthlyExpens
 userRoutes.get("/:date/totalBalance", allowAccessTo("User"), userMonthlyBalanceC);
 userRoutes.get("/expenses/total-by-period", allowAccessTo("User"), getTotalExpensesByPeriodC);
 userRoutes.get("/expenses/export", allowAccessTo("User"), exportExpensesVal, validate, exportExpenses);
+
+
+
+//exports a expanses csv
+userRoutes.get(
+  "/expenses/export",
+  authProtect,
+  allowAccessTo("User"),
+  exportExpensesVal,
+  validate,
+  exportExpenses
+);
 
 export default userRoutes;
