@@ -65,47 +65,49 @@ const BudgetSection = () => {
   return (
     <>
       <div className="bg-[#161d31] p-8 rounded-lg border border-[#283046] mt-6 shadow-xl">
-       
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between mb-8">
-           <div>
-              <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
-                Selected month: {selectedMonth}
-              </p>
-              <h2 className="text-white text-xl font-medium tracking-tight">
-                Budget Limits by Category
-              </h2>
-            </div> 
-           {show ?  <div className="rounded-lg border border-[#283046] bg-[#101627] px-5 py-3 text-right">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between mb-8">
+          <div>
+            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
+              Selected month: {selectedMonth}
+            </p>
+            <h2 className="text-white text-xl font-medium tracking-tight">
+              Budget Limits by Category
+            </h2>
+          </div>
+          {show ? (
+            <div className="rounded-lg border border-[#283046] bg-[#101627] px-5 py-3 text-right">
               <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
                 Monthly expenses
               </p>
               <p className="text-white text-2xl font-semibold">
                 EUR {totalExpenses.toFixed(2)}
               </p>
-            </div> : null }
+            </div>
+          ) : null}
 
-            <button
-              onClick={() =>
-                changeView(show, showUpdates, setShow, setShowUpdates)
-              }
-              className="text-[#7367f0]  text-sm flex items-center gap-2 hover:brightness-125 transition-all"
-            >
-              <span className="material-icons-outlined text-lg"></span> Manage
-              Budgets
-            </button>
-          </div>
-        
+          <button
+            onClick={() =>
+              changeView(show, showUpdates, setShow, setShowUpdates)
+            }
+            className="text-[#7367f0]  text-sm flex items-center gap-2 hover:brightness-125 transition-all"
+          >
+            <span className="material-icons-outlined text-lg"></span> Manage
+            Budgets
+          </button>
+        </div>
 
-        {showUpdates
-          ? budgets.map((b) => (
-              <BudgetLimitUpdate
-                key={b.id}
-                budgets={b}
-                limit={limit}
-                setLimit={setLimit}
-              />
-            ))
-          : null}
+        <div className="flex flex-col">
+          {showUpdates
+            ? budgets.map((b) => (
+                <BudgetLimitUpdate
+                  key={b.id}
+                  budgets={b}
+                  limit={limit}
+                  setLimit={setLimit}
+                />
+              ))
+            : null}
+        </div>
 
         {show ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
