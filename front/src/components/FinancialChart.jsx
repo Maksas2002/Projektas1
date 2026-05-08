@@ -57,7 +57,7 @@ function FinancialChart() {
     const values = chartData.flatMap((item) => [
       Number(item.income || 0),
       Number(item.expenses || 0),
-      Number(item.balance || 0),
+      Number(item.cumulative_balance || 0),
     ]);
     const maxValue = Math.max(1, ...values);
     const minValue = Math.min(0, ...values);
@@ -69,7 +69,7 @@ function FinancialChart() {
     const balancePoints = chartData
       .map((item, index) => {
         const x = padding.left + index * step + step / 2;
-        return `${x},${y(Number(item.balance || 0))}`;
+        return `${x},${y(Number(item.cumulative_balance || 0))}`;
       })
       .join(" ");
 
@@ -117,7 +117,7 @@ function FinancialChart() {
           </div>
           <div className="bg-[#101627] border border-[#283046] rounded-lg px-4 py-3">
             <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">
-              Balance
+              Running Balance
             </p>
             <p
               className={`text-lg font-semibold ${

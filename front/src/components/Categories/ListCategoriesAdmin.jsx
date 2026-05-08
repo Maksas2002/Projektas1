@@ -49,27 +49,27 @@ const handleDelete = async (id) => {
 };
 
   return (
-    <div className="bg-[#1e293b] rounded-xl overflow-hidden">
-      <div className="p-6 border-b border-slate-700/50 flex justify-between items-center">
-        <h2 className="text-white font-semibold italic">Category List</h2>
-        <span className="text-blue-400 text-xs font-bold">{categories.length} Total</span>
+    <div className="bg-[#1b2448] rounded-lg overflow-hidden">
+      <div className="p-4 border-b border-[#283046] flex justify-between items-center">
+        <h2 className="text-white font-semibold">Category List</h2>
+        <span className="text-sky-300 text-xs font-bold">{categories.length} Total</span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="text-slate-400 text-[10px] uppercase font-bold border-b border-slate-700/50">
+            <tr className="text-slate-400 text-xs border-b border-[#283046]">
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Type</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700/50">
+          <tbody className="divide-y divide-[#283046]">
             {loading ? (
               <tr><td colSpan="3" className="text-center py-10 text-slate-500">Loading...</td></tr>
             ) : (
               categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-slate-800/40 transition-all">
+                <tr key={cat.id} className="hover:bg-[#111b3c] transition-all">
                   <td className="px-6 py-4 text-slate-200 font-medium">{cat.name}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${cat.type === 'income' ? 'text-green-400 bg-green-400/10' : 'text-red-400 bg-red-400/10'}`}>
@@ -77,8 +77,8 @@ const handleDelete = async (id) => {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button onClick={() => setEditingCategory(cat)} className="text-blue-500 mr-3 text-xs font-bold">Edit</button>
-                    <button onClick={() => setDeletingCategoryId(cat.id)} className="text-red-500 text-xs font-bold">Delete</button>
+                    <button onClick={() => setEditingCategory(cat)} className="text-sky-300 mr-3 text-xs font-bold">Edit</button>
+                    <button onClick={() => setDeletingCategoryId(cat.id)} className="text-rose-300 text-xs font-bold">Delete</button>
                   </td>
                 </tr>
               ))
