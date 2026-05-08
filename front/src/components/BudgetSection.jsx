@@ -17,6 +17,7 @@ const BudgetSection = () => {
     typeof month === "string" && month
       ? month
       : new Date().toISOString().slice(0, 7);
+
   const totalExpenses = useMemo(
     () => budgets.reduce((sum, item) => sum + Number(item.amount_used || 0), 0),
     [budgets],
@@ -99,13 +100,13 @@ const BudgetSection = () => {
         <div className="flex flex-col">
           {showUpdates
             ? budgets.map((b) => (
-                <BudgetLimitUpdate
-                  key={b.id}
-                  budgets={b}
-                  limit={limit}
-                  setLimit={setLimit}
-                />
-              ))
+              <BudgetLimitUpdate
+                key={b.id}
+                budgets={b}
+                limit={limit}
+                setLimit={setLimit}
+              />
+            ))
             : null}
         </div>
 

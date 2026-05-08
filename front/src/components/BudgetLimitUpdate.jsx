@@ -5,29 +5,46 @@ import errorHandler from "../utils/errorHandler";
 
 function BudgetLimitUpdate({ budgets, limit, setLimit }) {
   const { month } = useContext(MonthContext);
-  const handleChange = (value) => {
-    setLimit((prev) => ({
-      ...prev,
-      [budgets.category_id]: value,
-    }));
-  };
 
   // user's budget limit  update
-  const updateUsersBudgetLimits = async () => {
+  const updateUsersBudgetLimits = async (value) => {
     try {
       await axios.patch(
-        `http://localhost:3000/api/v1/user/${budgets.category_id}/my-budgets/${month}/update`,
+        `http://localhost:3000/api/v1/user/${budgets.category_id}/my-budgets/${month}-01/update`,
         {
-          amount_limit: limit,
+          amount_limit: value,
         },
         {
           withCredentials: true,
         },
       );
     } catch (error) {
-        setError(errorHandler(error));
+      // setError(errorHandler(error));
+      console.log(error);
     }
   };
+
+   // Main function for uploading new limit updates. Chains to other functions
+  const handleChange = (value) => {
+    setLimit(() => ({
+      [budgets.category_id]: value,
+    }));
+    updateUsersBudgetLimits(separateObj(value));
+  };
+
+  // gets only a number from
+  const separateObj = (value) => {
+    const arrayOfObj =  Object.values(limit).map(value => ({
+      amount_limit: Number(value),
+    }));
+    const onlyObj = arrayOfObj[0];
+  
+    return onlyObj?.amount_limit;
+  };
+
+console.log(separateObj());
+  //------------------------------------------------------------
+
 
   return (
     <>
