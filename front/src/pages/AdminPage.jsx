@@ -107,32 +107,49 @@ try {
   );
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 p-6 font-sans">
+    <div className="min-h-screen bg-[#08142c] text-slate-200 p-6 font-sans">
       {/* Header */}
-      <div className="max-w-7xl mx-auto flex justify-between items-center mb-8 bg-[#1e293b] p-5 rounded-xl shadow-2xl border border-slate-700/50">
+      <div className="max-w-7xl mx-auto flex justify-between items-center mb-6 bg-[#121b3a] p-5 rounded-lg border border-sky-500/50">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Admin Panel</h1>
-          <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold">Management System</p>
+          <h1 className="text-lg font-bold text-white tracking-tight">Admin Panel</h1>
+          <p className="text-xs text-slate-400 font-semibold">BudgetNest Management</p>
         </div>
         <button
           onClick={() => { localStorage.clear(); window.location.href = '/login'; }}
-          className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/50 px-5 py-2 rounded-lg transition-all font-bold text-sm"
+          className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-md transition-all font-bold text-xs"
         >
           Log Out
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-[#1b2448] p-6 rounded-lg border border-[#1b346c]">
+            <p className="text-slate-400 text-sm">Total Users</p>
+            <p className="text-white text-3xl mt-5">{users.length}</p>
+            <p className="text-emerald-400 text-xs mt-4">All registered accounts</p>
+          </div>
+          <div className="bg-[#1b2448] p-6 rounded-lg border border-[#1b346c]">
+            <p className="text-slate-400 text-sm">Active Users</p>
+            <p className="text-white text-3xl mt-5">{users.length}</p>
+            <p className="text-slate-500 text-xs mt-4">Current active users</p>
+          </div>
+          <div className="bg-[#1b2448] p-6 rounded-lg border border-[#1b346c]">
+            <p className="text-slate-400 text-sm">New Users (30d)</p>
+            <p className="text-white text-3xl mt-5">0</p>
+            <p className="text-emerald-400 text-xs mt-4">Recent growth</p>
+          </div>
+        </div>
         {/* Vartotojo kūrimas */}
-        <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
+        <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
           <AdminUserCreate onUserCreated={handleDataChange} />
         </div>
 
         {/* Vartotojų lentelė - ATKURTA PAGAL TAVO DIZAINĄ */}
-        <div className="bg-[#1e293b] rounded-xl shadow-xl border border-slate-700/50 overflow-hidden">
-          <div className="p-6 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/30">
-            <h2 className="text-lg font-semibold text-white">User Management</h2>
-            <span className="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-xs font-bold border border-blue-600/30">
+        <div className="bg-[#1b2448] rounded-lg border border-[#1b346c] overflow-hidden">
+          <div className="p-5 border-b border-[#283046] flex justify-between items-center">
+            <h2 className="text-base font-semibold text-white">User Management</h2>
+            <span className="bg-sky-500/10 text-sky-300 px-3 py-1 rounded-full text-xs font-bold border border-sky-500/20">
               {users.length} Active Accounts
             </span>
           </div>
@@ -146,18 +163,18 @@ try {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-[#334155]/20 text-slate-400 text-[11px] uppercase tracking-[0.2em] font-bold">
+                <tr className="text-slate-400 text-xs border-b border-[#283046]">
                   <th className="px-6 py-5">User</th>
                   <th className="px-6 py-5">Email Address</th>
                   <th className="px-6 py-5">Status / Role</th>
                   <th className="px-6 py-5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody className="divide-y divide-[#283046]">
                 {users.map((user) => (
-                  <tr key={user.id || user._id} className="hover:bg-slate-800/40 transition-all group">
+                  <tr key={user.id || user._id} className="hover:bg-[#111b3c] transition-all group">
                     <td className="px-6 py-4 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-linear-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm font-bold text-white uppercase shadow-lg">
+                      <div className="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center text-xs font-bold text-sky-300 uppercase">
                         {user.name?.charAt(0) || 'U'}
                       </div>
                       <span className="font-semibold text-white">{user.name}</span>
@@ -169,8 +186,8 @@ try {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button onClick={() => setEditingUser(user)} className="bg-blue-500/10 hover:bg-blue-500 text-blue-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Edit</button>
-                      <button onClick={() => setDeletingUserId(user.id || user._id)} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1 rounded transition-all text-xs font-bold mx-1">Delete</button>
+                      <button onClick={() => setEditingUser(user)} className="text-sky-300 hover:text-sky-100 px-3 py-1 transition-all text-xs font-bold mx-1">Edit</button>
+                      <button onClick={() => setDeletingUserId(user.id || user._id)} className="text-rose-300 hover:text-rose-100 px-3 py-1 transition-all text-xs font-bold mx-1">Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -190,7 +207,7 @@ try {
 
 {deletingUserId && (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 text-white">
-    <div className="bg-[#1e293b] p-6 rounded-xl border border-slate-700 shadow-lg max-w-sm w-full text-center">
+    <div className="bg-[#1b2448] p-6 rounded-lg border border-[#1b346c] shadow-lg max-w-sm w-full text-center">
       <p className="mb-6 text-lg font-medium">
         Are you sure you want to delete this user?
       </p>
@@ -219,10 +236,10 @@ try {
 
         {/* Kategorijų valdymas - SU APSAUGA NUO LOOP */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
+          <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
              <AddCategoriesAdmin onCategoryCreated={handleDataChange} />
           </div>
-          <div className="bg-[#1e293b] p-6 rounded-xl shadow-xl border border-slate-700/50">
+          <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
              <ListCategoriesAdmin key={refreshCategoriesKey} />
           </div>
         </div>

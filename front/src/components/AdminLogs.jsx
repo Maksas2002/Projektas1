@@ -51,21 +51,21 @@ const AdminLogs = () => {
   };
 
   return (
-    <div className="bg-[#1e293b] rounded-xl border border-slate-700/50 overflow-hidden shadow-xl mt-6">
-      <div className="p-6 border-b border-slate-700/50 bg-slate-800/30 flex flex-col md:flex-row justify-between items-center gap-4">
-        <h2 className="text-xl font-semibold text-white">Activity Log</h2>
+    <div className="bg-[#1b2448] rounded-lg border border-[#1b346c] overflow-hidden mt-6">
+      <div className="p-5 border-b border-[#283046] flex flex-col md:flex-row justify-between items-center gap-4">
+        <h2 className="text-base font-semibold text-white">Activity Log</h2>
         
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
           <input 
             type="text"
             placeholder="Search admin or user..."
-            className="bg-[#0f172a] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 outline-none focus:border-blue-500 flex-1"
+            className="bg-[#303a59] border border-[#3b4667] text-slate-300 text-sm rounded-md px-4 py-2 outline-none focus:border-sky-400 flex-1"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <select 
-            className="bg-[#0f172a] border border-slate-700 text-slate-300 text-sm rounded-lg px-4 py-2 outline-none focus:border-blue-500 cursor-pointer"
+            className="bg-[#303a59] border border-[#3b4667] text-slate-300 text-sm rounded-md px-4 py-2 outline-none focus:border-sky-400 cursor-pointer"
             value={actionFilter}
             onChange={(e) => setActionFilter(e.target.value)}
           >
@@ -85,7 +85,7 @@ const AdminLogs = () => {
       <div className="overflow-x-auto">
         <table className="w-full text-left">
           <thead>
-            <tr className="text-slate-400 text-[11px] uppercase font-bold tracking-wider border-b border-slate-700/50">
+            <tr className="text-slate-400 text-xs border-b border-[#283046]">
               <th className="px-6 py-4">Action</th>
               <th className="px-6 py-4">User / Admin</th>
               <th className="px-6 py-4">Target (Subject)</th>
@@ -93,12 +93,12 @@ const AdminLogs = () => {
               <th className="px-6 py-4">Date</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700/50">
+          <tbody className="divide-y divide-[#283046]">
             {loading ? (
               <tr><td colSpan="5" className="text-center py-10 text-slate-500 italic font-light tracking-widest">Loading records...</td></tr>
             ) : logs.length > 0 ? (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-800/40 transition-all">
+                <tr key={log.id} className="hover:bg-[#111b3c] transition-all">
                   <td className="px-6 py-4">
                     <span className={getActionBadge(log.action)}>
                       {log.action.replace('_', ' ')}

@@ -22,13 +22,21 @@ export const getMonthlyChartDataM = async (userId, startDate, endDate) => {
       GROUP BY date
     )
     SELECT
-      TO_CHAR(days.date, 'YYYY-MM-DD') AS date,
-      COALESCE(income_totals.income, 0)::float AS income,
-      COALESCE(expense_totals.expenses, 0)::float AS expenses,
-      (COALESCE(income_totals.income, 0) - COALESCE(expense_totals.expenses, 0))::float AS balance
-    FROM days
-    LEFT JOIN income_totals ON income_totals.date = days.date
-    LEFT JOIN expense_totals ON expense_totals.date = days.date
-    ORDER BY days.date ASC;
+      TO_CHAR(daily.date, 'YYYY-MM-DD') AS date,
+      daily.income,
+      daily.expenses,
+      daily.balance,
+      SUM(daily.balance) OVER (ORDER BY daily.date ASC)::float AS cumulative_balance
+    FROM (
+      SELECT
+        days.date,
+        COALESCE(income_totals.income, 0)::float AS income,
+        COALESCE(expense_totals.expenses, 0)::float AS expenses,
+        (COALESCE(income_totals.income, 0) - COALESCE(expense_totals.expenses, 0))::float AS balance
+      FROM days
+      LEFT JOIN income_totals ON income_totals.date = days.date
+      LEFT JOIN expense_totals ON expense_totals.date = days.date
+    ) daily
+    ORDER BY daily.date ASC;
   `;
 };
