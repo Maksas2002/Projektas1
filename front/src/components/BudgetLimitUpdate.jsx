@@ -24,25 +24,29 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
     }
   };
 
-   // Main function for uploading new limit updates. Chains to other functions
+  // Main function for uploading new limit updates. Chains to other functions
   const handleChange = (value) => {
-    setLimit(() => ({
-      [budgets.category_id]: value,
+    const numberValue = Number(value);
+
+    setLimit((prev) => ({
+      ...prev,
+      [budgets.category_id]: numberValue,
     }));
-    updateUsersBudgetLimits(separateObj(value));
+
+    updateUsersBudgetLimits(numberValue);
   };
 
-  // gets only a number from
+  // gets only a number from obj
   const separateObj = (value) => {
-    const arrayOfObj =  Object.values(limit).map(value => ({
+    const arrayOfObj = Object.values(limit).map(value => ({
       amount_limit: Number(value),
     }));
     const onlyObj = arrayOfObj[0];
-  
+
     return onlyObj?.amount_limit;
   };
 
-console.log(separateObj());
+
   //------------------------------------------------------------
 
 
@@ -57,7 +61,7 @@ console.log(separateObj());
             type="number"
             placeholder={budgets.amount_limit}
             value={limit[budgets.category_id] || ""}
-            onChange={(e) => handleChange(e.target.value)}
+            onInput={(e) => handleChange(e.target.value)}
             className="
                   w-28 rounded-xl border border-blue-900
                   bg-[#08132C] px-4 py-2
