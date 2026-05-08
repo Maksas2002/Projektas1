@@ -6,7 +6,7 @@ import DashHeader from "../components/Header/DashHeader/DashHeader";
 import AddIncome from "../components/AddIncome/AddIncome";
 import AddExpense from "../components/AddExpense/AddExpense";
 import ExpensesTotal from "../components/ExpensesTotal/ExpensesTotal";
-import BudgetSection from "../components/BudgetSection"; 
+import BudgetSection from "../components/BudgetSection";
 
 function DashBoard() {
   const [activeForm, setActiveForm] = useState(null);

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { MonthContext } from "../utlis/MonthContext";
 import { TransactionContext } from "../utlis/TransactionContext";
+import RemainingBudgetSection from "./RemainingBudgetSection";
 
 const BudgetSection = () => {
   const { month } = useContext(MonthContext);
@@ -79,9 +80,18 @@ const BudgetSection = () => {
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
-                <p className={isOverLimit ? "text-rose-400 text-[11px] mt-2" : "text-slate-500 text-[11px] mt-2"}>
-                  {percent.toFixed(0)}% used
-                </p>
+                <div className="flex justify-between items-center">
+                  <RemainingBudgetSection categoryId={b.category_id}/>
+                  <p className={isOverLimit ? "text-rose-400 text-[11px] mt-2" : "text-slate-500 text-[11px] mt-2"}>
+                    {percent.toFixed(0)}% used
+                  </p>
+                  {isOverLimit && (
+                    <span className="text-[10px] text-red-500 font-bold uppercase animate-pulse">
+                      Limit exceeded!
+                    </span>
+                  )}
+                </div>
+                
               </div>
             );
           })}
