@@ -36,20 +36,6 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
     updateUsersBudgetLimits(numberValue);
   };
 
-  // gets only a number from obj
-  const separateObj = (value) => {
-    const arrayOfObj = Object.values(limit).map(value => ({
-      amount_limit: Number(value),
-    }));
-    const onlyObj = arrayOfObj[0];
-
-    return onlyObj?.amount_limit;
-  };
-
-
-  //------------------------------------------------------------
-
-
   return (
     <>
       <div className="flex justify-between">
