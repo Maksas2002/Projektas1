@@ -17,13 +17,18 @@ function MonthSelector({ transaction }) {
   };
 
   // selects only uinque months
+  const currentMonth = new Date().toISOString().slice(0, 7);
   const uniqueMonths = [
     ...new Set(
-      getAllFormattedDates()
+      (transaction || [])
         .map((t) => t.formatted_date?.slice(0, 7))
         .filter(Boolean),
     ),
   ];
+  const months = uniqueMonths.includes(currentMonth)
+    ? uniqueMonths
+    : [currentMonth, ...uniqueMonths];
+
 
   // removes month feom text if no noi trasactions exist
   const removeMonth = () => {
@@ -38,16 +43,16 @@ function MonthSelector({ transaction }) {
 
   return (
     <select
-      // if no transactions → reset month
-      value={month || ""}
+      value={month || currentMonth}
       onChange={(e) => setMonth(e.target.value)}
-      className="border pl-3 pr-3 rounded-[5px] text-white border-[#061a75] bg-[#020b33] h-[0.7cm]"
+      className="border border-[#283046] pl-3 pr-3 rounded-md text-white bg-[#0b1430] h-9 text-xs min-w-[150px]"
     >
-      <option value="">Select month</option>
-
-      {uniqueMonths.map((m) => (
+      {months.map((m) => (
         <option key={m} value={m}>
-          {m}
+          {new Date(`${m}-01`).toLocaleDateString("en-US", {
+            month: "long",
+            year: "numeric",
+          })}
         </option>
       ))}
     </select>

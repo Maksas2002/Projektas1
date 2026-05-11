@@ -6,7 +6,7 @@ import {
   logoutC,
   updateUserC,
   deleteMe,
-  getMyBudgets, // Naujai suimportuota funkcija
+  getMyBudgets,
 } from "../controller/userController.js";
 
 import {
@@ -14,10 +14,11 @@ import {
   getIncomeByIdC,
   updateIncomeC,
   deleteIncome,
-  totalMonthlyIncomeC,
+  totalMonthlyIncomeC
 } from "../controller/incomeController.js";
 
 import { userMonthlyBalanceC } from "../controller/userBalanceController.js";
+
 import {
   createExpenseC,
   deleteExpenseC,
@@ -25,15 +26,12 @@ import {
   getExpenseByIdC,
   updateExpense,
   totalMonthlyExpensesC,
+  getTotalExpensesByPeriodC
 } from "../controller/expensesController.js";
 
 import { userCombinedHistoryC } from "../controller/userHistoryController.js";
-import {
-  getUserBudgets,
-  updateBudgetLimitsC,
-} from "../controller/budgetController.js";
-
-// Validacijos ir Middleware
+import { getRemainingBudgetC, getUserBudgets, updateBudgetLimitsC } from "../controller/budgetController.js";
+import { getMonthlyChartDataC } from "../controller/chartController.js";
 import userLogin from "../validation/userLoginV.js";
 import userSignUp from "../validation/userSignup.js";
 import incomeVal from "../validation/incomeVal.js";
@@ -49,14 +47,11 @@ import budgetLimitVal from "../validation/budgetLimitVal.js";
 
 const userRoutes = express.Router();
 
-// --- 1. VIEŠI MARŠRUTAI ---
 userRoutes.post("/signup", userSignUp, validate, signup);
 userRoutes.post("/login", userLogin, validate, loginC);
 
-// --- 2. APSAUGA (AUTH) ---
 userRoutes.use(authProtect);
 
-// Vartotojo profilis
 userRoutes.get("/", getAllUsers);
 userRoutes.get("/logout", authProtect, logoutC);
 userRoutes.patch("/edit", authProtect, updateUserC);
@@ -74,6 +69,8 @@ userRoutes.patch(
   updateBudgetLimitsC,
 );
 userRoutes.get("/history", authProtect, allowAccessTo("User"), userCombinedHistoryC);
+userRoutes.get("/remaining-budget", allowAccessTo("User"), getRemainingBudgetC);
+userRoutes.get("/charts/monthly", allowAccessTo("User"), getMonthlyChartDataC);
 
 // 4. Pajamos (Income)
 userRoutes.post(

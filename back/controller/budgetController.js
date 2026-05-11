@@ -1,5 +1,5 @@
 import { budgetQueries } from "../db/queries.js";
-import { updateBudgetLimitsM } from "../modules/budgetModule.js";
+import { getRemainingBudgetM, updateBudgetLimitsM  } from "../modules/budgetModule.js";
 import AppError from "../utils/appError.js";
 
 export const getUserBudgets = async (req, res) => {
@@ -44,6 +44,30 @@ export const getUserBudgets = async (req, res) => {
     });
   }
 };
+
+export const getRemainingBudgetC = async (req,res,next) => {
+    try {
+        const userId = req.user.id;
+        const {month} = req.query;
+
+        if(!month){
+            throw new AppError("Month yyyy-mm is required", 400);
+        }
+
+        const remainingBudget = await getRemainingBudgetM(userId, month);
+
+        if(!remainingBudget || remainingBudget.length === 0){
+             throw new AppError("No budgets found ", 404);
+        }
+
+        res.status(200).json({
+            status: "success",
+            data: remainingBudget
+        });
+    } catch (error) {
+        next(error)
+    }
+}
 
 // update user's budget limits
 export const updateBudgetLimitsC = async (req, res, next) => {
