@@ -55,32 +55,27 @@ export const getRemainingBudgetM = async (userId, MDate) => {
   `;
 
   return remainingBudget;
-}
+};
 
 // update user's monthly budget limits
 
-export const updateBudgetLimitsM = async (newBudgetLimitN, id, categoryId, fDateShort, lastDayShort) => {
+export const updateBudgetLimitsM = async (
+  newBudgetLimitN,
+  id,
+  categoryId,
+  fDateShort,
+) => {
   const newBudgetLimit = await sql`
-   UPDATE budgets AS b
-   SET amount_limit = ${parseInt(newBudgetLimitN)}
-   WHERE b.user_id = ${parseInt(id)}
-   AND b.category_id = ${parseInt(categoryId)}
-   AND (
-      EXISTS (
-          SELECT 1
-          FROM expenses e
-          WHERE e.user_id = b.user_id
-            AND e.date BETWEEN ${fDateShort} AND ${lastDayShort}
-      )
-      OR NOT EXISTS (
-          SELECT 1
-          FROM expenses e
-          WHERE e.user_id = b.user_id
-            AND e.date BETWEEN ${fDateShort} AND ${lastDayShort}
-      )
-  )
-    RETURNING *;
+   INSERT INTO  budgets (user_id, category_id, amount_limit, budget_date)
+   VALUES (${parseInt(id)}, ${parseInt(categoryId)}, ${parseInt(newBudgetLimitN)}, ${parseInt(fDateShort)})
+   ON CONFLICT (user_id, category_id)
+   DO UPDATE 
+   SET amount_limit = EXCLUDED.amount_limit,
+   budget_date = ${fDateShort}
+   WHERE budgets.user_id = ${parseInt(id)}
+   AND budgets.category_id = ${parseInt(categoryId)}
+   RETURNING *;
   `;
 
   return newBudgetLimit[0];
-}
+};

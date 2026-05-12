@@ -1,24 +1,28 @@
 import { sql } from "../dbConnection.js";
 
 export const budgetQueries = {
-    /**
-     * 1. Gauna vartotojo biudžetus kartu su susumuotomis išlaidomis.
-     */
-    getUserBudgetsWithExpenses: async (userId, startDateOrYear, nextMonthDateOrMonth) => {
-        let startDate = startDateOrYear;
-        let nextMonthDate = nextMonthDateOrMonth;
+  /**
+   * 1. Gauna vartotojo biudžetus kartu su susumuotomis išlaidomis.
+   */
+  getUserBudgetsWithExpenses: async (
+    userId,
+    startDateOrYear,
+    nextMonthDateOrMonth,
+  ) => {
+    let startDate = startDateOrYear;
+    let nextMonthDate = nextMonthDateOrMonth;
 
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(startDateOrYear || ""))) {
-            const now = new Date();
-            const year = Number(startDateOrYear) || now.getFullYear();
-            const month = Number(nextMonthDateOrMonth) || now.getMonth() + 1;
-            startDate = `${year}-${String(month).padStart(2, "0")}-01`;
-            nextMonthDate = new Date(Date.UTC(year, month, 1))
-                .toISOString()
-                .slice(0, 10);
-        }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(startDateOrYear || ""))) {
+      const now = new Date();
+      const year = Number(startDateOrYear) || now.getFullYear();
+      const month = Number(nextMonthDateOrMonth) || now.getMonth() + 1;
+      startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+      nextMonthDate = new Date(Date.UTC(year, month, 1))
+        .toISOString()
+        .slice(0, 10);
+    }
 
-        return await sql`
+    return await sql`
             SELECT 
                 c.id AS category_id, 
                 c.name AS category_name, 
@@ -35,32 +39,44 @@ export const budgetQueries = {
             WHERE c.name IN ('Food', 'Transport', 'Entertainment', 'Shopping', 'Health', 'Travel')
             ORDER BY c.id ASC;
         `;
-    },
+  },
 
-    /**
-     * 2. Sukuria standartinius limitus naujam vartotojui registracijos metu.
-     */
-    setDefaultBudgets: async (userId) => {
-        const defaultBudgets = [
-            { name: 'Food', limit: 500 },
-            { name: 'Transport', limit: 200 },
-            { name: 'Entertainment', limit: 150 },
-            { name: 'Shopping', limit: 250 },
-            { name: 'Health', limit: 300 },
-            { name: 'Travel', limit: 500 }
-        ];
+  /**
+   * 2. Sukuria standartinius limitus naujam vartotojui registracijos metu.
+   */
+  setDefaultBudgets: async (userId) => {
+    const firstDay = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1,
+    )
+      .toISOString()
+      .slice(0, 10);
 
-        return await Promise.allSettled(defaultBudgets.map(item => 
-            sql`
-                INSERT INTO budgets (user_id, category_id, amount_limit)
+    const defaultBudgets = [
+      { name: "Food", limit: 500, date: firstDay },
+      { name: "Transport", limit: 200, date: firstDay },
+      { name: "Entertainment", limit: 150, date: firstDay },
+      { name: "Shopping", limit: 250, date: firstDay },
+      { name: "Health", limit: 300, date: firstDay },
+      { name: "Travel", limit: 500, date: firstDay },
+    ];
+
+    return await Promise.allSettled(
+      defaultBudgets.map(
+        (item) =>
+          sql`
+                INSERT INTO budgets (user_id, category_id, amount_limit, budget_date)
                 VALUES (
                     ${userId}, 
                     (SELECT id FROM categories WHERE name = ${item.name} LIMIT 1), 
-                    ${item.limit}
+                    ${item.limit},
+                    ${item.date}::date
                 ) ON CONFLICT (user_id, category_id) DO NOTHING;
-            `
-        ));
-    }
+            `,
+      ),
+    );
+  },
 };
 
 export default budgetQueries;

@@ -23,7 +23,10 @@ function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
       
       if (error.response.data.error[0].msg) {
         setError(error.response.data.error[0].msg);
-      } else setError(errorHandler(error));
+      } else {
+        setError(null);
+        setError(errorHandler(error));
+      }
     }
   };
 

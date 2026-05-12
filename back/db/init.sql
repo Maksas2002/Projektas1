@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS budgets (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     amount_limit DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    budget_date DATE NOT NULL, -- we will have to add NOT NULL at some point
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, category_id)
 );

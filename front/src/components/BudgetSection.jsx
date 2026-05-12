@@ -57,7 +57,7 @@ const BudgetSection = () => {
       }
     };
     fetchBudgets();
-  }, [selectedMonth, transaction]);
+  }, [selectedMonth, transaction, limit]);
 
   return (
     <section className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">

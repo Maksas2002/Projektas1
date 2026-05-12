@@ -80,10 +80,7 @@ export const updateBudgetLimitsC = async (req, res, next) => {
     // date change
     const fDate = new Date(req.params.date);
     const fDateShort = fDate.toISOString().slice(0, 10);
-    // changes selected month's first day to the last day
-    const lastDay = new Date(fDate.getFullYear(), fDate.getMonth() + 1, 0);
-    const lastDayShort = lastDay.toISOString().slice(0, 10);
-
+  
     if (Object.keys(newBudgetLimit).length === 0) {
       throw new AppError("No fields provided to update", 400);
     }
@@ -94,8 +91,7 @@ export const updateBudgetLimitsC = async (req, res, next) => {
       newBudgetLimitN,
       id,
       categoryId,
-      fDateShort,
-      lastDayShort,
+      fDateShort
     );
 
     if (!newBudgetLimitD) {
