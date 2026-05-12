@@ -13,6 +13,7 @@ const BudgetSection = () => {
   const [show, setShow] = useState(true);
   const [showUpdates, setShowUpdates] = useState(false);
   const [limit, setLimit] = useState([]);
+  const [error, setError] = useState(null);
 
   const selectedMonth =
     typeof month === "string" && month
@@ -62,27 +63,37 @@ const BudgetSection = () => {
     <section className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-white text-base font-medium">Budget Limits by Category</h2>
-          <p className="text-slate-500 text-xs">Expenses this month: EUR {totalExpenses.toFixed(2)}</p>
+          <h2 className="text-white text-base font-medium">
+            Budget Limits by Category
+          </h2>
+          <p className="text-slate-500 text-xs">
+            Expenses this month: EUR {totalExpenses.toFixed(2)}
+          </p>
         </div>
-        <button onClick={() => changeView(show, showUpdates, setShow, setShowUpdates)} className="text-sky-300 text-xs hover:text-sky-200">
+        <button
+          onClick={() => changeView(show, showUpdates, setShow, setShowUpdates)}
+          className="text-sky-300 text-xs hover:text-sky-200"
+        >
           Manage Budgets
         </button>
       </div>
-
 
       {/*Loads budget limit update table*/}
       <div className="flex flex-col">
         {showUpdates
           ? budgets.map((b) => (
-            <BudgetLimitUpdate
-              key={b.id}
-              budgets={b}
-              limit={limit}
-              setLimit={setLimit}
-            />
-          ))
+              <BudgetLimitUpdate
+                key={b.id}
+                budgets={b}
+                limit={limit}
+                setLimit={setLimit}
+                setError={setError}
+              />
+            ))
           : null}
+        {showUpdates ? (
+          <p className="text-center text-red-600 font-bold">{error}</p>
+        ) : null}
       </div>
 
       {loading ? (
@@ -95,23 +106,33 @@ const BudgetSection = () => {
             const percent = limit > 0 ? Math.min((used / limit) * 100, 100) : 0;
             const isOverLimit = used >= limit && limit > 0;
 
-            return (
-              show ? <div key={b.category_id} className="bg-[#0b1430] rounded-md p-4">
+            return show ? (
+              <div key={b.category_id} className="bg-[#0b1430] rounded-md p-4">
                 <div className="flex items-center justify-between gap-3 text-xs">
                   <span className="text-white">{b.category_name}</span>
-                  <span className={isOverLimit ? "text-rose-400" : "text-sky-300"}>
+                  <span
+                    className={isOverLimit ? "text-rose-400" : "text-sky-300"}
+                  >
                     EUR {used.toFixed(0)} / EUR {limit.toFixed(0)}
                   </span>
                 </div>
                 <div className="h-2 bg-[#071027] rounded-full overflow-hidden mt-3">
                   <div
-                    className={isOverLimit ? "h-full bg-rose-500" : "h-full bg-sky-400"}
+                    className={
+                      isOverLimit ? "h-full bg-rose-500" : "h-full bg-sky-400"
+                    }
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between items-center">
                   <RemainingBudgetSection categoryId={b.category_id} />
-                  <p className={isOverLimit ? "text-rose-400 text-[11px] mt-2" : "text-slate-500 text-[11px] mt-2"}>
+                  <p
+                    className={
+                      isOverLimit
+                        ? "text-rose-400 text-[11px] mt-2"
+                        : "text-slate-500 text-[11px] mt-2"
+                    }
+                  >
                     {percent.toFixed(0)}% used
                   </p>
                   {isOverLimit && (
@@ -120,8 +141,8 @@ const BudgetSection = () => {
                     </span>
                   )}
                 </div>
-              </div> : null
-            );
+              </div>
+            ) : null;
           })}
         </div>
       ) : (

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { MonthContext } from "../utlis/MonthContext";
 import errorHandler from "../utils/errorHandler";
 
-function BudgetLimitUpdate({ budgets, limit, setLimit }) {
+function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
   const { month } = useContext(MonthContext);
 
   // user's budget limit  update
@@ -18,9 +18,12 @@ function BudgetLimitUpdate({ budgets, limit, setLimit }) {
           withCredentials: true,
         },
       );
+      setError(null);
     } catch (error) {
-      // setError(errorHandler(error));
-      console.log(error);
+      
+      if (error.response.data.error[0].msg) {
+        setError(error.response.data.error[0].msg);
+      } else setError(errorHandler(error));
     }
   };
 
