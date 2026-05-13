@@ -66,17 +66,17 @@ CREATE TABLE IF NOT EXISTS budgets (
 );
 
 --Priskiriame pradinius limitus vartotojui 'Cole'
-INSERT INTO budgets (user_id, category_id, amount_limit)
-SELECT u.id, c.id, 500.00 
-FROM users u, categories c 
-WHERE u.email = 'Cole@gmail.com' AND c.name = 'Food'
-ON CONFLICT DO NOTHING;
+-- INSERT INTO budgets (user_id, category_id, amount_limit)
+-- SELECT u.id, c.id, 500.00 
+-- FROM users u, categories c 
+-- WHERE u.email = 'Cole@gmail.com' AND c.name = 'Food'
+-- ON CONFLICT DO NOTHING;
 
-INSERT INTO budgets (user_id, category_id, amount_limit)
-SELECT u.id, c.id, 200.00 
-FROM users u, categories c 
-WHERE u.email = 'Cole@gmail.com' AND c.name = 'Transport'
-ON CONFLICT DO NOTHING;
+-- INSERT INTO budgets (user_id, category_id, amount_limit)
+-- SELECT u.id, c.id, 200.00 
+-- FROM users u, categories c 
+-- WHERE u.email = 'Cole@gmail.com' AND c.name = 'Transport'
+-- ON CONFLICT DO NOTHING;
 
 -- 4. Pajamos ir Išlaidos
 CREATE TABLE IF NOT EXISTS income (
