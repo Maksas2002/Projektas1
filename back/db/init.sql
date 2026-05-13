@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS budgets (
     amount_limit DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     budget_date DATE NOT NULL, -- we will have to add NOT NULL at some point
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, category_id)
+    UNIQUE(user_id, category_id, budget_date)
 );
 
 --Priskiriame pradinius limitus vartotojui 'Cole'

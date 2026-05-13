@@ -72,7 +72,7 @@ export const budgetQueries = {
                     (SELECT id FROM categories WHERE name = ${item.name} LIMIT 1), 
                     ${item.limit},
                     ${item.date}::date
-                ) ON CONFLICT (user_id, category_id) DO NOTHING;
+                ) ON CONFLICT (user_id, category_id, budget_date) DO NOTHING;
             `,
       ),
     );

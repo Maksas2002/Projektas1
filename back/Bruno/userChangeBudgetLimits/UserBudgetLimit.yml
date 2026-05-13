@@ -5,12 +5,12 @@ info:
 
 http:
   method: PATCH
-  url: http://localhost:3000/api/v1/user/5/my-budgets/update
+  url: http://localhost:3000/api/v1/user/3/my-budgets/2025-05-01/update
   body:
     type: json
     data: |-
       {
-        "amount_limit": 500000000
+        "amount_limit": 10
       }
   auth: inherit
 

@@ -67,8 +67,8 @@ export const updateBudgetLimitsM = async (
 ) => {
   const newBudgetLimit = await sql`
    INSERT INTO  budgets (user_id, category_id, amount_limit, budget_date)
-   VALUES (${parseInt(id)}, ${parseInt(categoryId)}, ${parseInt(newBudgetLimitN)}, ${parseInt(fDateShort)})
-   ON CONFLICT (user_id, category_id)
+   VALUES (${parseInt(id)}, ${parseInt(categoryId)}, ${parseInt(newBudgetLimitN)}, ${fDateShort})
+   ON CONFLICT (user_id, category_id, budget_date)
    DO UPDATE 
    SET amount_limit = EXCLUDED.amount_limit,
    budget_date = ${fDateShort}
