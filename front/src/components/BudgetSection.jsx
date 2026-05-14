@@ -4,11 +4,13 @@ import axios from "axios";
 import { MonthContext } from "../utlis/MonthContext";
 import { TransactionContext } from "../utlis/TransactionContext";
 import RemainingBudgetSection from "./RemainingBudgetSection";
+import errorHandler from "../utils/errorHandler";
 
 const BudgetSection = () => {
   const { month } = useContext(MonthContext);
   const { transaction } = useContext(TransactionContext);
   const [budgets, setBudgets] = useState([]);
+  const [exCat, setExCat] = useState([]);
   const [loading, setLoading] = useState(true);
   const [show, setShow] = useState(true);
   const [showUpdates, setShowUpdates] = useState(false);
@@ -24,6 +26,25 @@ const BudgetSection = () => {
     () => budgets.reduce((sum, item) => sum + Number(item.amount_used || 0), 0),
     [budgets],
   );
+
+  //get expenses categories
+  const getExCat = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:3000/api/v1/categories/expenses",
+        {
+          withCredentials: true,
+        },
+      );
+      setExCat(res.data.catList);
+    } catch (error) {
+      setError(errorHandler(error));
+    }
+  };
+
+  useEffect(() => {
+    getExCat();
+  }, []);
 
   // chnage view of the tables
   const changeView = (show, showUpdates, setShow, setShowUpdates) => {
@@ -81,7 +102,7 @@ const BudgetSection = () => {
       {/*Loads budget limit update table*/}
       <div className="flex flex-col">
         {showUpdates
-          ? budgets.map((b) => (
+          ? exCat.map((b) => (
               <BudgetLimitUpdate
                 key={b.id}
                 budgets={b}

@@ -10,7 +10,7 @@ function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
   const updateUsersBudgetLimits = async (value) => {
     try {
       await axios.patch(
-        `http://localhost:3000/api/v1/user/${budgets.category_id}/my-budgets/${month}-01/update`,
+        `http://localhost:3000/api/v1/user/${budgets.id}/my-budgets/${month}-01/update`,
         {
           amount_limit: value,
         },
@@ -36,7 +36,7 @@ function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
 
     setLimit((prev) => ({
       ...prev,
-      [budgets.category_id]: numberValue,
+      [budgets.id]: numberValue,
     }));
 
     updateUsersBudgetLimits(numberValue);
@@ -46,13 +46,12 @@ function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
     <>
       <div className="flex justify-between">
         <div>
-          <label className="text-white">{budgets.category_name}</label>
+          <label className="text-white">{budgets.name}</label>
         </div>
         <div className="flex items-center p-1">
           <input
             type="number"
-            placeholder={budgets.amount_limit}
-            value={limit[budgets.category_id] || ""}
+            value={limit[budgets.id] || ""}
             onInput={(e) => handleChange(e.target.value)}
             className="
                   w-28 rounded-xl border border-blue-900
