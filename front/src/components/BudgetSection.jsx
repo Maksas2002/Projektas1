@@ -9,6 +9,7 @@ const BudgetSection = () => {
   const { transaction } = useContext(TransactionContext);
   const [budgets, setBudgets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [remaining, setRemaining] = useState([]);
   const selectedMonth =
     typeof month === "string" && month
       ? month
@@ -41,7 +42,18 @@ const BudgetSection = () => {
       }
     };
 
+    const fetchRemaining = async () =>{
+      const res = await axios.get("http://localhost:3000/api/v1/user/remaining-budget",
+          {
+            withCredentials: true,
+            params: { month: selectedMonth },
+          }
+      );
+      setRemaining(res.data.data);
+    }
+
     fetchBudgets();
+    fetchRemaining();
   }, [selectedMonth, transaction]);
 
   return (
@@ -81,7 +93,7 @@ const BudgetSection = () => {
                   ></div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <RemainingBudgetSection categoryId={b.category_id}/>
+                  <RemainingBudgetSection categoryId={b.category_id} remainingData={remaining}/>
                   <p className={isOverLimit ? "text-rose-400 text-[11px] mt-2" : "text-slate-500 text-[11px] mt-2"}>
                     {percent.toFixed(0)}% used
                   </p>
