@@ -46,11 +46,11 @@ export const getRemainingBudgetM = async (userId, MDate) => {
     join categories
       on categories.id = budgets.category_id
     left join expenses
-      on expenses.category_id = categories.id
+      on expenses.category_id = budgets.category_id
       and expenses.user_id = budgets.user_id
       and date_trunc('month', expenses.date) = date_trunc('month', ${MDate}::date)
     where budgets.user_id = ${userId}
-    group by categories.id, categories.name, budgets.amount_limit
+    group by budgets.id, categories.id, categories.name, budgets.amount_limit
     order by categories.name;
   `;
 

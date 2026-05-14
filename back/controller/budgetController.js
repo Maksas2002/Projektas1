@@ -56,10 +56,6 @@ export const getRemainingBudgetC = async (req,res,next) => {
 
         const remainingBudget = await getRemainingBudgetM(userId, month);
 
-        if(!remainingBudget || remainingBudget.length === 0){
-             throw new AppError("No budgets found ", 404);
-        }
-
         res.status(200).json({
             status: "success",
             data: remainingBudget
