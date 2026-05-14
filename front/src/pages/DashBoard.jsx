@@ -17,10 +17,10 @@ function DashBoard() {
   const toggleForm = (formName) => setActiveForm(activeForm === formName ? null : formName);
 
   return (
-    <main className="min-h-screen bg-[#061126] pb-20">
+    <main className="min-h-screen overflow-x-hidden bg-[#061126] pb-20">
       <DashHeader />
       
-      <div className="max-w-[980px] mx-auto px-4 pt-6 flex flex-col gap-5">
+      <div className="w-full max-w-[980px] mx-auto px-4 md:px-6 lg:px-4 pt-6 flex flex-col gap-5">
         
         {/* Perduodame datą ir jos keitimo funkciją */}
         <UpperPageBase 

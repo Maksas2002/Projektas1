@@ -50,18 +50,18 @@ const handleDelete = async (id) => {
 
   return (
     <div className="bg-[#1b2448] rounded-lg overflow-hidden">
-      <div className="p-4 border-b border-[#283046] flex justify-between items-center">
+      <div className="admin-section-header p-3 border-b border-[#283046] flex justify-between items-center">
         <h2 className="text-white font-semibold">Category List</h2>
         <span className="text-sky-300 text-xs font-bold">{categories.length} Total</span>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="overflow-hidden">
+        <table className="w-full table-fixed text-left">
           <thead>
             <tr className="text-slate-400 text-xs border-b border-[#283046]">
-              <th className="px-6 py-4">Name</th>
-              <th className="px-6 py-4">Type</th>
-              <th className="px-6 py-4 text-right">Actions</th>
+              <th className="px-2 md:px-3 py-3 break-words">Name</th>
+              <th className="w-28 px-2 md:px-3 py-3 break-words">Type</th>
+              <th className="w-28 px-2 md:px-3 py-3 text-right break-words">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#283046]">
@@ -70,13 +70,13 @@ const handleDelete = async (id) => {
             ) : (
               categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-[#111b3c] transition-all">
-                  <td className="px-6 py-4 text-slate-200 font-medium">{cat.name}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-2 md:px-3 py-3 text-slate-200 font-medium break-words">{cat.name}</td>
+                  <td className="px-2 md:px-3 py-3">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${cat.type === 'income' ? 'text-green-400 bg-green-400/10' : 'text-red-400 bg-red-400/10'}`}>
                       {cat.type}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-2 md:px-3 py-3 text-right">
                     <button onClick={() => setEditingCategory(cat)} className="text-sky-300 mr-3 text-xs font-bold">Edit</button>
                     <button onClick={() => setDeletingCategoryId(cat.id)} className="text-rose-300 text-xs font-bold">Delete</button>
                   </td>

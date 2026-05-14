@@ -51,8 +51,8 @@ const AdminLogs = () => {
   };
 
   return (
-    <div className="bg-[#1b2448] rounded-lg border border-[#1b346c] overflow-hidden mt-6">
-      <div className="p-5 border-b border-[#283046] flex flex-col md:flex-row justify-between items-center gap-4">
+    <div className="bg-[#1b2448] rounded-lg border border-[#1b346c] overflow-hidden mt-4">
+      <div className="p-4 border-b border-[#283046] flex flex-col md:flex-row justify-between items-center gap-3">
         <h2 className="text-base font-semibold text-white">Activity Log</h2>
         
         <div className="flex flex-wrap gap-3 w-full md:w-auto">
@@ -82,15 +82,15 @@ const AdminLogs = () => {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="overflow-hidden">
+        <table className="w-full table-fixed text-left">
           <thead>
             <tr className="text-slate-400 text-xs border-b border-[#283046]">
-              <th className="px-6 py-4">Action</th>
-              <th className="px-6 py-4">User / Admin</th>
-              <th className="px-6 py-4">Target (Subject)</th>
-              <th className="px-6 py-4">Details</th>
-              <th className="px-6 py-4">Date</th>
+              <th className="w-24 px-2 md:px-3 py-3 break-words">Action</th>
+              <th className="w-32 px-2 md:px-3 py-3 break-words">User / Admin</th>
+              <th className="px-2 md:px-3 py-3 break-words">Target (Subject)</th>
+              <th className="px-2 md:px-3 py-3 break-words">Details</th>
+              <th className="w-32 px-2 md:px-3 py-3 break-words">Date</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#283046]">
@@ -99,26 +99,26 @@ const AdminLogs = () => {
             ) : logs.length > 0 ? (
               logs.map((log) => (
                 <tr key={log.id} className="hover:bg-[#111b3c] transition-all">
-                  <td className="px-6 py-4">
+                  <td className="px-2 md:px-3 py-3 break-words">
                     <span className={getActionBadge(log.action)}>
                       {log.action.replace('_', ' ')}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-2 md:px-3 py-3 break-words">
                     <div className="flex flex-col">
                       <span className="text-slate-200 text-sm font-medium">{log.user_display_name || 'System'}</span>
                       <span className="text-slate-500 text-[10px]">{log.username || 'admin'}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-2 md:px-3 py-3 break-words">
                     <span className="text-blue-300/80 text-sm font-semibold">
                       {log.target_name || '---'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-400 text-sm">
+                  <td className="px-2 md:px-3 py-3 text-slate-400 text-sm break-words">
                     {log.details}
                   </td>
-                  <td className="px-6 py-4 text-slate-400 text-xs tabular-nums">
+                  <td className="px-2 md:px-3 py-3 text-slate-400 text-xs tabular-nums break-words">
                     {log.created_at ? new Date(log.created_at).toLocaleString('lt-LT') : '---'}
                   </td>
                 </tr>

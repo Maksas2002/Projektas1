@@ -107,9 +107,9 @@ try {
   );
 
   return (
-    <div className="min-h-screen bg-[#08142c] text-slate-200 p-6 font-sans">
+    <div className="min-h-screen overflow-x-hidden bg-[#08142c] text-slate-200 p-4 md:p-6 font-sans">
       {/* Header */}
-      <div className="max-w-7xl mx-auto flex justify-between items-center mb-6 bg-[#121b3a] p-5 rounded-lg border border-sky-500/50">
+      <div className="w-full max-w-7xl mx-auto flex justify-between items-center mb-4 md:mb-6 bg-[#121b3a] p-4 md:p-5 rounded-lg border border-sky-500/50">
         <div>
           <h1 className="text-lg font-bold text-white tracking-tight">Admin Panel</h1>
           <p className="text-xs text-slate-400 font-semibold">BudgetNest Management</p>
@@ -122,8 +122,8 @@ try {
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="w-full max-w-7xl mx-auto space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4">
           <div className="bg-[#1b2448] p-6 rounded-lg border border-[#1b346c]">
             <p className="text-slate-400 text-sm">Total Users</p>
             <p className="text-white text-3xl mt-5">{users.length}</p>
@@ -141,13 +141,13 @@ try {
           </div>
         </div>
         {/* Vartotojo kūrimas */}
-        <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
+        <div className="bg-[#1b2448] p-4 rounded-lg border border-[#1b346c]">
           <AdminUserCreate onUserCreated={handleDataChange} />
         </div>
 
         {/* Vartotojų lentelė - ATKURTA PAGAL TAVO DIZAINĄ */}
         <div className="bg-[#1b2448] rounded-lg border border-[#1b346c] overflow-hidden">
-          <div className="p-5 border-b border-[#283046] flex justify-between items-center">
+          <div className="p-4 border-b border-[#283046] flex justify-between items-center gap-3">
             <h2 className="text-base font-semibold text-white">User Management</h2>
             <span className="bg-sky-500/10 text-sky-300 px-3 py-1 rounded-full text-xs font-bold border border-sky-500/20">
               {users.length} Active Accounts
@@ -160,32 +160,34 @@ try {
             </div>
           )}
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left">
               <thead>
                 <tr className="text-slate-400 text-xs border-b border-[#283046]">
-                  <th className="px-6 py-5">User</th>
-                  <th className="px-6 py-5">Email Address</th>
-                  <th className="px-6 py-5">Status / Role</th>
-                  <th className="px-6 py-5 text-right">Actions</th>
+                  <th className="px-2 md:px-3 py-3 text-left break-words">User</th>
+                  <th className="px-2 md:px-3 py-3 text-left break-words">Email Address</th>
+                  <th className="w-28 px-2 md:px-3 py-3 text-left break-words">Status / Role</th>
+                  <th className="w-28 px-2 md:px-3 py-3 text-right break-words">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#283046]">
                 {users.map((user) => (
                   <tr key={user.id || user._id} className="hover:bg-[#111b3c] transition-all group">
-                    <td className="px-6 py-4 flex items-center gap-3">
+                    <td className="px-2 md:px-3 py-3">
+                      <div className="flex items-center gap-3 min-w-0">
                       <div className="w-8 h-8 rounded-full bg-sky-500/20 flex items-center justify-center text-xs font-bold text-sky-300 uppercase">
                         {user.name?.charAt(0) || 'U'}
                       </div>
-                      <span className="font-semibold text-white">{user.name}</span>
+                      <span className="font-semibold text-white break-words">{user.name}</span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-300 text-sm">{user.email}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-2 md:px-3 py-3 text-slate-300 text-sm break-words">{user.email}</td>
+                    <td className="px-2 md:px-3 py-3">
                       <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${user.role === 'Admin' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-2 md:px-3 py-3 text-right">
                       <button onClick={() => setEditingUser(user)} className="text-sky-300 hover:text-sky-100 px-3 py-1 transition-all text-xs font-bold mx-1">Edit</button>
                       <button onClick={() => setDeletingUserId(user.id || user._id)} className="text-rose-300 hover:text-rose-100 px-3 py-1 transition-all text-xs font-bold mx-1">Delete</button>
                     </td>
@@ -235,11 +237,11 @@ try {
 
 
         {/* Kategorijų valdymas - SU APSAUGA NUO LOOP */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="bg-[#1b2448] p-4 rounded-lg border border-[#1b346c]">
              <AddCategoriesAdmin onCategoryCreated={handleDataChange} />
           </div>
-          <div className="bg-[#1b2448] p-5 rounded-lg border border-[#1b346c]">
+          <div className="bg-[#1b2448] p-4 rounded-lg border border-[#1b346c]">
              <ListCategoriesAdmin key={refreshCategoriesKey} />
           </div>
         </div>
