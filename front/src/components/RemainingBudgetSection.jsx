@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { MonthContext } from "../utlis/MonthContext";
+import { TransactionContext } from "../utlis/TransactionContext";
 
-function RemainingBudgetSection({ categoryId }) {
+function RemainingBudgetSection({ categoryId, limit }) {
     const { month } = useContext(MonthContext);
+    const { transaction } = useContext(TransactionContext);
     const [data, setData] = useState([]);
+  
 
     useEffect(() => {
         const fetchRemaining = async () => {
@@ -21,7 +24,7 @@ function RemainingBudgetSection({ categoryId }) {
             }
         }
         fetchRemaining();
-    }, [month])
+    }, [month, transaction, limit])
 
     const category = data.find((item) => item.category_id === categoryId);
 

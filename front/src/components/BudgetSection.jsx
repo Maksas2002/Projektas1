@@ -102,10 +102,11 @@ const BudgetSection = () => {
       {/*Loads budget limit update table*/}
       <div className="flex flex-col">
         {showUpdates
-          ? exCat.map((b) => (
+          ? exCat.map((b, index) => (
               <BudgetLimitUpdate
                 key={b.id}
                 budgets={b}
+                budgetAmount={budgets[index]}
                 limit={limit}
                 setLimit={setLimit}
                 setError={setError}
@@ -146,7 +147,7 @@ const BudgetSection = () => {
                   ></div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <RemainingBudgetSection categoryId={b.category_id} />
+                  <RemainingBudgetSection categoryId={b.category_id} limit={limit} />
                   <p
                     className={
                       isOverLimit

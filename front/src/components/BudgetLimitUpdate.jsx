@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { MonthContext } from "../utlis/MonthContext";
 import errorHandler from "../utils/errorHandler";
 
-function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
+function BudgetLimitUpdate({ budgets, limit, setLimit, setError , budgetAmount}) {
   const { month } = useContext(MonthContext);
 
   // user's budget limit  update
@@ -51,6 +51,7 @@ function BudgetLimitUpdate({ budgets, limit, setLimit, setError }) {
         <div className="flex items-center p-1">
           <input
             type="number"
+            placeholder={budgetAmount?.amount_limit}
             value={limit[budgets.id] || ""}
             onInput={(e) => handleChange(e.target.value)}
             className="
