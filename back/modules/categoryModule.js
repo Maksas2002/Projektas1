@@ -17,6 +17,15 @@ export const getAllCategoriesM = async () => {
   return categoryLists;
 };
 
+// get all expenses categories
+
+export const getAllExpensesCategoriesM = async () => {
+  const expenseCategoriesList = await sql`
+  SELECT * FROM categories
+  WHERE type = 'expense';
+  `
+  return expenseCategoriesList;
+}
 
 //add category
 export const createCategoryM = async (name, type, user_id) => {

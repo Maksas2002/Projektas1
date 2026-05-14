@@ -37,6 +37,7 @@ export const budgetQueries = {
             FROM categories c
             LEFT JOIN budgets b ON c.id = b.category_id AND b.user_id = ${userId}
             WHERE c.name IN ('Food', 'Transport', 'Entertainment', 'Shopping', 'Health', 'Travel')
+            AND b.budget_date = ${startDate}
             ORDER BY c.id ASC;
         `;
   },

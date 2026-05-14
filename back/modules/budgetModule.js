@@ -76,6 +76,6 @@ export const updateBudgetLimitsM = async (
    AND budgets.category_id = ${parseInt(categoryId)}
    RETURNING *;
   `;
-
+console.log(fDateShort);
   return newBudgetLimit[0];
 };
