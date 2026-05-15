@@ -64,18 +64,35 @@ CREATE TABLE IF NOT EXISTS budgets (
     UNIQUE(user_id, category_id)
 );
 
---Priskiriame pradinius limitus vartotojui 'Cole'
 INSERT INTO budgets (user_id, category_id, amount_limit)
-SELECT u.id, c.id, 500.00 
-FROM users u, categories c 
-WHERE u.email = 'Cole@gmail.com' AND c.name = 'Food'
-ON CONFLICT DO NOTHING;
+SELECT 
+    users.id AS user_id,
+    categories.id AS category_id,
+    CASE categories.name
+        WHEN 'Food' THEN 500
+        WHEN 'Transport' THEN 200
+        WHEN 'Entertainment' THEN 150
+        WHEN 'Shopping' THEN 250
+        WHEN 'Health' THEN 300
+        WHEN 'Travel' THEN 500
+        ELSE 0
+    END AS amount_limit
+FROM users
+JOIN categories ON categories.type = 'expense'
+ON CONFLICT (user_id, category_id) DO NOTHING;
 
-INSERT INTO budgets (user_id, category_id, amount_limit)
-SELECT u.id, c.id, 200.00 
-FROM users u, categories c 
-WHERE u.email = 'Cole@gmail.com' AND c.name = 'Transport'
-ON CONFLICT DO NOTHING;
+--Priskiriame pradinius limitus vartotojui 'Cole'
+-- INSERT INTO budgets (user_id, category_id, amount_limit)
+-- SELECT u.id, c.id, 500.00 
+-- FROM users u, categories c 
+-- WHERE u.email = 'Cole@gmail.com' AND c.name = 'Food'
+-- ON CONFLICT DO NOTHING;
+
+-- INSERT INTO budgets (user_id, category_id, amount_limit)
+-- SELECT u.id, c.id, 200.00 
+-- FROM users u, categories c 
+-- WHERE u.email = 'Cole@gmail.com' AND c.name = 'Transport'
+-- ON CONFLICT DO NOTHING;
 
 -- 4. Pajamos ir Išlaidos
 CREATE TABLE IF NOT EXISTS income (

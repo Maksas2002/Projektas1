@@ -16,7 +16,7 @@ function RemainingBudgetSection({categoryId, remainingData}) {
     return (
         <div className="text-slate-400 text-xs mt-2">
             Remaining:{" "}
-            <span className={remaining < 0 ? "text-red-500" : "text-green-400"}>
+            <span className={remaining < 0 ? "text-red-500" : remaining === 0 ? "text-slate-400" : "text-green-400"}>
                 €{remaining}
             </span>
         </div>
