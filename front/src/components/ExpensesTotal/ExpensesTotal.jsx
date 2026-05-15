@@ -12,7 +12,6 @@ function ExpensesTotal() {
   return <FinancialChart />;
   
   const { month, setMonth } = useContext(MonthContext);
-  const { transaction } = useContext(TransactionContext);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

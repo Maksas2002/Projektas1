@@ -5,6 +5,7 @@ import { MonthContext } from "../../utlis/MonthContext";
 function MonthSelector({ transaction }) {
   const { month, setMonth } = useContext(MonthContext);
  
+ 
 
   //  this loop makes the dates appear in the selection. I dont know why it doesnt work without this
   //  pushes all objects into array
@@ -43,6 +44,7 @@ function MonthSelector({ transaction }) {
 
   return (
     <select
+      value={month || currentMonth}
       value={month || currentMonth}
       onChange={(e) => setMonth(e.target.value)}
       className="border border-[#283046] pl-3 pr-3 rounded-md text-white bg-[#0b1430] h-9 text-xs min-w-[150px]"

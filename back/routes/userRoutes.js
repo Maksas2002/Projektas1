@@ -50,6 +50,7 @@ const userRoutes = express.Router();
 userRoutes.post("/signup", userSignUp, validate, signup);
 userRoutes.post("/login", userLogin, validate, loginC);
 
+// --- 2. APSAUGA (AUTH) ---
 userRoutes.use(authProtect);
 
 userRoutes.get("/", getAllUsers);
@@ -69,8 +70,8 @@ userRoutes.patch(
   updateBudgetLimitsC,
 );
 userRoutes.get("/history", authProtect, allowAccessTo("User"), userCombinedHistoryC);
-userRoutes.get("/remaining-budget", allowAccessTo("User"), getRemainingBudgetC);
-userRoutes.get("/charts/monthly", allowAccessTo("User"), getMonthlyChartDataC);
+userRoutes.get("/remaining-budget",authProtect, allowAccessTo("User"), getRemainingBudgetC);
+userRoutes.get("/charts/monthly",authProtect, allowAccessTo("User"), getMonthlyChartDataC);
 
 // 4. Pajamos (Income)
 userRoutes.post(

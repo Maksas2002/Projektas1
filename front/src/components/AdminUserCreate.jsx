@@ -65,8 +65,8 @@ const AdminUserCreate = ({ onUserCreated }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex flex-wrap gap-4 items-end bg-[#1e293b] p-4 rounded-xl border border-slate-700/50">
-        <div className="flex-1 min-w-[200px]">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end bg-[#1e293b] p-4 rounded-xl border border-slate-700/50">
+        <div className="md:col-span-3">
           <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Full Name</label>
           <input
             type="text"
@@ -78,7 +78,7 @@ const AdminUserCreate = ({ onUserCreated }) => {
           />
         </div>
 
-        <div className="flex-1 min-w-[200px]">
+        <div className="md:col-span-3">
           <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Email Address</label>
           <input
             type="email"
@@ -90,7 +90,7 @@ const AdminUserCreate = ({ onUserCreated }) => {
           />
         </div>
 
-        <div className="flex-1 min-w-[150px]">
+        <div className="md:col-span-2 md:row-start-2 md:col-start-3">
           <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Password</label>
           <input
             type="password"
@@ -102,7 +102,7 @@ const AdminUserCreate = ({ onUserCreated }) => {
           />
         </div>
 
-        <div className="w-[130px]">
+        <div className="md:col-span-2 md:row-start-2 md:col-start-1">
           <label className="block text-xs text-slate-400 mb-1.5 ml-1 font-semibold uppercase tracking-wider">Role</label>
           <select
             value={formData.role}
@@ -117,7 +117,7 @@ const AdminUserCreate = ({ onUserCreated }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`}
+          className={`w-full md:col-span-2 md:row-start-2 md:col-start-5 bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-lg text-sm font-bold shadow-lg shadow-blue-900/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {isSubmitting ? "Creating..." : "Create User"}
         </button>

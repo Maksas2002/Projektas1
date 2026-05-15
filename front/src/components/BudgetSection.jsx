@@ -103,15 +103,15 @@ const BudgetSection = () => {
       <div className="flex flex-col">
         {showUpdates
           ? exCat.map((b, index) => (
-              <BudgetLimitUpdate
-                key={b.id}
-                budgets={b}
-                budgetAmount={budgets[index]}
-                limit={limit}
-                setLimit={setLimit}
-                setError={setError}
-              />
-            ))
+            <BudgetLimitUpdate
+              key={b.id}
+              budgets={b}
+              budgetAmount={budgets[index]}
+              limit={limit}
+              setLimit={setLimit}
+              setError={setError}
+            />
+          ))
           : null}
         {showUpdates ? (
           <p className="text-center text-red-600 font-bold">{error}</p>
@@ -128,33 +128,23 @@ const BudgetSection = () => {
             const percent = limit > 0 ? Math.min((used / limit) * 100, 100) : 0;
             const isOverLimit = used >= limit && limit > 0;
 
-            return show ? (
+            return (
               <div key={b.category_id} className="bg-[#0b1430] rounded-md p-4">
                 <div className="flex items-center justify-between gap-3 text-xs">
                   <span className="text-white">{b.category_name}</span>
-                  <span
-                    className={isOverLimit ? "text-rose-400" : "text-sky-300"}
-                  >
+                  <span className={isOverLimit ? "text-rose-400" : "text-sky-300"}>
                     EUR {used.toFixed(0)} / EUR {limit.toFixed(0)}
                   </span>
                 </div>
                 <div className="h-2 bg-[#071027] rounded-full overflow-hidden mt-3">
                   <div
-                    className={
-                      isOverLimit ? "h-full bg-rose-500" : "h-full bg-sky-400"
-                    }
+                    className={isOverLimit ? "h-full bg-rose-500" : "h-full bg-sky-400"}
                     style={{ width: `${percent}%` }}
                   ></div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <RemainingBudgetSection categoryId={b.category_id} limit={limit} />
-                  <p
-                    className={
-                      isOverLimit
-                        ? "text-rose-400 text-[11px] mt-2"
-                        : "text-slate-500 text-[11px] mt-2"
-                    }
-                  >
+                  <RemainingBudgetSection categoryId={b.category_id} />
+                  <p className={isOverLimit ? "text-rose-400 text-[11px] mt-2" : "text-slate-500 text-[11px] mt-2"}>
                     {percent.toFixed(0)}% used
                   </p>
                   {isOverLimit && (
@@ -163,8 +153,9 @@ const BudgetSection = () => {
                     </span>
                   )}
                 </div>
+
               </div>
-            ) : null;
+            );
           })}
         </div>
       ) : (
